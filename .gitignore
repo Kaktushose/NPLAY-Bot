@@ -1,0 +1,5 @@
+.idea
+target/
+backupper.sh
+config.yaml
+*.iml
