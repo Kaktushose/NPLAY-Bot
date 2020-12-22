@@ -84,7 +84,7 @@ public class InfoCommand extends Command {
 
         if (bot.eventIsPresent()) {
             EventPoint eventPoint = bot.getDatabase().getEventPoint(EventType.WINTER);
-            builder.addField("", "Schmückevent", false);
+            builder.addField("", "__Schmückevent__:", false);
             builder.addField(eventPoint.getName() + ":", eventPoint.getEmote() + " " + botUser.getEventPoints(), false);
             if (botUser.getEventPoints() >= 25 && (System.currentTimeMillis() - bot.getDatabase().getChristmasBoosterStartTime(botUser.getId()) < 604800000L)) {
                 builder.addField("Belohnungen:", "Eventrolle XMAS 2020 :santa:\nSpecial Item \"Christmas Booster\" :santa:", false);
