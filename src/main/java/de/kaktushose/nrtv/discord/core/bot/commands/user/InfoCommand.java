@@ -9,7 +9,10 @@ import de.kaktushose.nrtv.discord.frameworks.command.SubCommand;
 import de.kaktushose.nrtv.discord.frameworks.event.EventPoint;
 import de.kaktushose.nrtv.discord.frameworks.event.EventType;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 
@@ -61,8 +64,7 @@ public class InfoCommand extends Command {
                 nextRank = "\uD83C\uDFAF ";
         if (botUser.getLevel() == 9) {
             nextRank = "N/A";
-        }
-        else {
+        } else {
             xpToNext = bot.getDatabase().getXpBounds().get(botUser.getLevel()) - botUser.getXp();
             nextRank += !isDM ? bot.getRoleByLevel(botUser.getLevel() + 1).getAsMention() + " (noch " + xpToNext + " XP)" : bot.getRoleByLevel(botUser.getLevel() + 1).getName() + " (noch " + xpToNext + " XP)";
         }
@@ -81,12 +83,15 @@ public class InfoCommand extends Command {
                 .addField("Diamanten: ", "\uD83D\uDC8E " + botUser.getDiamonds(), true);
 
         if (bot.eventIsPresent()) {
-            EventPoint eventPoint = bot.getDatabase().getEventPoint(EventType.SUMMER);
+            EventPoint eventPoint = bot.getDatabase().getEventPoint(EventType.WINTER);
+            builder.addField("", "Schmückevent", false);
             builder.addField(eventPoint.getName() + ":", eventPoint.getEmote() + " " + botUser.getEventPoints(), false);
-            if (botUser.getEventPoints() >= 10) {
-                builder.addField("Belohnung Sammelaktion:", ":sunny: Eventrolle SOMMER 2020", false);
+            if (botUser.getEventPoints() >= 25 && (System.currentTimeMillis() - bot.getDatabase().getChristmasBoosterStartTime(botUser.getId()) < 604800000L)) {
+                builder.addField("Belohnungen:", "Eventrolle XMAS 2020 :santa:\nSpecial Item \"Christmas Booster\" :santa:", false);
+            } else if (botUser.getEventPoints() >= 5) {
+                builder.addField("Belohnungen:", "Eventrolle XMAS 2020 :santa:", false);
             } else {
-                builder.addField("Belohnung Sammelaktion:", ":x: noch keine", false);
+                builder.addField("Belohnungen:", ":x: noch keine", false);
             }
         }
 

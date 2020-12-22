@@ -13,9 +13,6 @@ public class PremiumReward extends EventReward {
 
     @Override
     public void onReward(BotUser botUser, Bot bot) {
-        bot.addUpItem(botUser, new PremiumRole(0, ":star: PREMIUM basic",
-                "Erhalte mit dieser besonderen Rolle satte 13 exklusive Vorteile auf unserem Server!",
-                2592000000L,
-                1));
+        bot.getDatabase().setChristmasBoosterActivationTime(botUser.getId());
     }
 }

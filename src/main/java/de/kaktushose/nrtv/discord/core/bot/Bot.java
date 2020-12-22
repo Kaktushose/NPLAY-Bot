@@ -8,6 +8,7 @@ import de.kaktushose.nrtv.discord.core.database.Database;
 import de.kaktushose.nrtv.discord.core.database.data.BotUser;
 import de.kaktushose.nrtv.discord.frameworks.command.PermissionLevel;
 import de.kaktushose.nrtv.discord.frameworks.event.EventScheduler;
+import de.kaktushose.nrtv.discord.frameworks.event.PremiumReward;
 import de.kaktushose.nrtv.discord.frameworks.event.RoleReward;
 import de.kaktushose.nrtv.discord.frameworks.level.ItemCheck;
 import de.kaktushose.nrtv.discord.frameworks.level.shop.Item;
@@ -56,7 +57,8 @@ public abstract class Bot {
         logger = Logging.getLogger();
         itemCheck = new ItemCheck(this);
         eventScheduler = new EventScheduler(this);
-        eventScheduler.addEventReward(new RoleReward(10, ""));
+        eventScheduler.addEventReward(new PremiumReward(25, "Christmas Booster"));
+        eventScheduler.addEventReward(new RoleReward(5, "XMAS 2020 :santa:"));
     }
 
     public void postStart() {
@@ -312,6 +314,7 @@ public abstract class Bot {
         } else {
             botUser.setBuyTime(System.currentTimeMillis(), itemType);
             botUser.getItemStack().put(itemType, item);
+            if (itemType == ItemType.PREMIUM) addRole(guild.getMemberById(botUser.getId()), Roles.PREMIUM);
         }
     }
 

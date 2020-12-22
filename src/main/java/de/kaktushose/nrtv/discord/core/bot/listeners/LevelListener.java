@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 public class LevelListener extends ListenerAdapter {
 
@@ -22,11 +23,6 @@ public class LevelListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-
-        if (event.getChannel().getIdLong() == 743447345592795226L) {
-            event.getMessage().addReaction("⭐").queue();
-        }
-
         Date date = new Date();
 
         if (bot.getDatabase().getMutedChannelIds().contains(event.getChannel().getIdLong())) {
@@ -44,7 +40,7 @@ public class LevelListener extends ListenerAdapter {
         if (!bot.hasPermission(event.getMember(), PermissionLevel.MEMBER)) {
             return;
         }
-        if (date.getTime() - botUser.getLastXp() < 1200000L) {
+        if (date.getTime() - botUser.getLastXp() < 300000L) {
             return;
         }
 
@@ -52,7 +48,31 @@ public class LevelListener extends ListenerAdapter {
         message = message.toLowerCase().replaceAll(":(.|\\n)+?:|\\p{C}|@(.*?)\\s|(?:\\s|^)#[A-Za-z0-9\\-._]+(?:\\s|$)|\\s+", "");
         if (message.length() >= 10) {
             botUser.setLastXp(System.currentTimeMillis());
+            Map<Long, Long> christmas = bot.getDatabase().getChristmasBoosterStartTimes();
+            if (christmas.containsKey(event.getMember().getIdLong())) {
+                if ((System.currentTimeMillis() - christmas.get(event.getMember().getIdLong()) < 604800000L) ) {
+                    if (botUser.hasItem(ItemType.BOOSTER)) {
+                        botUser.setCoins(botUser.getCoins() + bot.getNewCoins() * 2 + 2);
+                    } else {
+                        botUser.setCoins(botUser.getCoins() + bot.getNewCoins() * 2);
+                    }
+                    if (botUser.hasItem(ItemType.XPBOOSTER)) {
+                        botUser.setXp(botUser.getXp() + bot.getNewXp() * 2 + 2);
+                    } else {
+                        botUser.setXp(botUser.getXp() + bot.getNewXp() * 2);
+                    }
 
+                    botUser.setDiamonds(botUser.getDiamonds() + bot.getNewDiamonds() * 2);
+
+                    botUser.setMessages(botUser.getMessages() + 1);
+                    if (bot.eventIsPresent()) {
+                        bot.getEventScheduler().onEventPointAdd(botUser, event.getAuthor());
+                    }
+                    bot.checkForPromotion(botUser, event);
+
+                    return;
+                }
+            }
             if (botUser.hasItem(ItemType.BOOSTER)) {
                 botUser.setCoins(botUser.getCoins() + bot.getNewCoins() + 2);
             } else {

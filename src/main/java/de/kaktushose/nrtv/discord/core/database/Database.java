@@ -470,6 +470,45 @@ public class Database {
         return item;
     }
 
+    public void setChristmasBoosterActivationTime(long userId) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("insert into christmas_booster values(?, ?)");
+            statement.setLong(1, userId);
+            statement.setLong(2, System.currentTimeMillis());
+            statement.execute();
+        } catch (SQLException e) {
+        }
+    }
+
+    public Long getChristmasBoosterStartTime(long userId) {
+        long startTime = 0;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("select * from christmas_booster where user_id = ?");
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getLong("start_time");
+            }
+        } catch (SQLException e) {
+            logger.error("An error occurred during a sql operation", e);
+        }
+        return startTime;
+    }
+
+    public Map<Long, Long> getChristmasBoosterStartTimes() {
+        Map<Long, Long> map = new HashMap<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("select * from christmas_booster");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+               map.put(resultSet.getLong("user_id"), resultSet.getLong("start_time"));
+            }
+        } catch (SQLException e) {
+            logger.error("An error occurred during a sql operation", e);
+        }
+        return map;
+    }
+
     public BotConfig getBotConfig(BotConfigType configType) {
         BotConfig botConfig = new BotConfig("", "", "", -1, -1, -1, false);
         try (Connection connection = dataSource.getConnection()) {
