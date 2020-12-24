@@ -39,6 +39,7 @@ public class TestBot extends de.kaktushose.nrtv.discord.core.bot.Bot {
                 .addCommand(new ModHelpCommand(this), "modhelp", "modhilfe")
                 .addCommand(new ChangeCommand(this), "tauschen")
                 .addCommand(new DailyCommand(this), "täglich")
+                .addCommand(new GiftCommand(this), "geschenk")
                 .addCommand(new LeaderboardCommand(this), "rangliste", "leaderboard", "lb");
 
     }

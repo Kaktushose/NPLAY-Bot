@@ -480,6 +480,30 @@ public class Database {
         }
     }
 
+    public List<Long> getGiftedUserIds() {
+        List<Long> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("select * from gifted_users");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(resultSet.getLong("id"));
+            }
+        } catch (SQLException e) {
+            logger.error("An error occurred during a sql operation", e);
+        }
+        return users;
+    }
+
+    public void addGiftedUserId(long id) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("insert into gifted_users values(?)");
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            logger.error("An error occurred during a sql operation", e);
+        }
+    }
+
     public Long getChristmasBoosterStartTime(long userId) {
         long startTime = 0;
         try (Connection connection = dataSource.getConnection()) {
