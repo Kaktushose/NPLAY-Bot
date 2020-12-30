@@ -40,7 +40,7 @@ public class LevelListener extends ListenerAdapter {
         if (!bot.hasPermission(event.getMember(), PermissionLevel.MEMBER)) {
             return;
         }
-        if (date.getTime() - botUser.getLastXp() < 300000L) {
+        if (date.getTime() - botUser.getLastXp() < 1200000L) {
             return;
         }
 
