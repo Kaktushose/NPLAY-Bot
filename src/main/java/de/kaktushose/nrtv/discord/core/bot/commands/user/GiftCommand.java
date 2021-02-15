@@ -19,7 +19,6 @@ public class GiftCommand extends Command {
         this.bot = bot;
     }
 
-
     @Override
     protected void onCommand(Member executor, Arguments args, TextChannel channel, Message message) {
         BotUser botUser = bot.getDatabase().getBotUser(executor.getIdLong());
