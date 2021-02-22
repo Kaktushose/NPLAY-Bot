@@ -18,6 +18,11 @@
     "description": "Die {currency} von {user} wurden um {value} {operation}.",
     "color": "#86c240"
   },
+  "currencySet": {
+    "title": "Erfolg!",
+    "description": "Die {currency} von {user} wurden auf {value} gesetzt.",
+    "color": "#86c240"
+  },
   "memberNotFound": {
     "title": "Fehler!",
     "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588>.",

@@ -2,12 +2,12 @@
   "defaultHelp": {
     "title": "Generelle Hilfe",
     "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um sepzifische Hilfe zu erhalten",
-    "color": "#00ff00"
+    "color": "#86c240"
   },
   "specificHelp": {
     "title": "Spezifische Hilfe",
     "description": "Command Details für `{prefix}{label}`",
-    "color": "#00ff00",
+    "color": "#86c240",
     "fields": [
       {
         "name": "Name",
@@ -38,7 +38,7 @@
   "commandNotFound": {
     "title": "Command Nicht Gefunden",
     "description": "```Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten```",
-    "color": "#ffc800"
+    "color": "#f4cd53"
   },
   "insufficientPermissions": {
     "title": "Unzureichende Berechtigungen",
