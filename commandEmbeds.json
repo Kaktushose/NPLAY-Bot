@@ -1,0 +1,15 @@
+{
+  "pingEmbed": {
+    "title": ":satellite_orbital: Ping zur Discord-API",
+    "fields": [
+      {
+        "name": "Gateway",
+        "value": "{gatewayPing}"
+      },
+      {
+        "name": "Rest",
+        "value": "{restPing}"
+      }
+    ]
+  }
+}

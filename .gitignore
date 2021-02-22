@@ -1,5 +1,4 @@
 .idea
 target/
-backupper.sh
-config.yaml
+src/main/resources/application.properties
 *.iml

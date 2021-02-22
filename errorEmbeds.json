@@ -1,0 +1,69 @@
+{
+  "defaultHelp": {
+    "title": "Generelle Hilfe",
+    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um sepzifische Hilfe zu erhalten",
+    "color": "#00ff00"
+  },
+  "specificHelp": {
+    "title": "Spezifische Hilfe",
+    "description": "Command Details für `{prefix}{label}`",
+    "color": "#00ff00",
+    "fields": [
+      {
+        "name": "Name",
+        "value": "`{name}`"
+      },
+      {
+        "name": "Benutzung",
+        "value": "`{usage}`"
+      },
+      {
+        "name": "Aliases",
+        "value": "`{aliases}`"
+      },
+      {
+        "name": "Beschreibung",
+        "value": "`{description}`"
+      },
+      {
+        "name": "Berechtigung",
+        "value": "`{permissions}`"
+      },
+      {
+        "name": "Kategorie",
+        "value": "`{category}`"
+      }
+    ]
+  },
+  "commandNotFound": {
+    "title": "Command Nicht Gefunden",
+    "description": "```Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten```",
+    "color": "#ffc800"
+  },
+  "insufficientPermissions": {
+    "title": "Unzureichende Berechtigungen",
+    "description": "`{prefix}{label}` benötigt spezielle Berechtigungen um ausgeführt zu werden",
+    "color": "#ff0000",
+    "fields": [
+      {
+        "name": "Berechtigungen:",
+        "value": "`{permissions}`"
+      }
+    ]
+  },
+  "syntaxError": {
+    "title": "Syntax Fehler",
+    "description": "`{usage}`",
+    "color": "#ffc800",
+    "fields": [
+      {
+        "name": "Erwartete Argumente",
+        "value": "`{expected}`"
+      },
+      {
+        "name": "Erhaltene Parameter",
+        "value": "`{actual}`"
+      }
+    ]
+  }
+}
