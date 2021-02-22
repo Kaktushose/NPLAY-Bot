@@ -21,7 +21,6 @@ public class PingCommand {
             category = "Sonstiges"
     )
     public void onPing(CommandEvent event) {
-        System.out.println("called");
         long gatewayPing = event.getJDA().getGatewayPing();
         long restPing = event.getJDA().getRestPing().complete();
         event.reply(embedCache
@@ -31,5 +30,4 @@ public class PingCommand {
                 .toEmbedBuilder()
         );
     }
-
 }

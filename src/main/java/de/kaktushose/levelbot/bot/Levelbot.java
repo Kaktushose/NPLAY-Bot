@@ -47,8 +47,6 @@ public class Levelbot implements Provider {
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
-        long startTime = System.currentTimeMillis();
-        log.info("Starting bot...");
         log.info("Bot is running at version {}", config.getVersion());
 
         embedCache.loadEmbedsToCache();
@@ -77,7 +75,6 @@ public class Levelbot implements Provider {
 
         log.debug("Registering event listeners...");
         jda.addEventListener(new JoinLeaveListener(database));
-
         log.debug("Starting jda-commands");
         jdaCommands = new JDACommandsBuilder(jda)
                 .setEmbedFactory(new JsonEmbedFactory(new File("errorEmbeds.json")))
@@ -92,24 +89,29 @@ public class Levelbot implements Provider {
         database.getUsers().findByPermissionLevel(2).forEach(botUser ->
                 jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId())
         );
-        database.getUsers().findByPermissionLevel(3).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId())
+        database.getUsers().findByPermissionLevel(3).forEach(botUser -> {
+                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
+                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
+                }
         );
-        database.getUsers().findByPermissionLevel(4).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId())
+        database.getUsers().findByPermissionLevel(4).forEach(botUser -> {
+                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
+                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
+                    jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId());
+                }
         );
 
         guild = jda.getGuildById(496614159254028289L);
 
-        startTime = System.currentTimeMillis() - startTime;
-        log.info("Successfully started bot! Took {} seconds", startTime);
-
+        jda.getPresence().setStatus(OnlineStatus.ONLINE);
+        jda.getPresence().setActivity(Activity.playing("So bitteschön Toni"));
 
         return this;
     }
 
     public Levelbot stop() {
         jda.shutdown();
+        jdaCommands.shutdown();
         return this;
     }
 
