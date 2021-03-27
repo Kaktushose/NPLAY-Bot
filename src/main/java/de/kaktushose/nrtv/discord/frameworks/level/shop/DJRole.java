@@ -45,18 +45,16 @@ public class DJRole extends Item {
         BotUser botUser = bot.getDatabase().getBotUser(member.getIdLong());
         if (System.currentTimeMillis() - botUser.getBoosterBuyTime() >= duration) {
             botUser.getItemStack().remove(ItemType.DJ);
-            member.getUser().openPrivateChannel().queue(privateChannel -> {
-                privateChannel.sendMessage(new EmbedBuilder()
-                        .setColor(Color.ORANGE)
-                        .setTitle("Item abgelaufen!")
-                        .setDescription("Dein " + name + " ist abgelaufen!")
-                        .addField("Gekauft am:", new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(botUser.getDjBuyTime())), false)
-                        .build()).queue(msg -> {
-                    bot.removeRole(member, Bot.Roles.DJ);
-                    botUser.setDjBuyTime(0);
-                    bot.getDatabase().setBotUser(botUser);
-                }, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
-            });
+            bot.removeRole(member, Bot.Roles.DJ);
+            botUser.setDjBuyTime(0);
+            bot.getDatabase().setBotUser(botUser);
+
+            member.getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(new EmbedBuilder()
+                    .setColor(Color.ORANGE)
+                    .setTitle("Item abgelaufen!")
+                    .setDescription("Dein " + name + " ist abgelaufen!")
+                    .addField("Gekauft am:", new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(botUser.getDjBuyTime())), false)
+                    .build()).queue(msg -> {}, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER)));
 
         }
     }
