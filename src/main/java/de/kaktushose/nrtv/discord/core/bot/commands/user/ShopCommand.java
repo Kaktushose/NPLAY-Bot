@@ -36,7 +36,7 @@ public class ShopCommand extends Command {
     private void loadEmbeds() {
         defaultShop = new EmbedBuilder()
                 .setTitle(":shopping_cart: Shop")
-                .setDescription("**Sichere dir während der Weihnachtstage 40% auf PREMIUM und 30% auf alle Booster! :small_red_triangle_down: **\nEine genaue Übersicht über alle Items findest du im <#648968903673905162>")
+                .setDescription("Eine genaue Übersicht über alle Items findest du in <#742880857391366256>")
                 .setColor(Color.ORANGE)
                 .addField(EmoteType.PREMIUM.name + " PREMIUM", "Erhalte mit dieser besonderen Rolle satte 12 exklusive Vorteile auf unserem Server!", false)
                 .addField(EmoteType.DJ.name + " Rythm DJ Perk", "Mit der DJ Rolle für den \"Rythm\" bist Du der Star!", false)
