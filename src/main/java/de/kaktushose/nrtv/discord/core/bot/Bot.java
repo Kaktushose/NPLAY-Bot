@@ -30,11 +30,11 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public abstract class Bot {
 
@@ -76,15 +76,20 @@ public abstract class Bot {
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setActivity(Activity.playing("starting...")).build().awaitReady();
-         guild = jda.getGuildById(botConfig.getGuildId());
-
+        guild = jda.getGuildById(botConfig.getGuildId());
         logger.info("Bot is running at version: " + version);
-        new Thread(() -> {
-            database.updateUserSet(guild, this);
-            itemCheck.check(guild);
-        }, "Update-Thread").start();
-        new Thread(this::sendDMs, "DM-Thread").start();
+        updateUserSet();
         postStart();
+    }
+
+    public void updateUserSet() {
+        logger.debug("Updating database...");
+        database.updateUserSet(guild, this);
+    }
+
+    public void removeItems() {
+        logger.debug("Indexing expiring items...");
+        itemCheck.check(guild);
     }
 
     public void shutdown() {

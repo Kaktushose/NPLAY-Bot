@@ -56,6 +56,9 @@ public abstract class Item {
         return (TimeUnit.MILLISECONDS.toHours(getRemainingTimeAsLong(buyTime)) < 24);
     }
 
+    public boolean isExpired(long buyTime) {
+        return getRemainingTimeAsLong(buyTime) < 0;
+    }
 
     public void setPrice(int price) {
         this.price = price;

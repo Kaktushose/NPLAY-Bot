@@ -9,7 +9,9 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,11 +38,16 @@ public class Bootstrapper {
         }
         logger.info("Successfully started bot - took " + (System.currentTimeMillis() - startTime) + "ms");
 
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
+
+        executorService.scheduleAtFixedRate(() -> {
+            bot.sendDMs();
+            bot.removeItems();
+        },0, 24, TimeUnit.HOURS);
 
         AtomicInteger counter = new AtomicInteger(0);
         bot.getJda().getPresence().setStatus(OnlineStatus.ONLINE);
-
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+        executorService.scheduleAtFixedRate(() -> {
             switch (counter.get()) {
                 case 0:
                     counter.set(counter.get() + 1);

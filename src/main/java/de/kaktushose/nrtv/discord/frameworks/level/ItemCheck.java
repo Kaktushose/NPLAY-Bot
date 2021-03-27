@@ -6,15 +6,14 @@ import de.kaktushose.nrtv.discord.frameworks.level.shop.Item;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ItemCheck {
 
-    private Bot bot;
-    private ScheduledExecutorService executorService;
+    private final Bot bot;
+    private final ScheduledExecutorService executorService;
 
     public ItemCheck(Bot bot) {
         this.bot = bot;
@@ -26,6 +25,10 @@ public class ItemCheck {
             BotUser botUser = bot.getDatabase().getBotUser(member.getIdLong());
             botUser.getItemStack().forEach((itemType, item) -> {
                 long buyTime = botUser.getBuyTime(itemType);
+                if (item.getRemainingTimeAsLong(buyTime) < 0) {
+                    item.onItemExpiration(bot, member);
+                    return;
+                }
                 if (item.isExpiring(buyTime)) {
                     schedule(member, item, item.getRemainingTimeAsLong(buyTime));
                 }
