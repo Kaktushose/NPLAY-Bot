@@ -27,5 +27,10 @@
     "title": "Fehler!",
     "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588>.",
     "color": "#aa0c14"
+  },
+  "confirmAction": {
+    "title": "Achtung!",
+    "description": "Bist du sicher, dass {action}",
+    "color": "#f4cd53"
   }
 }

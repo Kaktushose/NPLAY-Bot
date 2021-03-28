@@ -3,9 +3,9 @@ package de.kaktushose.levelbot.bot;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
-import com.github.kaktushose.jda.commands.api.Provider;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
+import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Config;
@@ -27,10 +27,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.sql.Time;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Levelbot implements Provider {
+public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
     private final Database database;
@@ -75,10 +77,17 @@ public class Levelbot implements Provider {
 
         log.debug("Registering event listeners...");
         jda.addEventListener(new JoinLeaveListener(database));
-        log.debug("Starting jda-commands");
+
+        log.debug("Starting ReactionListener...");
+        ReactionListener.setAutoRemove(true);
+        ReactionListener.setAutoRemoveDelay(30, TimeUnit.SECONDS);
+        ReactionListener.startListening(jda);
+
+        log.debug("Starting jda-commands...");
         jdaCommands = new JDACommandsBuilder(jda)
-                .setEmbedFactory(new JsonEmbedFactory(new File("errorEmbeds.json")))
+                .setEmbedFactory(new JsonEmbedFactory(new File("jdacEmbeds.json")))
                 .addProvider(this)
+                .setCommandPackage("de.kaktushose.levelbot.commands")
                 .build();
         jdaCommands.getDefaultSettings().setPrefix(config.getBotPrefix()).getHelpLabels().add("hilfe");
 
@@ -104,7 +113,7 @@ public class Levelbot implements Provider {
         guild = jda.getGuildById(496614159254028289L);
 
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
-        jda.getPresence().setActivity(Activity.playing("So bitteschön Toni"));
+        jda.getPresence().setActivity(Activity.playing("development"));
 
         return this;
     }
@@ -153,6 +162,11 @@ public class Levelbot implements Provider {
     @Produces
     public EmbedCache getEmbedCache() {
         return embedCache;
+    }
+
+    @Produces
+    public Levelbot getLevelbot() {
+        return this;
     }
 
     public JDACommands getJdaCommands() {

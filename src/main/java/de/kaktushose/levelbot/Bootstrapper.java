@@ -14,7 +14,6 @@ public class Bootstrapper {
     private final static Logger log = LoggerFactory.getLogger(Bootstrapper.class);
 
     public static void main(String[] args) throws LoginException, InterruptedException {
-        System.out.println(int.class.getName());
         long startTime = System.currentTimeMillis();
         log.info("Starting bot...");
         SpringApplication.run(Bootstrapper.class, args);
