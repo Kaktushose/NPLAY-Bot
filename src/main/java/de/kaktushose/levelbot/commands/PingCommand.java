@@ -5,7 +5,6 @@ import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
 
 @CommandController
 public class PingCommand {

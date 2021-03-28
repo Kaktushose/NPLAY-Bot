@@ -3,6 +3,7 @@ package de.kaktushose.levelbot.commands.moderation;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.levelbot.database.Database;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.entities.Member;
 import java.util.Optional;
 
 @CommandController("set")
+@Permission("moderator")
 public class SetCurrencyCommand {
 
     @Inject

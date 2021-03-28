@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.database.model;
 
 import javax.persistence.*;
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 
 @Entity

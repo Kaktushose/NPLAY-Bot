@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.database;
 
-import de.kaktushose.levelbot.database.model.CurrencyChance;
 import de.kaktushose.levelbot.database.model.Config;
+import de.kaktushose.levelbot.database.model.CurrencyChance;
 import de.kaktushose.levelbot.database.repositories.*;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
