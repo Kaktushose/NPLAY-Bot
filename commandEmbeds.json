@@ -67,5 +67,10 @@
     "title": "Fehler!",
     "description": "Es sind nur Werte von {min} bis einschließlich {max} erlaubt.",
     "color": "#aa0c14"
+  },
+  "bulkDeleteSuccess": {
+    "title": "Erfolg!",
+    "description": "{amount} Nachrichten wurden gelöscht.",
+    "color": "#86c240"
   }
 }

@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.commands;
+package de.kaktushose.levelbot.commands.member;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
