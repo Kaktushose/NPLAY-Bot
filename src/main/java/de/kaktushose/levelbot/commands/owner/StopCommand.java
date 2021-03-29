@@ -30,7 +30,6 @@ public class StopCommand {
                 .injectValue("action", "du den Bot herunterfahren möchtest?\n"
                         + "Nur <@393843637437464588> kann den Bot wieder starten!")
                 .toEmbedBuilder(), confirmMessage -> {
-
             confirmMessage.addReaction(EmoteType.THUMBSUP.unicode)
                     .and(confirmMessage.addReaction(EmoteType.THUMBSDOWN.unicode))
                     .queue();
@@ -53,4 +52,5 @@ public class StopCommand {
             });
         });
     }
+
 }

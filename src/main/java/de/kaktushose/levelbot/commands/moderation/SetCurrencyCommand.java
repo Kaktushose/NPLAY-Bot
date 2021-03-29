@@ -30,21 +30,21 @@ public class SetCurrencyCommand {
     )
     public void onSetCoins(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setCoins(amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencySet")
-                    .injectValue("currency", "Münzen")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser botUser = optional.get();
+        botUser.setCoins(amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencySet")
+                .injectValue("currency", "Münzen")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -56,21 +56,21 @@ public class SetCurrencyCommand {
     )
     public void onSetXp(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setXp(amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencySet")
-                    .injectValue("currency", "XP")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser botUser = optional.get();
+        botUser.setXp(amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencySet")
+                .injectValue("currency", "XP")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -82,21 +82,20 @@ public class SetCurrencyCommand {
     )
     public void onSetDiamonds(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setDiamonds(amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencySet")
-                    .injectValue("currency", "Diamanten")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
-    }
 
+        BotUser botUser = optional.get();
+        botUser.setDiamonds(amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencySet")
+                .injectValue("currency", "Diamanten")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .toEmbedBuilder()
+        );
+    }
 }

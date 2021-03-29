@@ -33,17 +33,17 @@
     "description": "Bist du sicher, dass {action}",
     "color": "#f4cd53"
   },
-  "memberBlacklistAdd":{
+  "memberBlacklistAdd": {
     "title": "Erfolg!",
     "description": "{user} wurde zur Blacklist hinzugefügt und kann nicht mehr mit dem Bot interagieren.",
     "color": "#86c240"
   },
-  "memberBlacklistShow":{
+  "memberBlacklistShow": {
     "title": "Folgende Nutzer stehen auf der Blacklist:",
     "description": "{blacklist}",
     "color": "#86c240"
   },
-  "memberBlacklistRemove":{
+  "memberBlacklistRemove": {
     "title": "Erfolg!",
     "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.",
     "color": "#86c240"
@@ -71,6 +71,19 @@
   "bulkDeleteSuccess": {
     "title": "Erfolg!",
     "description": "{amount} Nachrichten wurden gelöscht.",
+    "color": "#86c240"
+  },
+  "removeItem": {
+    "title": "Item entfernen",
+    "description": "{user} besitzt folgende Items:",
+    "color": "#f4cd53",
+    "footer": {
+      "text": "Reagiere mit dem entsprechenden Emote, um ein Item zu entfernen"
+    }
+  },
+  "removeItemSuccess": {
+    "title": "Erfolg!",
+    "description": "{user} wurde das Item entfernt",
     "color": "#86c240"
   }
 }

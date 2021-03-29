@@ -29,6 +29,12 @@ public class SetPermsCommand {
             category = "Moderation"
     )
     public void onSetPerms(CommandEvent event, Member member, int level) {
+        Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
+        if (optional.isEmpty()) {
+            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
+        }
+
         if (level < 1 || level > 4) {
             event.reply(embedCache.getEmbed("invalidValue")
                     .injectValue("min", 1)
@@ -38,42 +44,37 @@ public class SetPermsCommand {
             return;
         }
 
-        Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-        if (optional.isPresent()) {
-            BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
-            BotUser target = optional.get();
+        BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
+        BotUser target = optional.get();
 
-            // can only update users with lower perms
-            if (executor.getPermissionLevel() < level || executor.getPermissionLevel() < target.getPermissionLevel()) {
-                event.reply(embedCache.getEmbed("permissionSetInvalidTarget")
-                        .injectValue("user", member.getAsMention())
-                        .toEmbedBuilder()
-                );
-                return;
-            }
-
-            // update in db
-            target.setPermissionLevel(level);
-            database.getUsers().save(target);
-            // update in jda-commands
-            CommandSettings commandSettings = event.getJdaCommands().getDefaultSettings();
-            switch (level) {
-                case 4:
-                    commandSettings.getPermissionHolders("owner").add(target.getUserId());
-                case 3:
-                    commandSettings.getPermissionHolders("admin").add(target.getUserId());
-                case 2:
-                    commandSettings.getPermissionHolders("moderator").add(target.getUserId());
-            }
-
-            // reply
-            event.reply(embedCache.getEmbed("permissionSet")
+        // can only update users with lower perms
+        if (executor.getPermissionLevel() < level || executor.getPermissionLevel() < target.getPermissionLevel()) {
+            event.reply(embedCache.getEmbed("permissionSetInvalidTarget")
                     .injectValue("user", member.getAsMention())
-                    .injectValue("value", level)
                     .toEmbedBuilder()
             );
-        } else {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        // update in db
+        target.setPermissionLevel(level);
+        database.getUsers().save(target);
+        // update in jda-commands
+        CommandSettings commandSettings = event.getJdaCommands().getDefaultSettings();
+        switch (level) {
+            case 4:
+                commandSettings.getPermissionHolders("owner").add(target.getUserId());
+            case 3:
+                commandSettings.getPermissionHolders("admin").add(target.getUserId());
+            case 2:
+                commandSettings.getPermissionHolders("moderator").add(target.getUserId());
+        }
+
+        // reply
+        event.reply(embedCache.getEmbed("permissionSet")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", level)
+                .toEmbedBuilder()
+        );
     }
 }

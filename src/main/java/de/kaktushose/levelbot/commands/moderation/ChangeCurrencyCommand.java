@@ -30,22 +30,22 @@ public class ChangeCurrencyCommand {
     )
     public void onChangeCoins(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setCoins(botUser.getCoins() + amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencyChange")
-                    .injectValue("currency", "Münzen")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser botUser = optional.get();
+        botUser.setCoins(botUser.getCoins() + amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencyChange")
+                .injectValue("currency", "Münzen")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -57,22 +57,22 @@ public class ChangeCurrencyCommand {
     )
     public void onChangeXp(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setXp(botUser.getXp() + amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencyChange")
-                    .injectValue("currency", "XP")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser botUser = optional.get();
+        botUser.setXp(botUser.getXp() + amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencyChange")
+                .injectValue("currency", "XP")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -84,21 +84,21 @@ public class ChangeCurrencyCommand {
     )
     public void onChangeDiamonds(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser botUser = optional.get();
-            botUser.setDiamonds(botUser.getDiamonds() + amount);
-            database.getUsers().save(botUser);
-
-            event.reply(embedCache.getEmbed("currencyChange")
-                    .injectValue("currency", "Diamanten")
-                    .injectValue("user", member.getAsMention())
-                    .injectValue("value", amount)
-                    .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser botUser = optional.get();
+        botUser.setDiamonds(botUser.getDiamonds() + amount);
+        database.getUsers().save(botUser);
+
+        event.reply(embedCache.getEmbed("currencyChange")
+                .injectValue("currency", "Diamanten")
+                .injectValue("user", member.getAsMention())
+                .injectValue("value", amount)
+                .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
+                .toEmbedBuilder()
+        );
     }
 }

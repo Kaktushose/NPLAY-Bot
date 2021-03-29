@@ -21,7 +21,7 @@ public class BotUser {
     @Column(name = "daily")
     private boolean dailyUpdate;
     private int permissionLevel;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private List<Transaction> transactions;
 

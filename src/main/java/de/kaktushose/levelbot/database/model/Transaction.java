@@ -9,7 +9,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long transactionId;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "itemId", referencedColumnName = "itemId")
     private Item item;
     private long buyTime;
@@ -17,7 +17,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(long transactionId, Item item, long buyTime) {
+    public Transaction(Long transactionId, Item item, long buyTime) {
         this.transactionId = transactionId;
         this.item = item;
         this.buyTime = buyTime;

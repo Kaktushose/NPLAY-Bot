@@ -31,32 +31,32 @@ public class BlacklistCommand {
     )
     public void onBlacklistAdd(CommandEvent event, Member member) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
-            BotUser target = optional.get();
-            // can only blacklist users with lower permissions
-            if (executor.getPermissionLevel() < target.getPermissionLevel()) {
-                event.reply(
-                        embedCache.getEmbed("memberBlacklistInvalidTarget")
-                                .injectValue("user", member.getAsMention())
-                                .toEmbedBuilder()
-                );
-                return;
-            }
-            // update in db
-            target.setPermissionLevel(0);
-            database.getUsers().save(target);
-            // update in jda-commands
-            event.getJdaCommands().getDefaultSettings().getMutedUsers().add(member.getIdLong());
-            // reply
-            event.reply(embedCache.getEmbed("memberBlacklistAdd")
-                    .injectValue("user", member.getAsMention())
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
+        BotUser target = optional.get();
+        // can only blacklist users with lower permissions
+        if (executor.getPermissionLevel() < target.getPermissionLevel()) {
+            event.reply(
+                    embedCache.getEmbed("memberBlacklistInvalidTarget")
+                            .injectValue("user", member.getAsMention())
+                            .toEmbedBuilder()
+            );
+            return;
+        }
+        // update in db
+        target.setPermissionLevel(0);
+        database.getUsers().save(target);
+        // update in jda-commands
+        event.getJdaCommands().getDefaultSettings().getMutedUsers().add(member.getIdLong());
+        // reply
+        event.reply(embedCache.getEmbed("memberBlacklistAdd")
+                .injectValue("user", member.getAsMention())
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -68,23 +68,22 @@ public class BlacklistCommand {
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-
-        if (optional.isPresent()) {
-            BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
-            BotUser target = optional.get();
-            // update in db
-            target.setPermissionLevel(1);
-            database.getUsers().save(target);
-            // update in jda-commands
-            event.getJdaCommands().getDefaultSettings().getMutedUsers().remove(member.getIdLong());
-            // reply
-            event.reply(embedCache.getEmbed("memberBlacklistRemove")
-                    .injectValue("user", member.getAsMention())
-                    .toEmbedBuilder()
-            );
-        } else {
+        if (optional.isEmpty()) {
             event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            return;
         }
+
+        BotUser target = optional.get();
+        // update in db
+        target.setPermissionLevel(1);
+        database.getUsers().save(target);
+        // update in jda-commands
+        event.getJdaCommands().getDefaultSettings().getMutedUsers().remove(member.getIdLong());
+        // reply
+        event.reply(embedCache.getEmbed("memberBlacklistRemove")
+                .injectValue("user", member.getAsMention())
+                .toEmbedBuilder()
+        );
     }
 
     @Command(
@@ -98,9 +97,8 @@ public class BlacklistCommand {
         List<BotUser> blacklist = database.getUsers().findByPermissionLevel(0);
         StringBuilder members = new StringBuilder();
         blacklist.forEach(botUser -> members.append(event.getGuild().getMemberById(botUser.getUserId()).getEffectiveName()).append(", "));
-        event.reply(
-                embedCache.getEmbed("memberBlacklistShow")
-                        .injectValue("blacklist", members.substring(0, members.length() - 2))
+        event.reply(embedCache.getEmbed("memberBlacklistShow")
+                .injectValue("blacklist", members.substring(0, members.length() - 2))
                 .toEmbedBuilder()
         );
     }

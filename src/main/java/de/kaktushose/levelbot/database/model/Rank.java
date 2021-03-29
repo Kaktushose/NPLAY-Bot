@@ -14,7 +14,7 @@ public class Rank {
     private int bound;
     private Color color;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "rankId", referencedColumnName = "rankId")
     private List<RankReward> rankRewards;
 
