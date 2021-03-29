@@ -48,9 +48,24 @@
     "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.",
     "color": "#86c240"
   },
-  "memberBlacklistInvalidTarget":{
+  "memberBlacklistInvalidTarget": {
     "title": "Unzureichende Berechtigungen!",
-    "description": "Du darfst {user} nicht zur Blacklist hinzufügen",
+    "description": "Dein Berechtigungslevel reicht nicht aus, um {user} zur Blacklist hinzuzufügen.",
+    "color": "#aa0c14"
+  },
+  "permissionSet": {
+    "title": "Erfolg!",
+    "description": "Das Berechtigungslevel von {user} wurde auf {value} gesetzt.",
+    "color": "#86c240"
+  },
+  "permissionSetInvalidTarget": {
+    "title": "Unzureichende Berechtigungen!",
+    "description": "Dein Berechtigungslevel reicht nicht aus, um das Berechtigungslevel von {user} zu bearbeiten.",
+    "color": "#aa0c14"
+  },
+  "invalidValue": {
+    "title": "Fehler!",
+    "description": "Es sind nur Werte von {min} bis einschließlich {max} erlaubt.",
     "color": "#aa0c14"
   }
 }
