@@ -85,5 +85,10 @@
     "title": "Erfolg!",
     "description": "{user} wurde das Item entfernt",
     "color": "#86c240"
+  },
+  "evalCommand": {
+    "title": "Eval Result",
+    "description": "```{result}```",
+    "color": "{color}"
   }
 }
