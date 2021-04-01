@@ -87,9 +87,9 @@ public class InfoCommand extends Command {
             builder.addField("", "__Osterevent__:", false);
             builder.addField(eventPoint.getName() + ":", eventPoint.getEmote() + " " + botUser.getEventPoints(), false);
             if (botUser.getEventPoints() >= 25) {
-                builder.addField("Belohnungen:", "Eventrolle Ostern 2021 :egg:\nSpecial Item \"PREMIUM basic\" :star:", false);
+                builder.addField("Belohnungen:", "PREMIUM basic :star:\nEventrolle Ostern 2021 :egg:", false);
             } else if (botUser.getEventPoints() >= 3) {
-                builder.addField("Belohnungen:", "PREMIUM basic :star:", false);
+                builder.addField("Belohnungen:", "Eventrolle Ostern 2021 :egg:", false);
             } else {
                 builder.addField("Belohnungen:", ":x: noch keine", false);
             }
