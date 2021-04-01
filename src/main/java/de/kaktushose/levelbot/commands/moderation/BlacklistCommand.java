@@ -32,7 +32,7 @@ public class BlacklistCommand {
     public void onBlacklistAdd(CommandEvent event, Member member) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -40,11 +40,7 @@ public class BlacklistCommand {
         BotUser target = optional.get();
         // can only blacklist users with lower permissions
         if (executor.getPermissionLevel() < target.getPermissionLevel()) {
-            event.reply(
-                    embedCache.getEmbed("memberBlacklistInvalidTarget")
-                            .injectValue("user", member.getAsMention())
-                            .toEmbedBuilder()
-            );
+            event.reply(embedCache.getEmbed("memberBlacklistInvalidTarget").injectValue("user", member.getAsMention()));
             return;
         }
         // update in db
@@ -53,10 +49,7 @@ public class BlacklistCommand {
         // update in jda-commands
         event.getJdaCommands().getDefaultSettings().getMutedUsers().add(member.getIdLong());
         // reply
-        event.reply(embedCache.getEmbed("memberBlacklistAdd")
-                .injectValue("user", member.getAsMention())
-                .toEmbedBuilder()
-        );
+        event.reply(embedCache.getEmbed("memberBlacklistAdd").injectValue("user", member.getAsMention()));
     }
 
     @Command(
@@ -69,7 +62,7 @@ public class BlacklistCommand {
     public void onBlacklistRemove(CommandEvent event, Member member) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -82,7 +75,6 @@ public class BlacklistCommand {
         // reply
         event.reply(embedCache.getEmbed("memberBlacklistRemove")
                 .injectValue("user", member.getAsMention())
-                .toEmbedBuilder()
         );
     }
 
@@ -99,7 +91,6 @@ public class BlacklistCommand {
         blacklist.forEach(botUser -> members.append(event.getGuild().getMemberById(botUser.getUserId()).getEffectiveName()).append(", "));
         event.reply(embedCache.getEmbed("memberBlacklistShow")
                 .injectValue("blacklist", members.substring(0, members.length() - 2))
-                .toEmbedBuilder()
         );
     }
 }

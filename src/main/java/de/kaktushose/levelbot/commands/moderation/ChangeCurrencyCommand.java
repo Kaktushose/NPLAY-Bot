@@ -31,7 +31,7 @@ public class ChangeCurrencyCommand {
     public void onChangeCoins(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -44,7 +44,6 @@ public class ChangeCurrencyCommand {
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
                 .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                .toEmbedBuilder()
         );
     }
 
@@ -58,7 +57,7 @@ public class ChangeCurrencyCommand {
     public void onChangeXp(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -71,7 +70,6 @@ public class ChangeCurrencyCommand {
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
                 .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                .toEmbedBuilder()
         );
     }
 
@@ -85,7 +83,7 @@ public class ChangeCurrencyCommand {
     public void onChangeDiamonds(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -98,7 +96,6 @@ public class ChangeCurrencyCommand {
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
                 .injectValue("operation", amount > 0 ? "erhöht" : "verringert")
-                .toEmbedBuilder()
         );
     }
 }

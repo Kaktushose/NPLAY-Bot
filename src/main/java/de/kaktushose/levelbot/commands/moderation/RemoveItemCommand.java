@@ -39,7 +39,7 @@ public class RemoveItemCommand {
     public void onRemoveItem(CommandEvent event, Member member) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -87,10 +87,7 @@ public class RemoveItemCommand {
                 database.getUsers().save(target);
                 reactionWaiter.stopWaiting(true);
                 chooseMessage.delete().queue();
-                event.reply(embedCache.getEmbed("removeItemSuccess")
-                        .injectValue("user", member.getAsMention())
-                        .toEmbedBuilder()
-                );
+                event.reply(embedCache.getEmbed("removeItemSuccess").injectValue("user", member.getAsMention()));
             });
         });
 

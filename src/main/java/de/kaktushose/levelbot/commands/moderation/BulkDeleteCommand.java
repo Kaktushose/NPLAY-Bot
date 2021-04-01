@@ -27,11 +27,7 @@ public class BulkDeleteCommand {
     public void onBulkDeleteMessages(CommandEvent event, int amount) {
         // discord api only allows amount between 2 and 100
         if (amount < 2 || amount > 100) {
-            event.reply(embedCache.getEmbed("invalidValue")
-                    .injectValue("min", 2)
-                    .injectValue("max", 100)
-                    .toEmbedBuilder()
-            );
+            event.reply(embedCache.getEmbed("invalidValue").injectValue("min", 2).injectValue("max", 100));
             return;
         }
 
@@ -41,8 +37,7 @@ public class BulkDeleteCommand {
         messageHistory.forEach(message -> message.delete().complete());
 
         event.reply(embedCache.getEmbed("bulkDeleteSuccess")
-                        .injectValue("amount", amount)
-                        .toEmbedBuilder(),
+                        .injectValue("amount", amount),
                 message -> message.delete().queueAfter(10, TimeUnit.SECONDS) // delete success message after 10 secs
         );
     }

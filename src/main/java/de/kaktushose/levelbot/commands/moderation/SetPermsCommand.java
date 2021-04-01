@@ -31,7 +31,7 @@ public class SetPermsCommand {
     public void onSetPerms(CommandEvent event, Member member, int level) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -39,7 +39,6 @@ public class SetPermsCommand {
             event.reply(embedCache.getEmbed("invalidValue")
                     .injectValue("min", 1)
                     .injectValue("max", 4)
-                    .toEmbedBuilder()
             );
             return;
         }
@@ -51,7 +50,6 @@ public class SetPermsCommand {
         if (executor.getPermissionLevel() < level + 1 || executor.getPermissionLevel() < target.getPermissionLevel()) {
             event.reply(embedCache.getEmbed("permissionSetInvalidTarget")
                     .injectValue("user", member.getAsMention())
-                    .toEmbedBuilder()
             );
             return;
         }
@@ -78,7 +76,6 @@ public class SetPermsCommand {
         event.reply(embedCache.getEmbed("permissionSet")
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", level)
-                .toEmbedBuilder()
         );
     }
 }

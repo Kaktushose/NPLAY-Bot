@@ -26,7 +26,6 @@ public class PingCommand {
                 .getEmbed("pingEmbed")
                 .injectValue("gatewayPing", gatewayPing)
                 .injectValue("restPing", restPing)
-                .toEmbedBuilder()
         );
     }
 

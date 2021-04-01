@@ -61,7 +61,6 @@ public class EvalCommand {
         event.reply(embedCache.getEmbed("evalCommand")
                 .injectValue("result", result)
                 .injectValue("color", color)
-                .toEmbedBuilder()
         );
     }
 }

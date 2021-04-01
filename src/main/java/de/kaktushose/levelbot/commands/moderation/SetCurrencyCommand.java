@@ -31,7 +31,7 @@ public class SetCurrencyCommand {
     public void onSetCoins(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -43,7 +43,6 @@ public class SetCurrencyCommand {
                 .injectValue("currency", "Münzen")
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
-                .toEmbedBuilder()
         );
     }
 
@@ -57,7 +56,7 @@ public class SetCurrencyCommand {
     public void onSetXp(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -69,7 +68,6 @@ public class SetCurrencyCommand {
                 .injectValue("currency", "XP")
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
-                .toEmbedBuilder()
         );
     }
 
@@ -83,7 +81,7 @@ public class SetCurrencyCommand {
     public void onSetDiamonds(CommandEvent event, Member member, Integer amount) {
         Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
         if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound").toEmbedBuilder());
+            event.reply(embedCache.getEmbed("memberNotFound"));
             return;
         }
 
@@ -95,7 +93,6 @@ public class SetCurrencyCommand {
                 .injectValue("currency", "Diamanten")
                 .injectValue("user", member.getAsMention())
                 .injectValue("value", amount)
-                .toEmbedBuilder()
         );
     }
 }
