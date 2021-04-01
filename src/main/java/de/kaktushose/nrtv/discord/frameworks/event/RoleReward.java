@@ -12,6 +12,6 @@ public class RoleReward extends EventReward {
 
     @Override
     public void onReward(BotUser botUser, Bot bot) {
-        bot.addDiscordRole(bot.getGuild().getMemberById(botUser.getId()), bot.getGuild().getRoleById(790958478398717952L));
+        bot.addDiscordRole(bot.getGuild().getMemberById(botUser.getId()), bot.getGuild().getRoleById(827132547971678269L));
     }
 }

@@ -23,8 +23,8 @@ public class LevelListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if (event.getChannel().getIdLong() == 789966143380520980L) {
-            event.getMessage().addReaction("\uD83D\uDC4D").queue();
+        if (event.getChannel().getIdLong() == 827132902365462528L) {
+            event.getMessage().addReaction("\uD83E\uDD5A").queue();
         }
 
         Date date = new Date();

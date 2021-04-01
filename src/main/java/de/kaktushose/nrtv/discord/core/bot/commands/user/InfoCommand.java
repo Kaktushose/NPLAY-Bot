@@ -83,13 +83,13 @@ public class InfoCommand extends Command {
                 .addField("Diamanten: ", "\uD83D\uDC8E " + botUser.getDiamonds(), true);
 
         if (bot.eventIsPresent()) {
-            EventPoint eventPoint = bot.getDatabase().getEventPoint(EventType.WINTER);
-            builder.addField("", "__Schmückevent__:", false);
+            EventPoint eventPoint = bot.getDatabase().getEventPoint(EventType.EASTER);
+            builder.addField("", "__Osterevent__:", false);
             builder.addField(eventPoint.getName() + ":", eventPoint.getEmote() + " " + botUser.getEventPoints(), false);
-            if (botUser.getEventPoints() >= 25 && (System.currentTimeMillis() - bot.getDatabase().getChristmasBoosterStartTime(botUser.getId()) < 604800000L)) {
-                builder.addField("Belohnungen:", "Eventrolle XMAS 2020 :santa:\nSpecial Item \"Christmas Booster\" :santa:", false);
-            } else if (botUser.getEventPoints() >= 5) {
-                builder.addField("Belohnungen:", "Eventrolle XMAS 2020 :santa:", false);
+            if (botUser.getEventPoints() >= 25) {
+                builder.addField("Belohnungen:", "Eventrolle Ostern 2021 :egg:\nSpecial Item \"PREMIUM basic\" :star:", false);
+            } else if (botUser.getEventPoints() >= 3) {
+                builder.addField("Belohnungen:", "PREMIUM basic :star:", false);
             } else {
                 builder.addField("Belohnungen:", ":x: noch keine", false);
             }

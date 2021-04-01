@@ -26,20 +26,18 @@ public class EventScheduler {
             if (newPoints == bound) {
                 eventReward.onReward(botUser, bot);
                 bot.getBotChannel().sendMessage(user.getAsMention()).queue();
-                if (newPoints == 5) {
+                if (newPoints == 3) {
                     bot.getBotChannel().sendMessage(new EmbedBuilder()
                             .setColor(Color.GREEN)
-                            .setTitle(String.format("**Du bist wirklich fleißig**, %s! :christmas_tree:", bot.getGuild().getMember(user).getEffectiveName()))
-                            .setDescription("Du hast bereits 5 Weihnachtsbäume geschmückt.\nDafür schenken wir dir die streng limitierte **Eventrolle XMAS 2020** :santa:, mit der du dich während der Festtage an prominenter Stelle in der Userliste wiederfinden kannst!\n" +
-                                    "Frohe Weihnachten! :gift:\n\nÜbrigens: Einige Familien haben dieses Jahr noch keinen Weihnachtsbaum. Wenn du ihnen helfen willst, erhältst du **ab 25 geschmückten Bäumen** eine weitere **tolle Belohnung!**")
+                            .setTitle(String.format("Danke für deine Hilfe, %s! :rabbit:", bot.getGuild().getMember(user).getEffectiveName()))
+                            .setDescription("Du hast nun bereits 3 Ostereier gesammelt.\nAls Belohnung hat Dir der Osterhase die **Eventrolle OSTERN 2021** geschenkt!")
                             .build()).queue();
                 } else {
                     bot.getBotChannel().sendMessage(new EmbedBuilder()
                             .setColor(Color.GREEN)
-                            .setTitle(String.format("**Überall Glocken und Lichter,** %s! :christmas_tree:", bot.getGuild().getMember(user).getEffectiveName()))
-                            .setDescription("Das macht dir so schnell keiner nach: Du hast nun unglaubliche **25 Weihnachtsbäume** geschmückt. \n" +
-                                    "Wie versprochen, erhältst du dafür eine ganz besondere Belohnung: Das **Special Item \"Christmas Booster\"** :santa: ! Erhalte ab sofort **7 Tage :alarm_clock:  lang** doppelte XP :star2: , Münzen :moneybag:  und Diamanten :gem: bei jeder gezählten Nachricht!\n" +
-                                    "Frohe Weihnachten! :gift: ")
+                            .setTitle(String.format("Danke für deine Hilfe, %s! :rabbit:", bot.getGuild().getMember(user).getEffectiveName()))
+                            .setDescription("Das macht dir so schnell keiner nach: Du hast nun unglaubliche **25 Ostereier** gesammelt.\n" +
+                                   "Als Belohnung hat Dir der Osterhase **PREMIUM basic** geschenkt.")
                             .build()).queue();
                 }
 

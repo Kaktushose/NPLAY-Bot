@@ -57,8 +57,8 @@ public abstract class Bot {
         logger = Logging.getLogger();
         itemCheck = new ItemCheck(this);
         eventScheduler = new EventScheduler(this);
-        eventScheduler.addEventReward(new PremiumReward(25, "Christmas Booster"));
-        eventScheduler.addEventReward(new RoleReward(5, "XMAS 2020 :santa:"));
+        eventScheduler.addEventReward(new PremiumReward(25, "PREMIUM basic"));
+        eventScheduler.addEventReward(new RoleReward(3, "Eventrolle Ostern 2021"));
     }
 
     public void postStart() {
