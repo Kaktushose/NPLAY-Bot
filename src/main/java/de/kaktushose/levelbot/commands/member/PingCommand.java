@@ -6,14 +6,13 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 
-@CommandController
+@CommandController("ping")
 public class PingCommand {
 
     @Inject
     private EmbedCache embedCache;
 
     @Command(
-            value = "ping",
             name = "Ping Command",
             usage = "{prefix}ping",
             desc = "Zeigt den Ping zur Discord-API an",

@@ -90,5 +90,31 @@
     "title": "Eval Result",
     "description": "```{result}```",
     "color": "{color}"
+  },
+  "botInfo": {
+    "title": "Informationen zum Bot",
+    "color": "#86c240",
+    "fields": [
+      {
+        "name": "Prefix",
+        "value": "{prefix}"
+      },
+      {
+        "name": "Version",
+        "value": "{version}"
+      },
+      {
+        "name": "Lizenz",
+        "value": "[GNU General Public License 3](https://www.gnu.org/licenses/gpl-3.0)"
+      },
+      {
+        "name": "Github Organisation",
+        "value": "https://github.com/Level-System/"
+      },
+      {
+        "name": "Credits",
+        "value": "Konzept und Idee: <@307973135746072578>\nProgrammierung: <@393843637437464588>\nLogo und Testing: <@487320784759685130>"
+      }
+    ]
   }
 }
