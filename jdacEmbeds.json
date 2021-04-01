@@ -36,12 +36,12 @@
     ]
   },
   "commandNotFound": {
-    "title": "Command Nicht Gefunden",
+    "title": "Command Nicht Gefunden!",
     "description": "```Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten```",
     "color": "#f4cd53"
   },
   "insufficientPermissions": {
-    "title": "Unzureichende Berechtigungen",
+    "title": "Unzureichende Berechtigungen!",
     "description": "`{prefix}{label}` benötigt spezielle Berechtigungen um ausgeführt zu werden",
     "color": "#ff0000",
     "fields": [
@@ -52,7 +52,7 @@
     ]
   },
   "syntaxError": {
-    "title": "Syntax Fehler",
+    "title": "Syntax Fehler!",
     "description": "`{usage}`",
     "color": "#ffc800",
     "fields": [

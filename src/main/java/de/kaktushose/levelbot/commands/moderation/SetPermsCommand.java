@@ -48,7 +48,7 @@ public class SetPermsCommand {
         BotUser target = optional.get();
 
         // can only update users with lower perms
-        if (executor.getPermissionLevel() < level || executor.getPermissionLevel() < target.getPermissionLevel()) {
+        if (executor.getPermissionLevel() < level + 1 || executor.getPermissionLevel() < target.getPermissionLevel()) {
             event.reply(embedCache.getEmbed("permissionSetInvalidTarget")
                     .injectValue("user", member.getAsMention())
                     .toEmbedBuilder()
@@ -61,6 +61,10 @@ public class SetPermsCommand {
         database.getUsers().save(target);
         // update in jda-commands
         CommandSettings commandSettings = event.getJdaCommands().getDefaultSettings();
+        // first remove user from all levels, then reapply them
+        commandSettings.getPermissionHolders("owner").remove(target.getUserId());
+        commandSettings.getPermissionHolders("admin").remove(target.getUserId());
+        commandSettings.getPermissionHolders("moderator").remove(target.getUserId());
         switch (level) {
             case 4:
                 commandSettings.getPermissionHolders("owner").add(target.getUserId());

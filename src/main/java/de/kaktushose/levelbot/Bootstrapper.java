@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class Bootstrapper {
@@ -20,7 +21,7 @@ public class Bootstrapper {
         Levelbot levelbot = new Levelbot(Levelbot.GuildType.TESTING);
         levelbot.start().indexMembers();
         startTime = System.currentTimeMillis() - startTime;
-        log.info("Successfully started bot! Took {} ms", startTime);
+        log.info("Successfully started bot! Took {} seconds", TimeUnit.MILLISECONDS.toSeconds(startTime));
     }
 
 }
