@@ -26,9 +26,10 @@ public class StopCommand {
             category = "Owner"
     )
     public void onStop(CommandEvent event) {
-        event.reply(embedCache.getEmbed("confirmAction")
-                        .injectValue("action", "du den Bot herunterfahren möchtest?\n"
-                                + "Nur <@393843637437464588> kann den Bot wieder starten!"),
+        event.reply(embedCache.getEmbed("confirmAction").injectValue(
+                "action",
+                "du den Bot herunterfahren möchtest?\nNur <@393843637437464588> kann den Bot wieder starten!"
+                ),
                 confirmMessage -> {
                     confirmMessage.addReaction(EmoteType.THUMBSUP.unicode)
                             .and(confirmMessage.addReaction(EmoteType.THUMBSDOWN.unicode))
@@ -50,7 +51,8 @@ public class StopCommand {
                         }
                         reactionWaiter.stopWaiting(true);
                     });
-                });
+                }
+        );
     }
 
 }

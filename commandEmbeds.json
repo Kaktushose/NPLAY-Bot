@@ -83,7 +83,7 @@
   },
   "removeItemSuccess": {
     "title": "Erfolg!",
-    "description": "{user} wurde das Item entfernt",
+    "description": "{user} wurde das Item entfernt.",
     "color": "#86c240"
   },
   "evalCommand": {
@@ -116,5 +116,14 @@
         "value": "Konzept und Idee: <@307973135746072578>\nProgrammierung: <@393843637437464588>\nLogo und Testing: <@487320784759685130>"
       }
     ]
+  },
+  "missingCurrency": {
+    "title": "Fehler!",
+    "description": "Du hast nicht genügend {currency}."
+  },
+  "diamondChangeSuccess": {
+    "title": "Erfolg!",
+    "description": "Du hast {diamonds} Diamanten gegen {coins} Münzen getauscht.",
+    "color": "#86c240"
   }
 }
