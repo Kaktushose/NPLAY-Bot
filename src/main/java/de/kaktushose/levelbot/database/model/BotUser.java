@@ -26,10 +26,12 @@ public class BotUser {
     private List<Transaction> transactions;
 
     public BotUser() {
+        level = 1;
     }
 
     public BotUser(long userId) {
         this.userId = userId;
+        level = 1;
     }
 
     public BotUser(long userId,

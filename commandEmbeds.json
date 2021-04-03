@@ -136,5 +136,61 @@
     "title": "Fehler!",
     "description": "Der Bot kann dir keine Direktnachrichten senden!\nBitte überprüfe deine Einstellungen und versuche es dann erneut!",
     "color": "#aa0c14"
+  },
+  "rankInfo": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe",
+        "value": ":dart: {nextRank}"
+      },
+      {
+        "name": "",
+        "value": "__Währungen__:"
+      },
+      {
+        "name": "XP:",
+        "value": ":star2: {xp}",
+        "inline": true
+      },
+      {
+        "name": "Münzen:",
+        "value": ":moneybag: {coins}",
+        "inline": true
+      },
+      {
+        "name": "Diamanten:",
+        "value": ":gem: {diamonds}",
+        "inline": true
+      },
+      {
+        "name": "",
+        "value": "__Statistiken__:"
+      },
+      {
+        "name": "Ressourcen-Zuwachs:",
+        "value": ":star2: {xpGain} | :moneybag: {coinsGain} | :gem: {diamondsGain}"
+      },
+      {
+        "name": "Gezählte Nachrichten:",
+        "value": ":chart_with_upwards_trend: {messageCount}"
+      },
+      {
+        "name": "",
+        "value": "__Items__:"
+      }
+    ],
+    "footer": {
+      "text": "Mit dem Befehl !kaufen kannst du dir Items kaufen."
+    }
   }
 }

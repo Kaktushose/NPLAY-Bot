@@ -12,7 +12,7 @@ public class Rank {
     private Integer rankId;
     private long roleId;
     private int bound;
-    private Color color;
+    private String color;
     private String name;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "rankId", referencedColumnName = "rankId")
@@ -21,7 +21,7 @@ public class Rank {
     public Rank() {
     }
 
-    public Rank(Integer rankId, long roleId, int bound, Color color, String name) {
+    public Rank(Integer rankId, long roleId, int bound, String color, String name) {
         this.rankId = rankId;
         this.roleId = roleId;
         this.bound = bound;
@@ -53,11 +53,11 @@ public class Rank {
         this.bound = bound;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
