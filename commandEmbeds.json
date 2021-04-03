@@ -119,11 +119,22 @@
   },
   "missingCurrency": {
     "title": "Fehler!",
-    "description": "Du hast nicht genügend {currency}."
+    "description": "Du hast nicht genügend {currency}.",
+    "color": "#aa0c14"
   },
   "diamondChangeSuccess": {
     "title": "Erfolg!",
     "description": "Du hast {diamonds} Diamanten gegen {coins} Münzen getauscht.",
     "color": "#86c240"
+  },
+  "switchDailySuccess": {
+    "title": "Erfolg!",
+    "description": "Die tägliche Kontoinformation wurde {action}.",
+    "color": "#86c240"
+  },
+  "switchDailyError": {
+    "title": "Fehler!",
+    "description": "Der Bot kann dir keine Direktnachrichten senden!\nBitte überprüfe deine Einstellungen und versuche es dann erneut!",
+    "color": "#aa0c14"
   }
 }
