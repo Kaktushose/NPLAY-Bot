@@ -64,39 +64,35 @@ public class LeaderboardCommand {
                             return;
                         }
                         pagination.previousPage();
-                        showLeaderboard(event, message);
                         break;
                     case FORTH:
                         if (pagination.index() + 1 == pagination.pages()) {
                             return;
                         }
                         pagination.nextPage();
-                        showLeaderboard(event, message);
                         break;
                     case XP:
                         if (currencyType == CurrencyType.XP) {
                             return;
                         }
                         currencyType = CurrencyType.XP;
-                        showLeaderboard(event, message);
                         break;
                     case COINS:
                         if (currencyType == CurrencyType.COINS) {
                             return;
                         }
                         currencyType = CurrencyType.COINS;
-                        showLeaderboard(event, message);
                         break;
                     case DIAMONDS:
                         if (currencyType == CurrencyType.DIAMONDS) {
                             return;
                         }
                         currencyType = CurrencyType.DIAMONDS;
-                        showLeaderboard(event, message);
                         break;
                     default:
                         break;
                 }
+                showLeaderboard(event, message);
                 waiter.stopWaiting(true);
             });
         };
