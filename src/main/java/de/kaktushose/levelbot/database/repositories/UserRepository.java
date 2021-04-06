@@ -12,4 +12,13 @@ public interface UserRepository extends CrudRepository<BotUser, Long> {
     @Query(value = "SELECT * FROM users WHERE permission_level = :permissionLevel", nativeQuery = true)
     List<BotUser> findByPermissionLevel(@Param("permissionLevel") int permissionLevel);
 
+    @Query(value = "SELECT * FROM users order by xp desc", nativeQuery = true)
+    List<BotUser> getXpLeaderboard();
+
+    @Query(value = "SELECT * FROM users order by coins desc", nativeQuery = true)
+    List<BotUser> getCoinsLeaderboard();
+
+    @Query(value = "SELECT * FROM users order by diamonds desc", nativeQuery = true)
+    List<BotUser> getDiamondsLeaderboard();
+
 }

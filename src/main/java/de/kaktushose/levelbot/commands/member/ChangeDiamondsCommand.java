@@ -22,7 +22,7 @@ public class ChangeDiamondsCommand {
     @Command(
             name = "Diamanten tauschen",
             usage = "{prefix}tauschen <anzahl>",
-            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 40 Münzen wert.",
+            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 40 Münzen wert",
             category = "Levelsystem"
     )
     public void onChangeDiamonds(CommandEvent event, @Optional("1") long amount) {

@@ -79,7 +79,7 @@ public class Levelbot {
 
         log.debug("Starting ReactionListener...");
         ReactionListener.setAutoRemove(true);
-        ReactionListener.setAutoRemoveDelay(30, TimeUnit.SECONDS);
+        ReactionListener.setAutoRemoveDelay(60, TimeUnit.SECONDS);
         ReactionListener.startListening(jda);
 
         log.debug("Starting jda-commands...");

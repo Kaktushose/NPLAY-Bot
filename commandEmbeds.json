@@ -192,5 +192,9 @@
     "footer": {
       "text": "Mit dem Befehl !kaufen kannst du dir Items kaufen."
     }
+  },
+  "leaderboard": {
+    "title": "Rangliste {guild}: {currency}",
+    "color": "#86c240"
   }
 }
