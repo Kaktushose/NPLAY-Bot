@@ -196,5 +196,59 @@
   "leaderboard": {
     "title": "Rangliste {guild}: {currency}",
     "color": "#86c240"
+  },
+  "shopOverview": {
+    "title": ":shopping_cart: Shop",
+    "description": "Eine genaue Übersicht über alle Items findest du in <#829101385173041213>",
+    "color": "#86c240",
+    "fields": [
+      {
+        "name": ":star: PREMIUM",
+        "value": "Erhalte mit dieser besonderen Rolle satte 12 exklusive Vorteile auf unserem Server!"
+      },
+      {
+        "name": ":musical_note: Rythm DJ Perk",
+        "value": "Mit der DJ Rolle für den \"Rythm\" bist Du der Star!"
+      },
+      {
+        "name": ":man_tone3: Nickname Perk",
+        "value": "Mit dem Nickname Perk erhältst du das Recht, Deinen Nicknamen auf dem Server selbstständig jederzeit zu ändern!"
+      },
+      {
+        "name": ":moneybag: Münzenbooster",
+        "value": "Mit dem Münzenbooster erhältst Du +2 Münzen je gezählter Nachricht zusätzlich - optimal für viele Münzen!"
+      },
+      {
+        "name": ":star2: XP-Booster",
+        "value": "Mit dem XP-Booster erhältst Du +2 XP je gezählter Nachricht zusätzlich - steige so leichter in neue Stufen auf!"
+      }
+    ],
+    "footer": {
+      "text": "Um ein Item zu kaufen, reagiere mit dem jeweiligen Emote!"
+    }
+  },
+  "specificShop": {
+    "title": ":shopping_cart: Shop",
+    "description": "Für dieses Item stehen folgende Variationen zur Verfügung:",
+    "color": "#86c240",
+    "footer": {
+      "text": "Um ein Item zu kaufen, reagiere mit dem jeweiligen Emote!"
+    }
+  },
+  "shopSuccess": {
+    "title": ":shopping_bags: Erfolgreicher Kauf!",
+    "description": "Du besitzt jetzt das Item \"{item}\"",
+    "color": "#86c240",
+    "fields": [
+      {
+        "name": "Dauer:",
+        "value": ":timer_clock: {days} Tage"
+      }
+    ]
+  },
+  "shopError": {
+    "title": "Fehler!",
+    "description": "{message}",
+    "color": "#aa0c14"
   }
 }

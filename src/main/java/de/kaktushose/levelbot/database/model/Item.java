@@ -12,20 +12,18 @@ public class Item {
     private String name;
     private int price;
     private long duration;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
-    private ItemCategory itemCategory;
+    private int categoryId;
     private boolean visible;
 
     public Item() {
     }
 
-    public Item(int itemId, String name, int price, long duration, ItemCategory itemCategory, boolean visible) {
+    public Item(int itemId, String name, int price, long duration, int categoryId, boolean visible) {
         this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.duration = duration;
-        this.itemCategory = itemCategory;
+        this.categoryId = categoryId;
         this.visible = visible;
     }
 
@@ -61,12 +59,12 @@ public class Item {
         this.duration = duration;
     }
 
-    public ItemCategory getItemCategory() {
-        return itemCategory;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setItemCategory(ItemCategory itemCategory) {
-        this.itemCategory = itemCategory;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public boolean isVisible() {

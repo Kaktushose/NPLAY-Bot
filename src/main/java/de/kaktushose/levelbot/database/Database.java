@@ -13,7 +13,6 @@ public class Database {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
-    private final ItemCategoryRepository itemCategoryRepository;
     private final TransactionRepository transactionRepository;
     private final ChancesRepository chancesRepository;
     private final MutedChannelRepository mutedChannelRepository;
@@ -24,7 +23,6 @@ public class Database {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
-        itemCategoryRepository = context.getBean(ItemCategoryRepository.class);
         transactionRepository = context.getBean(TransactionRepository.class);
         chancesRepository = context.getBean(ChancesRepository.class);
         mutedChannelRepository = context.getBean(MutedChannelRepository.class);
@@ -38,10 +36,6 @@ public class Database {
 
     public ItemRepository getItems() {
         return itemRepository;
-    }
-
-    public ItemCategoryRepository getItemCategories() {
-        return itemCategoryRepository;
     }
 
     public TransactionRepository getTransactions() {
