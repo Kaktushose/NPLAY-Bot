@@ -6,10 +6,11 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Optional;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
-import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.service.LevelService;
+import de.kaktushose.levelbot.database.service.UserService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 
@@ -19,7 +20,9 @@ public class RankInfoCommand {
     @Inject
     private EmbedCache embedCache;
     @Inject
-    private Database database;
+    private LevelService levelService;
+    @Inject
+    private UserService userService;
 
     @Command(
             name = "Kontoinformation abrufen",
@@ -29,16 +32,11 @@ public class RankInfoCommand {
     )
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         Member target = member == null ? event.getMember() : member;
-        java.util.Optional<BotUser> optional = database.getUsers().findById(target.getIdLong());
 
-        if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound"));
-            return;
-        }
-        BotUser botUser = optional.get();
+        BotUser botUser = userService.getById(target.getIdLong());
 
-        Rank currentRank = database.getRanks().findById(botUser.getLevel()).orElseThrow();
-        Rank nextRank = database.getRanks().findById(botUser.getLevel() + 1).orElse(currentRank);
+        Rank currentRank = levelService.getCurrentRank(botUser.getUserId());
+        Rank nextRank = levelService.getNextRank(botUser.getUserId());
         long nextRankXp = nextRank.getBound() - botUser.getXp();
         long xpGain = botUser.getXp() - botUser.getStartXp();
         long coinsGain = botUser.getCoins() - botUser.getStartCoins();

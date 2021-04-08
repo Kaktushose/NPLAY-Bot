@@ -45,7 +45,7 @@
   },
   "memberBlacklistRemove": {
     "title": "Erfolg!",
-    "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.",
+    "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.\nHinweis: Sein Berechtigungslevel wurde auf `1` zurückgesetzt!",
     "color": "#86c240"
   },
   "memberBlacklistInvalidTarget": {

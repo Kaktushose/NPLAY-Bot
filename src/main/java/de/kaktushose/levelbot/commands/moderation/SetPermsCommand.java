@@ -7,18 +7,16 @@ import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import com.github.kaktushose.jda.commands.entities.CommandSettings;
-import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.service.UserService;
 import net.dv8tion.jda.api.entities.Member;
-
-import java.util.Optional;
 
 @CommandController("setperms")
 @Permission("moderator")
 public class SetPermsCommand {
 
     @Inject
-    private Database database;
+    private UserService userService;
     @Inject
     private EmbedCache embedCache;
 
@@ -29,12 +27,6 @@ public class SetPermsCommand {
             category = "Moderation"
     )
     public void onSetPerms(CommandEvent event, Member member, int level) {
-        Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-        if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound"));
-            return;
-        }
-
         if (level < 1 || level > 4) {
             event.reply(embedCache.getEmbed("invalidValue")
                     .injectValue("min", 1)
@@ -43,8 +35,8 @@ public class SetPermsCommand {
             return;
         }
 
-        BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
-        BotUser target = optional.get();
+        BotUser executor = userService.getById(event.getAuthor().getIdLong());
+        BotUser target = userService.getById(member.getIdLong());
 
         // can only update users with lower perms
         if (executor.getPermissionLevel() < level + 1 || executor.getPermissionLevel() < target.getPermissionLevel()) {
@@ -55,8 +47,7 @@ public class SetPermsCommand {
         }
 
         // update in db
-        target.setPermissionLevel(level);
-        database.getUsers().save(target);
+        userService.setPermission(executor.getUserId(), level);
         // update in jda-commands
         CommandSettings commandSettings = event.getJdaCommands().getDefaultSettings();
         // first remove user from all levels, then reapply them

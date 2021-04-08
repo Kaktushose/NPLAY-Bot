@@ -6,7 +6,7 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.database.service.LevelService;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -29,7 +29,7 @@ public class LeaderboardCommand {
     public static final String DIAMONDS = "\uD83D\uDC8E";
 
     @Inject
-    private Levelbot levelbot;
+    private LevelService levelService;
     @Inject
     private EmbedCache embedCache;
     private Guild guild;
@@ -46,9 +46,9 @@ public class LeaderboardCommand {
         this.guild = event.getGuild();
         currencyType = CurrencyType.XP;
         paginationMap = new HashMap<>();
-        paginationMap.put(CurrencyType.XP, new Pagination(levelbot, 10, CurrencyType.XP));
-        paginationMap.put(CurrencyType.COINS, new Pagination(levelbot, 10, CurrencyType.COINS));
-        paginationMap.put(CurrencyType.DIAMONDS, new Pagination(levelbot, 10, CurrencyType.DIAMONDS));
+        paginationMap.put(CurrencyType.XP, levelService.getXpLeaderboard(10, event.getJDA()));
+        paginationMap.put(CurrencyType.COINS, levelService.getCoinsLeaderboard(10, event.getJDA()));
+        paginationMap.put(CurrencyType.DIAMONDS, levelService.getDiamondsLeaderboard(10, event.getJDA()));
         showLeaderboard(event, null);
     }
 

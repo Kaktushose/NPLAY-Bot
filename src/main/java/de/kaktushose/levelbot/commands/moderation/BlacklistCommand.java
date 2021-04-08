@@ -6,19 +6,18 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
-import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.service.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;
-import java.util.Optional;
 
 @CommandController({"blacklist", "banlist", "bl"})
 @Permission("moderator")
 public class BlacklistCommand {
 
     @Inject
-    private Database database;
+    private UserService userService;
     @Inject
     private EmbedCache embedCache;
 
@@ -30,22 +29,15 @@ public class BlacklistCommand {
             category = "Moderation"
     )
     public void onBlacklistAdd(CommandEvent event, Member member) {
-        Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-        if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound"));
-            return;
-        }
-
-        BotUser executor = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
-        BotUser target = optional.get();
+        BotUser executor = userService.getById(event.getAuthor().getIdLong());
+        BotUser target = userService.getById(member.getIdLong());
         // can only blacklist users with lower permissions
         if (executor.getPermissionLevel() < target.getPermissionLevel()) {
             event.reply(embedCache.getEmbed("memberBlacklistInvalidTarget").injectValue("user", member.getAsMention()));
             return;
         }
         // update in db
-        target.setPermissionLevel(0);
-        database.getUsers().save(target);
+        userService.setPermission(member.getIdLong(), 0);
         // update in jda-commands
         event.getJdaCommands().getDefaultSettings().getMutedUsers().add(member.getIdLong());
         // reply
@@ -60,16 +52,9 @@ public class BlacklistCommand {
             category = "Moderation"
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
-        Optional<BotUser> optional = database.getUsers().findById(member.getIdLong());
-        if (optional.isEmpty()) {
-            event.reply(embedCache.getEmbed("memberNotFound"));
-            return;
-        }
-
-        BotUser target = optional.get();
+        BotUser target = userService.getById(member.getIdLong());
         // update in db
-        target.setPermissionLevel(1);
-        database.getUsers().save(target);
+        userService.setPermission(member.getIdLong(), 1);
         // update in jda-commands
         event.getJdaCommands().getDefaultSettings().getMutedUsers().remove(member.getIdLong());
         // reply
@@ -86,7 +71,7 @@ public class BlacklistCommand {
             category = "Moderation"
     )
     public void onBlacklistShow(CommandEvent event) {
-        List<BotUser> blacklist = database.getUsers().findByPermissionLevel(0);
+        List<BotUser> blacklist = userService.getByPermission(0);
         StringBuilder members = new StringBuilder();
         blacklist.forEach(botUser -> members.append(event.getGuild().getMemberById(botUser.getUserId()).getEffectiveName()).append(", "));
         event.reply(embedCache.getEmbed("memberBlacklistShow")

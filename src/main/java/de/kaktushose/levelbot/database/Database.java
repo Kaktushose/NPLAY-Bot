@@ -30,10 +30,6 @@ public class Database {
         rankRepository = context.getBean(RankRepository.class);
     }
 
-    public UserRepository getUsers() {
-        return userRepository;
-    }
-
     public ItemRepository getItems() {
         return itemRepository;
     }

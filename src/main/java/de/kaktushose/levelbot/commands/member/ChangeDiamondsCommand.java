@@ -8,14 +8,14 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
-import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.service.UserService;
 
 @CommandController({"tauschen", "wechseln"})
 public class ChangeDiamondsCommand {
 
     @Inject
-    private Database database;
+    private UserService userService;
     @Inject
     private EmbedCache embedCache;
 
@@ -26,7 +26,7 @@ public class ChangeDiamondsCommand {
             category = "Levelsystem"
     )
     public void onChangeDiamonds(CommandEvent event, @Optional("1") long amount) {
-        BotUser botUser = database.getUsers().findById(event.getAuthor().getIdLong()).orElseThrow();
+        BotUser botUser = userService.getById(event.getAuthor().getIdLong());
         long diamonds = botUser.getDiamonds();
         long coins = amount * 40;
         if (diamonds == 0 || amount > diamonds) {
@@ -53,11 +53,7 @@ public class ChangeDiamondsCommand {
 
                     reactionWaiter.onEvent(reactionEvent -> {
                         if (reactionEvent.getEmote().equals(EmoteType.THUMBSUP.unicode)) {
-                            botUser.setDiamonds(diamonds - amount);
-
-                            botUser.setCoins(botUser.getCoins() + coins);
-                            database.getUsers().save(botUser);
-
+                            userService.exchangeDiamonds(botUser.getUserId(), diamonds);
                             event.reply(embedCache.getEmbed("diamondChangeSuccess")
                                     .injectValue("diamonds", amount)
                                     .injectValue("coins", coins)

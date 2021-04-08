@@ -7,9 +7,9 @@ import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.database.Database;
-import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Config;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.database.service.LevelService;
+import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
 public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
-    private final Database database;
+    private final UserService userService;
+    private final LevelService levelService;
     private final Config config;
     private final EmbedCache embedCache;
     private JDACommands jdaCommands;
@@ -42,8 +43,10 @@ public class Levelbot {
     private Guild guild;
 
     public Levelbot(GuildType guildType) {
-        database = new Database();
+        Database database = new Database();
         config = database.getGuildSettings(guildType.id);
+        userService = new UserService();
+        levelService = new LevelService();
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
     }
 
@@ -75,7 +78,7 @@ public class Levelbot {
         ).build().awaitReady();
 
         log.debug("Registering event listeners...");
-        jda.addEventListener(new JoinLeaveListener(database));
+        jda.addEventListener(new JoinLeaveListener(userService));
 
         log.debug("Starting ReactionListener...");
         ReactionListener.setAutoRemove(true);
@@ -91,18 +94,18 @@ public class Levelbot {
         jdaCommands.getDefaultSettings().setPrefix(config.getBotPrefix()).getHelpLabels().add("hilfe");
 
         log.debug("Applying permissions...");
-        database.getUsers().findByPermissionLevel(0).forEach(botUser ->
+        userService.getByPermission(0).forEach(botUser ->
                 jdaCommands.getDefaultSettings().getMutedUsers().add(botUser.getUserId())
         );
-        database.getUsers().findByPermissionLevel(2).forEach(botUser ->
+        userService.getByPermission(2).forEach(botUser ->
                 jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId())
         );
-        database.getUsers().findByPermissionLevel(3).forEach(botUser -> {
+        userService.getByPermission(3).forEach(botUser -> {
                     jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
                 }
         );
-        database.getUsers().findByPermissionLevel(4).forEach(botUser -> {
+        userService.getByPermission(4).forEach(botUser -> {
                     jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId());
@@ -124,22 +127,16 @@ public class Levelbot {
     }
 
     public Levelbot indexMembers() {
-        UserRepository userRepository = database.getUsers();
         List<Member> guildMembers = guild.getMembers();
 
-        guildMembers.forEach(member -> {
-            if (!userRepository.existsById(member.getIdLong())) {
-                userRepository.save(new BotUser(member.getIdLong()));
-            }
-        });
+        guildMembers.forEach(member -> userService.createIfAbsent(member.getIdLong()));
 
         List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
-        userRepository.findAll().forEach(botUser -> {
+        userService.getAll().forEach(botUser -> {
             if (!guildMemberIds.contains(botUser.getUserId())) {
-                userRepository.deleteById(botUser.getUserId());
+                userService.delete(botUser.getUserId());
             }
         });
-
         return this;
     }
 
@@ -149,8 +146,13 @@ public class Levelbot {
     }
 
     @Produces
-    public Database getDatabase() {
-        return database;
+    public UserService getUserService() {
+        return userService;
+    }
+
+    @Produces
+    public LevelService getLevelService() {
+        return levelService;
     }
 
     @Produces

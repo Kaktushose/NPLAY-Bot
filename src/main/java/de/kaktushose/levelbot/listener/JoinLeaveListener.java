@@ -2,6 +2,8 @@ package de.kaktushose.levelbot.listener;
 
 import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.service.UserService;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -9,19 +11,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class JoinLeaveListener extends ListenerAdapter {
 
-    private final Database database;
+    private final UserService userService;
 
-    public JoinLeaveListener(Database database) {
-        this.database = database;
+    public JoinLeaveListener(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        database.getUsers().save(new BotUser(event.getUser().getIdLong()));
+        userService.create(event.getMember().getIdLong());
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        database.getUsers().deleteById(event.getUser().getIdLong());
+        userService.delete(event.getUser().getIdLong());
     }
 }

@@ -11,6 +11,8 @@ import de.kaktushose.levelbot.database.Database;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Transaction;
+import de.kaktushose.levelbot.database.service.LevelService;
+import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -35,7 +37,9 @@ public class ShopCommand {
     public static final String XP_BOOSTER = "\uD83C\uDF1F";
 
     @Inject
-    private Database database;
+    private UserService userService;
+    @Inject
+    private LevelService levelService;
     @Inject
     private EmbedCache embedCache;
 
@@ -104,7 +108,7 @@ public class ShopCommand {
 
     private void sendSpecificShop(CommandEvent event, Message shopMessage, ItemCategory itemCategory) {
         EmbedBuilder embedBuilder = specificShops.get(itemCategory);
-        List<Item> items = database.getItems().findByCategoryId(itemCategory.id);
+        List<Item> items = levelService.getItemsByCategoryId(itemCategory.id);
         long amount = items.stream().filter(Item::isVisible).count();
         Consumer<Message> success = message -> {
             message.clearReactions().queue();
@@ -188,9 +192,9 @@ public class ShopCommand {
     }
 
     private Optional<String> buy(Member member, Item item) {
-        BotUser botUser = database.getUsers().findById(member.getIdLong()).orElseThrow();
+        BotUser botUser = userService.getById(member.getIdLong());
 
-        if (database.getTransactions().findByItemIdAndUserId(item.getItemId(), member.getIdLong()).isPresent()) {
+        if (userService.hasItem(member.getIdLong(), item.getItemId())) {
             return Optional.of("Du besitzt dieses Item bereits!");
         }
 
@@ -198,13 +202,7 @@ public class ShopCommand {
             return Optional.of("Du hast nicht genug Münzen!");
         }
 
-        Transaction transaction = new Transaction();
-        transaction.setBuyTime(System.currentTimeMillis());
-        transaction.setItem(item);
-        botUser.getTransactions().add(transaction);
-        botUser.setCoins(botUser.getCoins() - item.getPrice());
-        database.getTransactions().save(transaction);
-        database.getUsers().save(botUser);
+        userService.buyItem(botUser.getUserId(), item.getItemId());
 
         return Optional.empty();
     }
@@ -214,7 +212,7 @@ public class ShopCommand {
 
         for (ItemCategory itemCategory : ItemCategory.values()) {
             EmbedBuilder specificShop = embedCache.getEmbed("specificShop").toEmbedBuilder();
-            List<Item> items = database.getItems().findByCategoryId(itemCategory.id);
+            List<Item> items = levelService.getItemsByCategoryId(itemCategory.id);
             for (int i = 0; i < items.size(); i++) {
                 Item item = items.get(i);
                 if (!item.isVisible()) {
@@ -244,5 +242,3 @@ public class ShopCommand {
         }
     }
 }
-
-
