@@ -56,9 +56,9 @@ public abstract class Bot {
         database = new Database(this.databaseConfig.getJdbcurl(), this.databaseConfig.getDbuser(), this.databaseConfig.getDbpassword());
         logger = Logging.getLogger();
         itemCheck = new ItemCheck(this);
-        eventScheduler = new EventScheduler(this);
-        eventScheduler.addEventReward(new PremiumReward(25, "PREMIUM basic"));
-        eventScheduler.addEventReward(new RoleReward(3, "Eventrolle Ostern 2021"));
+//        eventScheduler = new EventScheduler(this);
+//        eventScheduler.addEventReward(new PremiumReward(25, "PREMIUM basic"));
+//        eventScheduler.addEventReward(new RoleReward(3, "Eventrolle Ostern 2021"));
     }
 
     public void postStart() {
