@@ -1,32 +1,33 @@
 package de.kaktushose.levelbot.database.service;
 
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Rank;
-import de.kaktushose.levelbot.database.repositories.ItemRepository;
-import de.kaktushose.levelbot.database.repositories.RankRepository;
-import de.kaktushose.levelbot.database.repositories.TransactionRepository;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.repositories.*;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LevelService {
 
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
     private final ItemRepository itemRepository;
-    private final TransactionRepository transactionRepository;
+    private final SettingsRepository settingsRepository;
+    private final ChancesRepository chancesRepository;
+    private final UserService userService;
 
-    public LevelService() {
+    public LevelService(UserService userService) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         rankRepository = context.getBean(RankRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
-        transactionRepository = context.getBean(TransactionRepository.class);
+        settingsRepository = context.getBean(SettingsRepository.class);
+        chancesRepository = context.getBean(ChancesRepository.class);
+        this.userService = userService;
     }
 
     public Rank getRank(int rankId) {
@@ -34,13 +35,16 @@ public class LevelService {
     }
 
     public Rank getCurrentRank(long userId) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow();
+        BotUser botUser = userService.getById(userId);
         return rankRepository.findById(botUser.getLevel()).orElseThrow();
     }
 
     public Rank getNextRank(long userId) {
-        BotUser botUser = userRepository.findById(userId).orElseThrow();
-        return rankRepository.findById(botUser.getLevel() + 1).orElseThrow();
+        BotUser botUser = userService.getById(userId);
+        if (botUser.getLevel() == 10) {
+            return getRank(10);
+        }
+        return getRank(botUser.getLevel() + 1);
     }
 
     public List<Item> getItemsByCategoryId(int categoryId) {
@@ -57,6 +61,104 @@ public class LevelService {
 
     public Pagination getDiamondsLeaderboard(int pageSize, JDA jda) {
         return new Pagination(pageSize, userRepository.getDiamondsLeaderboard(), jda, Pagination.CurrencyType.DIAMONDS);
+    }
+
+    public List<Long> getIgnoredChannels() {
+        return settingsRepository.getIgnoredChannels();
+    }
+
+    public GuildSettings getGuildSetting(long guildId) {
+        return settingsRepository.getGuildSettings(guildId).orElseThrow();
+    }
+
+    public boolean isValidMessage(long userId, long guildId, long channelId) {
+        BotUser botUser = userService.getById(userId);
+        GuildSettings guildSettings = getGuildSetting(guildId);
+
+        if (getIgnoredChannels().contains(channelId)) {
+            return false;
+        }
+        if (botUser.getPermissionLevel() < 1) {
+            return false;
+        }
+        return System.currentTimeMillis() - botUser.getLastValidMessage() >= guildSettings.getMessageCooldown();
+    }
+
+    public long randomXp() {
+        List<CurrencyChance> chances = chancesRepository.getXpChances();
+        int random = ThreadLocalRandom.current().nextInt(1, 101);
+        for (CurrencyChance chance : chances) {
+            if (random <= chance.getChance()) {
+                return chance.getAmount();
+            }
+        }
+        return 0;
+    }
+
+    public long randomCoins() {
+        List<CurrencyChance> chances = chancesRepository.getCoinChances();
+        int random = ThreadLocalRandom.current().nextInt(1, 101);
+        for (CurrencyChance chance : chances) {
+            if (random <= chance.getChance()) {
+                return chance.getAmount();
+            }
+        }
+        return 0;
+    }
+
+    public long randomDiamonds() {
+        List<CurrencyChance> chances = chancesRepository.getDiamondChances();
+        int random = ThreadLocalRandom.current().nextInt(1, 101);
+        for (CurrencyChance chance : chances) {
+            if (random <= chance.getChance()) {
+                return chance.getAmount();
+            }
+        }
+        return 0;
+    }
+
+    public Optional<Rank> addXp(long userId) {
+        userService.updateLastValidMessage(userId);
+        userService.updateMessageCount(userId);
+
+        long diamonds = randomDiamonds();
+        long coins = randomCoins();
+        if (userService.ownsItemOfCategory(userId, 3)) {
+            coins += 2;
+        }
+        long xp = randomXp();
+        if (userService.ownsItemOfCategory(userId, 4)) {
+            coins += 2;
+        }
+
+        userService.addDiamonds(userId, diamonds);
+        userService.addCoins(userId, coins);
+        long newXp = userService.addXp(userId, xp);
+
+        if (getCurrentRank(userId).getRankId() == 10) {
+            return Optional.empty();
+        }
+
+        if (newXp < getNextRank(userId).getBound()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(getRank(userService.increaseRank(userId)));
+    }
+
+    public String applyRewards(long userId, int rankId) {
+        Rank rank = getRank(rankId);
+        StringBuilder rewardText = new StringBuilder();
+        rank.getRankRewards().forEach(rankReward -> {
+            userService.addCoins(userId, rankReward.getCoins());
+            userService.addDiamonds(userId, rankReward.getDiamonds());
+            userService.addXp(userId, rankReward.getXp());
+            if (rankReward.getItem() != null) {
+                userService.addUpItem(userId, rankReward.getItem().getItemId());
+            }
+            rewardText.append(rankReward.getMessage()).append("\n");
+        });
+        return rewardText.substring(0, rewardText.length() - 1);
     }
 
 }

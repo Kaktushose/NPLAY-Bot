@@ -250,5 +250,24 @@
     "title": "Fehler!",
     "description": "{message}",
     "color": "#aa0c14"
+  },
+  "levelUp": {
+    "title": ":arrow_up: Stufenaufstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Einmalige Belohnung:",
+        "value": "{reward}"
+      },
+      {
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (ab {xp} XP)"
+      }
+    ]
   }
 }

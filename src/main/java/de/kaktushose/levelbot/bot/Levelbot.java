@@ -5,12 +5,13 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
+import com.github.kaktushose.jda.commands.util.CommandDocumentation;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
-import de.kaktushose.levelbot.database.Database;
-import de.kaktushose.levelbot.database.model.Config;
+import de.kaktushose.levelbot.database.model.GuildSettings;
 import de.kaktushose.levelbot.database.service.LevelService;
 import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
+import de.kaktushose.levelbot.listener.LevelListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -36,27 +37,26 @@ public class Levelbot {
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
     private final UserService userService;
     private final LevelService levelService;
-    private final Config config;
+    private final GuildSettings guildSettings;
     private final EmbedCache embedCache;
     private JDACommands jdaCommands;
     private JDA jda;
     private Guild guild;
 
     public Levelbot(GuildType guildType) {
-        Database database = new Database();
-        config = database.getGuildSettings(guildType.id);
         userService = new UserService();
-        levelService = new LevelService();
+        levelService = new LevelService(userService);
+        guildSettings = levelService.getGuildSetting(guildType.id);
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
-        log.info("Bot is running at version {}", config.getVersion());
+        log.info("Bot is running at version {}", guildSettings.getVersion());
 
         embedCache.loadEmbedsToCache();
 
         log.debug("Starting jda...");
-        String token = config.getBotToken();
+        String token = guildSettings.getBotToken();
         jda = JDABuilder.create(
                 token,
                 GatewayIntent.GUILD_MEMBERS,
@@ -78,7 +78,10 @@ public class Levelbot {
         ).build().awaitReady();
 
         log.debug("Registering event listeners...");
-        jda.addEventListener(new JoinLeaveListener(userService));
+        jda.addEventListener(
+                new JoinLeaveListener(userService),
+                new LevelListener(levelService, embedCache)
+        );
 
         log.debug("Starting ReactionListener...");
         ReactionListener.setAutoRemove(true);
@@ -91,7 +94,7 @@ public class Levelbot {
                 .addProvider(this)
                 .setCommandPackage("de.kaktushose.levelbot.commands")
                 .build();
-        jdaCommands.getDefaultSettings().setPrefix(config.getBotPrefix()).getHelpLabels().add("hilfe");
+        jdaCommands.getDefaultSettings().setPrefix(guildSettings.getBotPrefix()).getHelpLabels().add("hilfe");
 
         log.debug("Applying permissions...");
         userService.getByPermission(0).forEach(botUser ->
@@ -128,7 +131,6 @@ public class Levelbot {
 
     public Levelbot indexMembers() {
         List<Member> guildMembers = guild.getMembers();
-
         guildMembers.forEach(member -> userService.createIfAbsent(member.getIdLong()));
 
         List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
@@ -138,11 +140,6 @@ public class Levelbot {
             }
         });
         return this;
-    }
-
-    @Produces
-    public Config getConfig() {
-        return config;
     }
 
     @Produces
@@ -170,10 +167,6 @@ public class Levelbot {
         return this;
     }
 
-    public JDACommands getJdaCommands() {
-        return jdaCommands;
-    }
-
     public enum GuildType {
 
         TESTING(496614159254028289L),
@@ -186,5 +179,4 @@ public class Levelbot {
         }
 
     }
-
 }

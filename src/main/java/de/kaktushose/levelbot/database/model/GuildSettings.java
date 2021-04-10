@@ -5,8 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "settings")
-public class Config {
+@Table(name = "guild_settings")
+public class GuildSettings {
 
     @Id
     private Long guildId;
@@ -14,16 +14,18 @@ public class Config {
     private String botToken;
     private String botPrefix;
     private long botChannelId;
+    private long messageCooldown;
 
-    public Config() {
+    public GuildSettings() {
     }
 
-    public Config(long guildId, String version, String botToken, String botPrefix, long botChannelId) {
+    public GuildSettings(long guildId, String version, String botToken, String botPrefix, long botChannelId, long messageCooldown) {
         this.guildId = guildId;
         this.version = version;
         this.botToken = botToken;
         this.botPrefix = botPrefix;
         this.botChannelId = botChannelId;
+        this.messageCooldown = messageCooldown;
     }
 
     public Long getGuildId() {
@@ -64,5 +66,9 @@ public class Config {
 
     public void setBotChannelId(long botChannelId) {
         this.botChannelId = botChannelId;
+    }
+
+    public long getMessageCooldown() {
+        return messageCooldown;
     }
 }

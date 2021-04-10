@@ -1,7 +1,7 @@
 {
   "defaultHelp": {
     "title": "Generelle Hilfe",
-    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um sepzifische Hilfe zu erhalten",
+    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um sepzifische Hilfe zu erhalten.",
     "color": "#86c240"
   },
   "specificHelp": {
@@ -37,12 +37,12 @@
   },
   "commandNotFound": {
     "title": "Command Nicht Gefunden!",
-    "description": "```Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten```",
+    "description": "Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten.",
     "color": "#f4cd53"
   },
   "insufficientPermissions": {
     "title": "Unzureichende Berechtigungen!",
-    "description": "`{prefix}{label}` benötigt spezielle Berechtigungen um ausgeführt zu werden",
+    "description": "`{prefix}{label}` benötigt spezielle Berechtigungen um ausgeführt zu werden.",
     "color": "#ff0000",
     "fields": [
       {
@@ -65,5 +65,10 @@
         "value": "`{actual}`"
       }
     ]
+  },
+  "userMuted": {
+    "title": "Unzureichende Berechtigungen!",
+    "description": "Du bist gemuted.",
+    "color": "#ffc800"
   }
 }

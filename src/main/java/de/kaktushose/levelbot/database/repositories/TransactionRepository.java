@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
 
     @Query(value = "SELECT * FROM transactions WHERE item_id = :itemId and user_id = :userId", nativeQuery = true)
-    Optional<Transaction> findByItemIdAndUserId(@Param("itemId") int itemId, @Param("userId") long userId);
+    Optional<Transaction> findByUserIdAndItemId(@Param("userId") long userId, @Param("itemId") int itemId);
 
 }

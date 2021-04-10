@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserService {
@@ -45,7 +46,11 @@ public class UserService {
     }
 
     public BotUser createIfAbsent(long userId) {
-        return userRepository.findById(userId).orElse(create(userId));
+        Optional<BotUser> optional = userRepository.findById(userId);
+        if (optional.isEmpty()) {
+            return create(userId);
+        }
+        return optional.get();
     }
 
     public void delete(long id) {
@@ -60,7 +65,7 @@ public class UserService {
     }
 
     public boolean hasItem(long userId, int itemId) {
-        return transactionRepository.findByItemIdAndUserId(itemId, userId).isPresent();
+        return transactionRepository.findByUserIdAndItemId(userId, itemId).isPresent();
     }
 
     public void buyItem(long userId, int itemId) {
@@ -75,9 +80,32 @@ public class UserService {
         userRepository.save(botUser);
     }
 
+    public void addUpItem(long userId, int itemId) {
+        BotUser botUser = getById(userId);
+        Item item = itemRepository.findById(itemId).orElseThrow();
+        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
+        Transaction transaction;
+        if (optional.isPresent()) {
+            transaction = optional.get();
+            transaction.setBuyTime(transaction.getBuyTime() + item.getDuration());
+        } else {
+            transaction = new Transaction();
+            transaction.setBuyTime(System.currentTimeMillis());
+            transaction.setItem(item);
+        }
+        botUser.getTransactions().add(transaction);
+        userRepository.save(botUser);
+        transactionRepository.save(transaction);
+    }
+
     public List<Item> getItems(long userId) {
         BotUser botUser = getById(userId);
         return botUser.getTransactions().stream().map(Transaction::getItem).collect(Collectors.toList());
+    }
+
+    public boolean ownsItemOfCategory(long userId, int categoryId) {
+        List<Item> userItems = getItems(userId);
+        return itemRepository.findByCategoryId(categoryId).stream().anyMatch(userItems::contains);
     }
 
     public void removeItem(long userId, int itemId) {
@@ -98,22 +126,25 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public void addCoins(long userId, int amount) {
+    public long addCoins(long userId, long amount) {
         BotUser botUser = getById(userId);
         botUser.setCoins(botUser.getCoins() + amount);
         userRepository.save(botUser);
+        return botUser.getCoins();
     }
 
-    public void addXp(long userId, int amount) {
+    public long addXp(long userId, long amount) {
         BotUser botUser = getById(userId);
         botUser.setXp(botUser.getXp() + amount);
         userRepository.save(botUser);
+        return botUser.getXp();
     }
 
-    public void addDiamonds(long userId, int amount) {
+    public long addDiamonds(long userId, long amount) {
         BotUser botUser = getById(userId);
         botUser.setDiamonds(botUser.getDiamonds() + amount);
         userRepository.save(botUser);
+        return botUser.getDiamonds();
     }
 
     public void setCoins(long userId, int amount) {
@@ -132,6 +163,28 @@ public class UserService {
         BotUser botUser = getById(userId);
         botUser.setDiamonds(amount);
         userRepository.save(botUser);
+    }
+
+    public void updateLastValidMessage(long userId) {
+        BotUser botUser = getById(userId);
+        botUser.setLastValidMessage(System.currentTimeMillis());
+        userRepository.save(botUser);
+    }
+
+    public void updateMessageCount(long userId) {
+        BotUser botUser = getById(userId);
+        botUser.setMessageCount(botUser.getMessageCount() + 1);
+        userRepository.save(botUser);
+    }
+
+    public int increaseRank(long userId) {
+        BotUser botUser = getById(userId);
+        if (botUser.getLevel() == 10) {
+            return 10;
+        }
+        botUser.setLevel(botUser.getLevel() + 1);
+        userRepository.save(botUser);
+        return botUser.getLevel();
     }
 
 }
