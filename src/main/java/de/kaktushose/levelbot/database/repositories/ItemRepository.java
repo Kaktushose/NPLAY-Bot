@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ItemRepository extends CrudRepository<Item, Integer> {
 
-    @Query(value = "SELECT * FROM items WHERE category_id = :categoryId", nativeQuery = true)
-    List<Item> findByCategoryId(@Param("categoryId") int categoryId);
+    List<Item> findByCategoryId(int categoryId);
 
 }

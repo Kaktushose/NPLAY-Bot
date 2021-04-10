@@ -5,22 +5,20 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
-import com.github.kaktushose.jda.commands.util.CommandDocumentation;
+import com.github.kaktushose.jda.commands.exceptions.CommandException;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
-import de.kaktushose.levelbot.database.model.GuildSettings;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.service.LevelService;
 import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
 import de.kaktushose.levelbot.listener.LevelListener;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -41,6 +39,7 @@ public class Levelbot {
     private final LevelService levelService;
     private final GuildSettings guildSettings;
     private final EmbedCache embedCache;
+    private final TaskScheduler taskScheduler;
     private JDACommands jdaCommands;
     private JDA jda;
     private Guild guild;
@@ -50,6 +49,7 @@ public class Levelbot {
         levelService = new LevelService(userService);
         guildSettings = levelService.getGuildSetting(guildType.id);
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
+        taskScheduler = new TaskScheduler(this);
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
@@ -119,6 +119,15 @@ public class Levelbot {
 
         guild = jda.getGuildById(496614159254028289L);
 
+        taskScheduler.addRepetitiveTask(() -> {
+            try {
+                checkForExpiredItems();
+                dmRankInfo();
+            } catch (Throwable t) {
+                log.error("An exception has occurred while executing daily tasks!", t);
+            }
+        }, 0, 1, TimeUnit.DAYS);
+
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("development"));
 
@@ -156,12 +165,91 @@ public class Levelbot {
 
     public void addItemRole(long userId, int itemId) {
         Item item = levelService.getItem(itemId);
+        if (item.getRoleId() == -1) {
+            return;
+        }
         guild.addRoleToMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
     public void removeItemRole(long userId, int itemId) {
         Item item = levelService.getItem(itemId);
         guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
+    }
+
+    public void dmRankInfo() {
+        userService.getByDailyEnabled().forEach(botUser -> {
+            User user = jda.getUserById(botUser.getUserId());
+            user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(generateRankInfo(user).build()))
+                    .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+        });
+    }
+
+    public void checkForExpiredItems() {
+        userService.getAll().forEach(botUser -> {
+            for (Transaction transaction : botUser.getTransactions()) {
+                Item item = transaction.getItem();
+                long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
+                long userId = botUser.getUserId();
+                System.out.println("checking " + userId);
+                System.out.println("remaining" + remaining);
+                int itemId = item.getItemId();
+                if (remaining < 0) {
+                    userService.removeItem(userId, itemId);
+                    removeItemRole(userId, itemId);
+                    sendItemExpiredInformation(userId);
+                } else if (remaining < 86400000) {
+                    taskScheduler.addSingleTask(() -> {
+                        try {
+                            userService.removeItem(userId, itemId);
+                            removeItemRole(userId, itemId);
+                            sendItemExpiredInformation(userId);
+                        } catch (Throwable t) {
+                            log.error("An exception has occurred while removing an item!", t);
+                        }
+
+                    }, remaining, TimeUnit.MILLISECONDS);
+                }
+            }
+        });
+    }
+
+    public void sendItemExpiredInformation(long userId) {
+        System.out.println("cringe bro");
+    }
+
+    public EmbedBuilder generateRankInfo(User target) {
+
+        BotUser botUser = userService.getById(target.getIdLong());
+
+        Rank currentRank = levelService.getCurrentRank(botUser.getUserId());
+        Rank nextRank = levelService.getNextRank(botUser.getUserId());
+        long nextRankXp = nextRank.getBound() - botUser.getXp();
+        long xpGain = botUser.getXp() - botUser.getStartXp();
+        long coinsGain = botUser.getCoins() - botUser.getStartCoins();
+        long diamondsGain = botUser.getDiamonds() - botUser.getStartDiamonds();
+
+        EmbedBuilder embedBuilder = embedCache.getEmbed("rankInfo")
+                .injectValue("user", target.getAsMention())
+                .injectValue("color", currentRank.getColor())
+                .injectValue("currentRank", String.format("<@&%d>", currentRank.getRoleId()))
+                .injectValue("nextRank", String.format("<@&%d> (noch %d XP)", nextRank.getRoleId(), nextRankXp))
+                .injectValue("avatarUrl", target.getAvatarUrl())
+                .injectValue("xpGain", xpGain)
+                .injectValue("coinsGain", coinsGain)
+                .injectValue("diamondsGain", diamondsGain)
+                .injectFields(botUser)
+                .toEmbedBuilder();
+
+        if (botUser.getTransactions().isEmpty()) {
+            embedBuilder.addField("Keine Items in Besitz", "", false);
+        }
+
+        botUser.getTransactions().forEach(transaction -> {
+            Item item = transaction.getItem();
+            embedBuilder.addField(item.getName(), item.getRemainingTimeAsDate(transaction.getBuyTime()), false);
+        });
+
+        return embedBuilder;
     }
 
     @Produces

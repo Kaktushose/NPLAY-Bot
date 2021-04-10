@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface UserRepository extends CrudRepository<BotUser, Long> {
 
-    @Query(value = "SELECT * FROM users WHERE permission_level = :permissionLevel", nativeQuery = true)
-    List<BotUser> findByPermissionLevel(@Param("permissionLevel") int permissionLevel);
+    List<BotUser> findByPermissionLevel(int permissionLevel);
+
+    List<BotUser> findByDailyUpdate(boolean dailyUpdate);
 
     @Query(value = "SELECT * FROM users order by xp desc", nativeQuery = true)
     List<BotUser> getXpLeaderboard();

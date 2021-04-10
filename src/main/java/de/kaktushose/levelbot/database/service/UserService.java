@@ -41,6 +41,10 @@ public class UserService {
         return userRepository.findByPermissionLevel(permissionLevel);
     }
 
+    public List<BotUser> getByDailyEnabled() {
+        return userRepository.findByDailyUpdate(true);
+    }
+
     public BotUser create(long userId) {
         return userRepository.save(new BotUser(userId));
     }
@@ -109,9 +113,8 @@ public class UserService {
     }
 
     public void removeItem(long userId, int itemId) {
-        BotUser botUser = getById(userId);
-        botUser.getTransactions().removeIf(transaction -> transaction.getItem().getItemId() == itemId);
-        userRepository.save(botUser);
+        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
+        optional.ifPresent(transactionRepository::delete);
     }
 
     public boolean switchDaily(long userId) {
