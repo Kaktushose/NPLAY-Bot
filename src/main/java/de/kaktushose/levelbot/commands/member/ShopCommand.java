@@ -7,6 +7,7 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.service.LevelService;
@@ -40,6 +41,8 @@ public class ShopCommand {
     private LevelService levelService;
     @Inject
     private EmbedCache embedCache;
+    @Inject
+    private Levelbot levelbot;
 
     private EmbedBuilder shopOverview;
     private Map<ItemCategory, EmbedBuilder> specificShops;
@@ -201,6 +204,7 @@ public class ShopCommand {
         }
 
         userService.buyItem(botUser.getUserId(), item.getItemId());
+        levelbot.addItemRole(botUser.getUserId(), item.getItemId());
 
         return Optional.empty();
     }

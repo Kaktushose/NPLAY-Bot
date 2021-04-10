@@ -8,6 +8,8 @@ import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import com.github.kaktushose.jda.commands.util.CommandDocumentation;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.database.model.GuildSettings;
+import de.kaktushose.levelbot.database.model.Item;
+import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.service.LevelService;
 import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
@@ -79,8 +81,8 @@ public class Levelbot {
 
         log.debug("Registering event listeners...");
         jda.addEventListener(
-                new JoinLeaveListener(userService),
-                new LevelListener(levelService, embedCache)
+                new JoinLeaveListener(this),
+                new LevelListener(this)
         );
 
         log.debug("Starting ReactionListener...");
@@ -140,6 +142,26 @@ public class Levelbot {
             }
         });
         return this;
+    }
+
+    public void addRankRole(long userId, int rankId) {
+        Rank rank = levelService.getRank(rankId);
+        guild.addRoleToMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+    }
+
+    public void removeRankRole(long userId, int rankId) {
+        Rank rank = levelService.getRank(rankId);
+        guild.removeRoleFromMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+    }
+
+    public void addItemRole(long userId, int itemId) {
+        Item item = levelService.getItem(itemId);
+        guild.addRoleToMember(userId, guild.getRoleById(item.getRoleId())).queue();
+    }
+
+    public void removeItemRole(long userId, int itemId) {
+        Item item = levelService.getItem(itemId);
+        guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
     @Produces

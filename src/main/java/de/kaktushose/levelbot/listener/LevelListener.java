@@ -1,6 +1,7 @@
 package de.kaktushose.levelbot.listener;
 
 import com.github.kaktushose.jda.commands.api.EmbedCache;
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.service.LevelService;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,11 +16,11 @@ import java.util.Optional;
 public class LevelListener extends ListenerAdapter {
 
     private final LevelService levelService;
-    private final EmbedCache embedCache;
+    private final Levelbot levelbot;
 
-    public LevelListener(LevelService levelService, EmbedCache embedCache) {
-        this.levelService = levelService;
-        this.embedCache = embedCache;
+    public LevelListener(Levelbot levelbot) {
+        this.levelService = levelbot.getLevelService();
+        this.levelbot = levelbot;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class LevelListener extends ListenerAdapter {
             return;
         }
 
-        Optional<Rank> optional = levelService.addXp(author.getIdLong());
+        Optional<Rank> optional = levelService.onValidMessage(author.getIdLong());
         if (optional.isEmpty()) {
             return;
         }
@@ -48,13 +49,11 @@ public class LevelListener extends ListenerAdapter {
         );
         String rewards = levelService.applyRewards(author.getIdLong(), currentRank.getRankId());
 
-        guild.addRoleToMember(author.getIdLong(), guild.getRoleById(currentRank.getRoleId()))
-                .and(guild.removeRoleFromMember(author.getIdLong(),
-                        guild.getRoleById(levelService.getRank(currentRank.getRankId() - 1).getRoleId()))
-                ).queue();
+        levelbot.addRankRole(author.getIdLong(), currentRank.getRankId());
+        levelbot.removeRankRole(author.getIdLong(), levelService.getPreviousRank(author.getIdLong()).getRankId());
 
         channel.sendMessage(author.getAsMention())
-                .and(channel.sendMessage(embedCache.getEmbed("levelUp")
+                .and(channel.sendMessage(levelbot.getEmbedCache().getEmbed("levelUp")
                         .injectValue("user", author.getAsMention())
                         .injectValue("color", currentRank.getColor())
                         .injectValue("currentRank", guild.getRoleById(currentRank.getRoleId()).getAsMention())

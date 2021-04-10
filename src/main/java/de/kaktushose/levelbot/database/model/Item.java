@@ -14,17 +14,19 @@ public class Item {
     private long duration;
     private int categoryId;
     private boolean visible;
+    private long roleId;
 
     public Item() {
     }
 
-    public Item(int itemId, String name, int price, long duration, int categoryId, boolean visible) {
+    public Item(int itemId, String name, int price, long duration, int categoryId, boolean visible, long roleId) {
         this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.duration = duration;
         this.categoryId = categoryId;
         this.visible = visible;
+        this.roleId = roleId;
     }
 
     public Integer getItemId() {
@@ -61,7 +63,7 @@ public class Item {
 
     public int getCategoryId() {
         return categoryId;
-    }
+}
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
@@ -73,6 +75,14 @@ public class Item {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(long roleId) {
+        this.roleId = roleId;
     }
 
     public String getRemainingTimeAsDate(long buyTime) {

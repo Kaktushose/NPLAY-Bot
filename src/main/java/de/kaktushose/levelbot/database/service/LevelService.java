@@ -34,9 +34,17 @@ public class LevelService {
         return rankRepository.findById(rankId).orElseThrow();
     }
 
+    public Rank getPreviousRank(long userId) {
+        BotUser botUser = userService.getById(userId);
+        if (botUser.getLevel() == 1) {
+            return getRank(1);
+        }
+        return getRank(botUser.getLevel() - 1);
+    }
+
     public Rank getCurrentRank(long userId) {
         BotUser botUser = userService.getById(userId);
-        return rankRepository.findById(botUser.getLevel()).orElseThrow();
+        return getRank(botUser.getLevel());
     }
 
     public Rank getNextRank(long userId) {
@@ -49,6 +57,10 @@ public class LevelService {
 
     public List<Item> getItemsByCategoryId(int categoryId) {
         return itemRepository.findByCategoryId(categoryId);
+    }
+
+    public Item getItem(int itemId) {
+        return itemRepository.findById(itemId).orElseThrow();
     }
 
     public Pagination getXpLeaderboard(int pageSize, JDA jda) {
@@ -117,7 +129,7 @@ public class LevelService {
         return 0;
     }
 
-    public Optional<Rank> addXp(long userId) {
+    public Optional<Rank> onValidMessage(long userId) {
         userService.updateLastValidMessage(userId);
         userService.updateMessageCount(userId);
 
@@ -160,5 +172,4 @@ public class LevelService {
         });
         return rewardText.substring(0, rewardText.length() - 1);
     }
-
 }
