@@ -269,5 +269,16 @@
         "value": ":dart: {nextRank} (ab {xp} XP)"
       }
     ]
+  },
+  "itemExpired": {
+    "title": "Item abgelaufen!",
+    "description": "Dein {item} ist abgelaufen!",
+    "color": "#f4cd53",
+    "fields": [
+      {
+        "name": "Gekauft am:",
+        "value": "{date}"
+      }
+    ]
   }
 }

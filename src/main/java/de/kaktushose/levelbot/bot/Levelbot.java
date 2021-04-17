@@ -3,6 +3,7 @@ package de.kaktushose.levelbot.bot;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
+import com.github.kaktushose.jda.commands.entities.EmbedDTO;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import com.github.kaktushose.jda.commands.exceptions.CommandException;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -49,7 +52,7 @@ public class Levelbot {
         levelService = new LevelService(userService);
         guildSettings = levelService.getGuildSetting(guildType.id);
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
-        taskScheduler = new TaskScheduler(this);
+        taskScheduler = new TaskScheduler();
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
@@ -176,6 +179,32 @@ public class Levelbot {
         guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
+    public void checkForExpiredItems() {
+        userService.getAll().forEach(botUser -> {
+            for (Transaction transaction : botUser.getTransactions()) {
+                Item item = transaction.getItem();
+                long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
+                long userId = botUser.getUserId();
+                int itemId = item.getItemId();
+                if (remaining < 0) {
+                    userService.removeItem(userId, itemId);
+                    removeItemRole(userId, itemId);
+                    sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
+                } else if (remaining < 86400000) {
+                    taskScheduler.addSingleTask(() -> {
+                        try {
+                            userService.removeItem(userId, itemId);
+                            removeItemRole(userId, itemId);
+                            sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
+                        } catch (Throwable t) {
+                            log.error("An exception has occurred while removing an item!", t);
+                        }
+                    }, remaining, TimeUnit.MILLISECONDS);
+                }
+            }
+        });
+    }
+
     public void dmRankInfo() {
         userService.getByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
@@ -184,41 +213,23 @@ public class Levelbot {
         });
     }
 
-    public void checkForExpiredItems() {
-        userService.getAll().forEach(botUser -> {
-            for (Transaction transaction : botUser.getTransactions()) {
-                Item item = transaction.getItem();
-                long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
-                long userId = botUser.getUserId();
-                System.out.println("checking " + userId);
-                System.out.println("remaining" + remaining);
-                int itemId = item.getItemId();
-                if (remaining < 0) {
-                    userService.removeItem(userId, itemId);
-                    removeItemRole(userId, itemId);
-                    sendItemExpiredInformation(userId);
-                } else if (remaining < 86400000) {
-                    taskScheduler.addSingleTask(() -> {
-                        try {
-                            userService.removeItem(userId, itemId);
-                            removeItemRole(userId, itemId);
-                            sendItemExpiredInformation(userId);
-                        } catch (Throwable t) {
-                            log.error("An exception has occurred while removing an item!", t);
-                        }
-
-                    }, remaining, TimeUnit.MILLISECONDS);
-                }
-            }
-        });
-    }
-
-    public void sendItemExpiredInformation(long userId) {
-        System.out.println("cringe bro");
+    public void sendItemExpiredInformation(long userId, int itemId, long buyTime) {
+        User user = jda.getUserById(userId);
+        Item item = levelService.getItem(itemId);
+        EmbedBuilder embed = embedCache.getEmbed("itemExpired")
+                .injectValue("item", item.getName())
+                .injectValue("date", new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(buyTime)))
+                .toEmbedBuilder();
+        user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(embed.build()))
+                .queue(null, new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, exception -> {
+                    TextChannel channel = guild.getTextChannelById(
+                            levelService.getGuildSetting(guild.getIdLong()).getBotChannelId()
+                    );
+                    channel.sendMessage(user.getAsMention()).and(channel.sendMessage(embed.build())).queue();
+                }));
     }
 
     public EmbedBuilder generateRankInfo(User target) {
-
         BotUser botUser = userService.getById(target.getIdLong());
 
         Rank currentRank = levelService.getCurrentRank(botUser.getUserId());

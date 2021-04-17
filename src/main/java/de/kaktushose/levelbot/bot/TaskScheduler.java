@@ -6,11 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskScheduler {
 
-    private final Levelbot levelbot;
     private final ScheduledExecutorService executorService;
 
-    public TaskScheduler(Levelbot levelbot) {
-        this.levelbot = levelbot;
+    public TaskScheduler() {
         executorService = Executors.newScheduledThreadPool(10);
     }
 
