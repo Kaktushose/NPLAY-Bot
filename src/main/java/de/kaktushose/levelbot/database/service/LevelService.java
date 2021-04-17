@@ -79,13 +79,13 @@ public class LevelService {
         return settingsRepository.getIgnoredChannels();
     }
 
-    public GuildSettings getGuildSetting(long guildId) {
+    public GuildSettings getGuildSettings(long guildId) {
         return settingsRepository.getGuildSettings(guildId).orElseThrow();
     }
 
     public boolean isValidMessage(long userId, long guildId, long channelId) {
         BotUser botUser = userService.getById(userId);
-        GuildSettings guildSettings = getGuildSetting(guildId);
+        GuildSettings guildSettings = getGuildSettings(guildId);
 
         if (getIgnoredChannels().contains(channelId)) {
             return false;

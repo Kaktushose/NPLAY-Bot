@@ -46,8 +46,7 @@ public class StopCommand {
                         if (reactionEvent.getEmote().equals(EmoteType.THUMBSUP.unicode)) {
                             event.reply("https://tenor.com/view/tekashi-69-fade-out-peace-gif-15141419");
                             confirmMessage.delete().queue();
-                            levelbot.stop();
-                            System.exit(0);
+                            levelbot.stop().terminate(0);
                         }
                         reactionWaiter.stopWaiting(true);
                     });

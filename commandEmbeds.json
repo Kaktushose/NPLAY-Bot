@@ -280,5 +280,15 @@
         "value": "{date}"
       }
     ]
+  },
+  "botStop": {
+    "title": "Bot wurde heruntergefahren!",
+    "description": ":wrench: Wir sind in Kürze wieder zurück!",
+    "color": "#aa0c14"
+  },
+  "botStart": {
+    "title": "Bot wurde gestartet!",
+    "description": ":gear: Version: {version}",
+    "color": "#86c240"
   }
 }

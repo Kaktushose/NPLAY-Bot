@@ -45,7 +45,7 @@ public class ShopCommand {
     private Levelbot levelbot;
 
     private EmbedBuilder shopOverview;
-    private Map<ItemCategory, EmbedBuilder> specificShops;
+    private final Map<ItemCategory, EmbedBuilder> specificShops;
 
     public ShopCommand() {
         specificShops = new HashMap<>();

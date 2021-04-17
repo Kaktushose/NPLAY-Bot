@@ -1,7 +1,6 @@
 package de.kaktushose.levelbot.database.model;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "transactions")

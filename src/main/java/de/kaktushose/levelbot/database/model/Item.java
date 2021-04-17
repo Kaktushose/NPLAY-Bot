@@ -1,6 +1,8 @@
 package de.kaktushose.levelbot.database.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.concurrent.TimeUnit;
 
 @Entity
@@ -63,7 +65,7 @@ public class Item {
 
     public int getCategoryId() {
         return categoryId;
-}
+    }
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
@@ -92,7 +94,7 @@ public class Item {
         long millis = duration - (System.currentTimeMillis() - buyTime);
         long days = TimeUnit.MILLISECONDS.toDays(millis);
         long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
-        String daysPattern = days != 1 ?  "%d Tage" : "ein Tag";
+        String daysPattern = days != 1 ? "%d Tage" : "ein Tag";
         String hoursPattern = hours != 1 ? "%d Stunden" : "eine Stunde";
         return String.format(daysPattern, days) + " und " + String.format(hoursPattern, hours);
     }

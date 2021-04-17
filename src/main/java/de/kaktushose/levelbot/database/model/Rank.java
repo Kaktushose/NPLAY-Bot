@@ -1,7 +1,6 @@
 package de.kaktushose.levelbot.database.model;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.List;
 
 @Entity

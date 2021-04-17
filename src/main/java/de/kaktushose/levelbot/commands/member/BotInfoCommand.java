@@ -6,12 +6,13 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.levelbot.database.model.GuildSettings;
+import de.kaktushose.levelbot.database.service.LevelService;
 
 @CommandController({"botinfo", "credits"})
 public class BotInfoCommand {
 
     @Inject
-    private GuildSettings guildSettings;
+    private LevelService levelService;
     @Inject
     private EmbedCache embedCache;
 
@@ -22,6 +23,7 @@ public class BotInfoCommand {
             category = "Sonstiges"
     )
     public void onBotInfo(CommandEvent event) {
+        GuildSettings guildSettings = levelService.getGuildSettings(event.getGuild().getIdLong());
         event.reply(embedCache.getEmbed("botInfo")
                 .injectValue("prefix", guildSettings.getBotPrefix())
                 .injectValue("version", guildSettings.getVersion())

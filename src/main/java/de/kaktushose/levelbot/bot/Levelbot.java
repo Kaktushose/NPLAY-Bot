@@ -3,10 +3,8 @@ package de.kaktushose.levelbot.bot;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
-import com.github.kaktushose.jda.commands.entities.EmbedDTO;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
-import com.github.kaktushose.jda.commands.exceptions.CommandException;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.service.LevelService;
@@ -46,11 +44,12 @@ public class Levelbot {
     private JDACommands jdaCommands;
     private JDA jda;
     private Guild guild;
+    private TextChannel botChannel;
 
     public Levelbot(GuildType guildType) {
         userService = new UserService();
         levelService = new LevelService(userService);
-        guildSettings = levelService.getGuildSetting(guildType.id);
+        guildSettings = levelService.getGuildSettings(guildType.id);
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
     }
@@ -120,7 +119,8 @@ public class Levelbot {
                 }
         );
 
-        guild = jda.getGuildById(496614159254028289L);
+        guild = jda.getGuildById(guildSettings.getGuildId());
+        botChannel = guild.getTextChannelById(guildSettings.getBotChannelId());
 
         taskScheduler.addRepetitiveTask(() -> {
             try {
@@ -134,13 +134,22 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("development"));
 
+        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
+                .injectValue("version", guildSettings.getVersion())
+                .toMessageEmbed()
+        ).queue();
         return this;
     }
 
     public Levelbot stop() {
-        jda.shutdown();
+        getBotChannel().sendMessage(embedCache.getEmbed("botStop").toMessageEmbed()).complete();
         jdaCommands.shutdown();
+        jda.shutdown();
         return this;
+    }
+
+    public void terminate(int status) {
+        System.exit(0);
     }
 
     public Levelbot indexMembers() {
@@ -222,9 +231,7 @@ public class Levelbot {
                 .toEmbedBuilder();
         user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(embed.build()))
                 .queue(null, new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, exception -> {
-                    TextChannel channel = guild.getTextChannelById(
-                            levelService.getGuildSetting(guild.getIdLong()).getBotChannelId()
-                    );
+                    TextChannel channel = getBotChannel();
                     channel.sendMessage(user.getAsMention()).and(channel.sendMessage(embed.build())).queue();
                 }));
     }
@@ -286,6 +293,10 @@ public class Levelbot {
     @Produces
     public Levelbot getLevelbot() {
         return this;
+    }
+
+    public TextChannel getBotChannel() {
+        return botChannel;
     }
 
     public enum GuildType {

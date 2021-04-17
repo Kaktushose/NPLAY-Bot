@@ -1,6 +1,5 @@
 package de.kaktushose.levelbot.listener;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.service.LevelService;
@@ -44,9 +43,7 @@ public class LevelListener extends ListenerAdapter {
 
         Rank currentRank = optional.get();
         Rank nextRank = levelService.getNextRank(author.getIdLong());
-        TextChannel channel = guild.getTextChannelById(
-                levelService.getGuildSetting(event.getGuild().getIdLong()).getBotChannelId()
-        );
+        TextChannel channel = levelbot.getBotChannel();
         String rewards = levelService.applyRewards(author.getIdLong(), currentRank.getRankId());
 
         levelbot.addRankRole(author.getIdLong(), currentRank.getRankId());
