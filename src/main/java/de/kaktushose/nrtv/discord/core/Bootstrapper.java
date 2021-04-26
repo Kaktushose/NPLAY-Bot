@@ -62,6 +62,50 @@ public class Bootstrapper {
                     bot.getJda().getPresence().setActivity(Activity.playing("Farming Simulator 19"));
                     break;
                 case 3:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("Notruf 112 2"));
+                    break;
+                case 4:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.hearing("Podcast Simulator 3000"));
+                    break;
+                case 5:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("Snowrunner"));
+                    break;
+                case 6:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("The Bus"));
+                    break;
+                case 7:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("Microsoft Flight Simulator 2020"));
+                    break;
+                case 8:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("kein Among Us"));
+                    break;
+                case 9:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.watching("dem Lavendel beim vertrocknen zu"));
+                    break;
+                case 10:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("TSW 2"));
+                    break;
+                case 11:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("kein Among Us"));
+                    break;
+                case 12:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.playing("kein Among Us"));
+                    break;
+                case 13:
+                    counter.set(counter.get() + 1);
+                    bot.getJda().getPresence().setActivity(Activity.watching("Ansgar zu"));
+                    break;
+                case 14:
                     counter.set(0);
                     bot.getJda().getPresence().setActivity(Activity.watching("FarmerTown"));
             }
