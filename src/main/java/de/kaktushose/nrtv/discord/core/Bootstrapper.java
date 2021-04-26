@@ -99,13 +99,9 @@ public class Bootstrapper {
                     break;
                 case 12:
                     counter.set(counter.get() + 1);
-                    bot.getJda().getPresence().setActivity(Activity.playing("kein Among Us"));
-                    break;
-                case 13:
-                    counter.set(counter.get() + 1);
                     bot.getJda().getPresence().setActivity(Activity.watching("Ansgar zu"));
                     break;
-                case 14:
+                case 13:
                     counter.set(0);
                     bot.getJda().getPresence().setActivity(Activity.watching("FarmerTown"));
             }
