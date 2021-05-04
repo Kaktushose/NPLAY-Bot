@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "rewards")
-public class Rewards {
+public class Reward {
 
     @Id
     private Integer rewardId;
@@ -16,10 +16,10 @@ public class Rewards {
     private Item item;
     private String message;
 
-    public Rewards() {
+    public Reward() {
     }
 
-    public Rewards(Integer rewardId, int coins, int xp, int diamonds, Item item, String message) {
+    public Reward(Integer rewardId, int coins, int xp, int diamonds, Item item, String message) {
         this.rewardId = rewardId;
         this.coins = coins;
         this.xp = xp;

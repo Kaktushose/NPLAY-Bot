@@ -11,6 +11,7 @@ import de.kaktushose.levelbot.database.service.LevelService;
 import de.kaktushose.levelbot.database.service.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
 import de.kaktushose.levelbot.listener.LevelListener;
+import de.kaktushose.levelbot.listener.NitroBoosterListener;
 import de.kaktushose.levelbot.listener.VoiceTextLink;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -86,7 +87,8 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(839150041955565588L), 570698190584545283L)
+                new VoiceTextLink(jda.getTextChannelById(839150041955565588L), 570698190584545283L),
+                new NitroBoosterListener(this)
         );
 
         log.debug("Starting ReactionListener...");
@@ -128,6 +130,7 @@ public class Levelbot {
             try {
                 checkForExpiredItems();
                 dmRankInfo();
+                checkForNitroBoostersRewards();
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
             }
@@ -221,6 +224,14 @@ public class Levelbot {
             User user = jda.getUserById(botUser.getUserId());
             user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(generateRankInfo(user).build()))
                     .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+        });
+    }
+
+    public void checkForNitroBoostersRewards() {
+        userService.getActiveNitroBoosters().forEach(nitroBooster -> {
+            if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - nitroBooster.getBoostStart()) % 30 == 0) {
+                userService.addMonthlyReward(nitroBooster.getUserId());
+            }
         });
     }
 

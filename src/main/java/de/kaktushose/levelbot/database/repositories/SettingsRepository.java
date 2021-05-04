@@ -1,6 +1,7 @@
 package de.kaktushose.levelbot.database.repositories;
 
 import de.kaktushose.levelbot.database.model.GuildSettings;
+import de.kaktushose.levelbot.database.model.Reward;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +16,11 @@ public interface SettingsRepository extends Repository<GuildSettings, Long> {
 
     @Query(value = "SELECT * FROM ignored_channels", nativeQuery = true)
     List<Long> getIgnoredChannels();
+
+    @Query(value = "SELECT * FROM rewards where reward_id = 12", nativeQuery = true)
+    Reward getMonthlyNitroBoosterReward();
+
+    @Query(value = "SELECT * FROM rewards where reward_id = 11", nativeQuery = true)
+    Reward getOneTimeNitroBoosterReward();
 
 }

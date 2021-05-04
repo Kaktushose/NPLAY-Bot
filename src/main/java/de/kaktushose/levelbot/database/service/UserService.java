@@ -1,13 +1,7 @@
 package de.kaktushose.levelbot.database.service;
 
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.NitroBooster;
-import de.kaktushose.levelbot.database.model.Transaction;
-import de.kaktushose.levelbot.database.repositories.ItemRepository;
-import de.kaktushose.levelbot.database.repositories.NitroBoosterRepository;
-import de.kaktushose.levelbot.database.repositories.TransactionRepository;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.repositories.*;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -22,6 +16,7 @@ public class UserService {
     private final TransactionRepository transactionRepository;
     private final ItemRepository itemRepository;
     private final NitroBoosterRepository nitroBoosterRepository;
+    private final SettingsRepository settingsRepository;
 
     public UserService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
@@ -29,6 +24,7 @@ public class UserService {
         transactionRepository = context.getBean(TransactionRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
         nitroBoosterRepository = context.getBean(NitroBoosterRepository.class);
+        settingsRepository = context.getBean(SettingsRepository.class);
     }
 
     public List<BotUser> getAll() {
@@ -194,14 +190,49 @@ public class UserService {
         return botUser.getLevel();
     }
 
-    public List<NitroBooster> getAllNitroBooster() {
+    public List<NitroBooster> getAllNitroBoosters() {
         List<NitroBooster> result = new ArrayList<>();
         nitroBoosterRepository.findAll().forEach(result::add);
         return result;
     }
 
-    public List<NitroBooster> getAllActiveNitroBooster() {
+    public List<NitroBooster> getActiveNitroBoosters() {
         return nitroBoosterRepository.getActiveNitroBoosters();
     }
 
+    public boolean isNitroBooster(long userId) {
+        return nitroBoosterRepository.findById(userId).isPresent();
+    }
+
+    public void createNewNitroBooster(long userId) {
+        nitroBoosterRepository.save(new NitroBooster(userId, System.currentTimeMillis(), true));
+    }
+
+    public void changeNitroBoosterStatus(long userId, boolean active) {
+        NitroBooster nitroBooster = nitroBoosterRepository.findById(userId).orElseThrow();
+        nitroBooster.setActive(active);
+        nitroBoosterRepository.save(nitroBooster);
+    }
+
+    public String addMonthlyReward(long userId) {
+        Reward reward = settingsRepository.getMonthlyNitroBoosterReward();
+        addCoins(userId, reward.getCoins());
+        addXp(userId, reward.getXp());
+        addDiamonds(userId, reward.getDiamonds());
+        if (reward.getItem() != null) {
+            addUpItem(userId, reward.getItem().getItemId());
+        }
+        return reward.getMessage();
+    }
+
+    public String addOneTimeReward(long userId) {
+        Reward reward = settingsRepository.getOneTimeNitroBoosterReward();
+        addCoins(userId, reward.getCoins());
+        addXp(userId, reward.getXp());
+        addDiamonds(userId, reward.getDiamonds());
+        if (reward.getItem() != null) {
+            addUpItem(userId, reward.getItem().getItemId());
+        }
+        return reward.getMessage();
+    }
 }

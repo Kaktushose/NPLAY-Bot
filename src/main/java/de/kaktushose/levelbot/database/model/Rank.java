@@ -15,7 +15,7 @@ public class Rank {
     private String name;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "rankId", referencedColumnName = "rankId")
-    private List<Rewards> rewards;
+    private List<Reward> rewards;
 
     public Rank() {
     }
@@ -68,11 +68,11 @@ public class Rank {
         this.name = name;
     }
 
-    public List<Rewards> getRankRewards() {
+    public List<Reward> getRankRewards() {
         return rewards;
     }
 
-    public void setRankRewards(List<Rewards> rewards) {
+    public void setRankRewards(List<Reward> rewards) {
         this.rewards = rewards;
     }
 }
