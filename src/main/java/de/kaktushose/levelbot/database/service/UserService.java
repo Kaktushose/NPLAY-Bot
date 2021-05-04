@@ -2,8 +2,10 @@ package de.kaktushose.levelbot.database.service;
 
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
+import de.kaktushose.levelbot.database.model.NitroBooster;
 import de.kaktushose.levelbot.database.model.Transaction;
 import de.kaktushose.levelbot.database.repositories.ItemRepository;
+import de.kaktushose.levelbot.database.repositories.NitroBoosterRepository;
 import de.kaktushose.levelbot.database.repositories.TransactionRepository;
 import de.kaktushose.levelbot.database.repositories.UserRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
@@ -19,12 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final ItemRepository itemRepository;
+    private final NitroBoosterRepository nitroBoosterRepository;
 
     public UserService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         transactionRepository = context.getBean(TransactionRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
+        nitroBoosterRepository = context.getBean(NitroBoosterRepository.class);
     }
 
     public List<BotUser> getAll() {
@@ -188,6 +192,16 @@ public class UserService {
         botUser.setLevel(botUser.getLevel() + 1);
         userRepository.save(botUser);
         return botUser.getLevel();
+    }
+
+    public List<NitroBooster> getAllNitroBooster() {
+        List<NitroBooster> result = new ArrayList<>();
+        nitroBoosterRepository.findAll().forEach(result::add);
+        return result;
+    }
+
+    public List<NitroBooster> getAllActiveNitroBooster() {
+        return nitroBoosterRepository.getActiveNitroBoosters();
     }
 
 }
