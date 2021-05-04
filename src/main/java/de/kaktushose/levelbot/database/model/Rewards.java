@@ -3,8 +3,8 @@ package de.kaktushose.levelbot.database.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "rank_rewards")
-public class RankReward {
+@Table(name = "rewards")
+public class Rewards {
 
     @Id
     private Integer rewardId;
@@ -16,10 +16,10 @@ public class RankReward {
     private Item item;
     private String message;
 
-    public RankReward() {
+    public Rewards() {
     }
 
-    public RankReward(Integer rewardId, int coins, int xp, int diamonds, Item item, String message) {
+    public Rewards(Integer rewardId, int coins, int xp, int diamonds, Item item, String message) {
         this.rewardId = rewardId;
         this.coins = coins;
         this.xp = xp;
