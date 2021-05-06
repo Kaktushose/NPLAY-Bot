@@ -290,5 +290,15 @@
     "title": "Bot wurde gestartet!",
     "description": ":gear: Version: {version}",
     "color": "#86c240"
+  },
+  "itemNotFound": {
+    "title": "Fehler!",
+    "description": "Es wurde kein Item mit der ID {id} gefunden!",
+    "color": "#aa0c14"
+  },
+  "itemPriceChanged": {
+    "title": "Erfolg!",
+    "description": "Der Preis wurde erfolgreich geändert!",
+    "color": "#86c240"
   }
 }

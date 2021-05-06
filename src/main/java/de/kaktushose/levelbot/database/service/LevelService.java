@@ -63,6 +63,16 @@ public class LevelService {
         return itemRepository.findById(itemId).orElseThrow();
     }
 
+    public boolean setItemPrice(int itemId, int price) {
+        if (!itemRepository.existsById(itemId)) {
+            return false;
+        }
+        Item item = getItem(itemId);
+        item.setPrice(price);
+        itemRepository.save(item);
+        return true;
+    }
+
     public Pagination getXpLeaderboard(int pageSize, JDA jda) {
         return new Pagination(pageSize, userRepository.getXpLeaderboard(), jda, Pagination.CurrencyType.XP);
     }
