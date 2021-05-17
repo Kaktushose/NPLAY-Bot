@@ -44,6 +44,26 @@ public class SettingsService {
         return settingsRepository.getIgnoredChannels().contains(channelId);
     }
 
+    public long getShopChannelId(long guildId) {
+        return getGuildSettings(guildId).getShopChannelId();
+    }
+
+    public void setShopChannelId(long guildId, long shopChannelId) {
+        GuildSettings guildSettings = getGuildSettings(guildId);
+        guildSettings.setShopChannelId(shopChannelId);
+        settingsRepository.save(guildSettings);
+    }
+
+    public long getShopMessageId(long guildId) {
+        return getGuildSettings(guildId).getShopMessageId();
+    }
+
+    public void setShopMessageId(long guildId, long shopMessageId) {
+        GuildSettings guildSettings = getGuildSettings(guildId);
+        guildSettings.setShopMessageId(shopMessageId);
+        settingsRepository.save(guildSettings);
+    }
+
     public Reward getMonthlyNitroBoosterReward() {
         return settingsRepository.getMonthlyNitroBoosterReward();
     }

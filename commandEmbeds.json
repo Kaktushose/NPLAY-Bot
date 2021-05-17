@@ -320,5 +320,10 @@
     "title": "Information zu Deinem Server-Boost bei nordrheintvplay",
     "description": "Lieber {user},\nschade, dass du unseren Server nicht mehr mit einem Server-Boost unterstützt.\nWir möchten dich darüber informieren, dass mit der Beendigung des Boosts auch die dazugehörigen fortlaufenden Belohnungen entfallen. \nWir bedanken uns für Deine Treue und wünschen Dir weiterhin viel Spaß auf dem Server.\nDein Serverteam\n",
     "color": "#f4cd53"
+  },
+  "shopInitSuccess":{
+    "title": "Erfolg!",
+    "description": "Der Reaction Shop wurde erfolgreich eingerichtet!",
+    "color": "#86c240"
   }
 }
