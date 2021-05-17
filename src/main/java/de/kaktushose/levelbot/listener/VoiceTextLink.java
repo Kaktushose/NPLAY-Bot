@@ -12,24 +12,18 @@ import java.util.EnumSet;
 public class VoiceTextLink extends ListenerAdapter {
 
     private final TextChannel textChannel;
-    private final long voiceChannelId;
 
-    public VoiceTextLink(TextChannel textChannel, long voiceChannelId) {
+    public VoiceTextLink(TextChannel textChannel) {
         this.textChannel = textChannel;
-        this.voiceChannelId = voiceChannelId;
     }
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        if (event.getChannelJoined().getIdLong() == voiceChannelId) {
-            textChannel.getManager().putPermissionOverride(event.getMember(), EnumSet.of(Permission.VIEW_CHANNEL), null).queue();
-        }
+        textChannel.getManager().putPermissionOverride(event.getMember(), EnumSet.of(Permission.VIEW_CHANNEL), null).queue();
     }
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        if (event.getChannelLeft().getIdLong() == voiceChannelId) {
-            textChannel.getManager().removePermissionOverride(event.getMember()).queue();
-        }
+        textChannel.getManager().removePermissionOverride(event.getMember()).queue();
     }
 }

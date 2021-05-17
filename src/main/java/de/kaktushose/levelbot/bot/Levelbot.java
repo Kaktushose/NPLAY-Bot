@@ -6,9 +6,14 @@ import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
-import de.kaktushose.levelbot.database.model.*;
-import de.kaktushose.levelbot.database.service.LevelService;
-import de.kaktushose.levelbot.database.service.UserService;
+import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.Item;
+import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.model.Transaction;
+import de.kaktushose.levelbot.database.services.BoosterService;
+import de.kaktushose.levelbot.database.services.LevelService;
+import de.kaktushose.levelbot.database.services.SettingsService;
+import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.listener.JoinLeaveListener;
 import de.kaktushose.levelbot.listener.LevelListener;
 import de.kaktushose.levelbot.listener.NitroBoosterListener;
@@ -39,10 +44,12 @@ public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
     private final UserService userService;
+    private final SettingsService settingsService;
     private final LevelService levelService;
-    private final GuildSettings guildSettings;
+    private final BoosterService boosterService;
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
+    private final long guildId;
     private JDACommands jdaCommands;
     private JDA jda;
     private Guild guild;
@@ -50,25 +57,28 @@ public class Levelbot {
 
     public Levelbot(GuildType guildType) {
         userService = new UserService();
-        levelService = new LevelService(userService);
-        guildSettings = levelService.getGuildSettings(guildType.id);
+        settingsService = new SettingsService();
+        levelService = new LevelService(userService, settingsService);
+        boosterService = new BoosterService(userService, settingsService);
+        guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
-        log.info("Bot is running at version {}", guildSettings.getVersion());
+        log.info("Bot is running at version {}", settingsService.getVersion(guildId));
 
         embedCache.loadEmbedsToCache();
 
         log.debug("Starting jda...");
-        String token = guildSettings.getBotToken();
+        String token = settingsService.getBotToken(guildId);
         jda = JDABuilder.create(
                 token,
                 GatewayIntent.GUILD_MEMBERS,
                 GatewayIntent.GUILD_VOICE_STATES,
                 GatewayIntent.GUILD_MESSAGES,
-                GatewayIntent.GUILD_MESSAGE_REACTIONS
+                GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                GatewayIntent.GUILD_PRESENCES
         ).disableCache(
                 CacheFlag.ACTIVITY,
                 CacheFlag.EMOTE,
@@ -87,7 +97,7 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(839150041955565588L), 570698190584545283L),
+                new VoiceTextLink(jda.getTextChannelById(839150041955565588L)),
                 new NitroBoosterListener(this)
         );
 
@@ -102,29 +112,29 @@ public class Levelbot {
                 .addProvider(this)
                 .setCommandPackage("de.kaktushose.levelbot.commands")
                 .build();
-        jdaCommands.getDefaultSettings().setPrefix(guildSettings.getBotPrefix()).getHelpLabels().add("hilfe");
+        jdaCommands.getDefaultSettings().setPrefix(settingsService.getBotPrefix(guildId)).getHelpLabels().add("hilfe");
 
         log.debug("Applying permissions...");
-        userService.getByPermission(0).forEach(botUser ->
+        userService.getUsersByPermission(0).forEach(botUser ->
                 jdaCommands.getDefaultSettings().getMutedUsers().add(botUser.getUserId())
         );
-        userService.getByPermission(2).forEach(botUser ->
+        userService.getUsersByPermission(2).forEach(botUser ->
                 jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId())
         );
-        userService.getByPermission(3).forEach(botUser -> {
+        userService.getUsersByPermission(3).forEach(botUser -> {
                     jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
                 }
         );
-        userService.getByPermission(4).forEach(botUser -> {
+        userService.getUsersByPermission(4).forEach(botUser -> {
                     jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
                     jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId());
                 }
         );
 
-        guild = jda.getGuildById(guildSettings.getGuildId());
-        botChannel = guild.getTextChannelById(guildSettings.getBotChannelId());
+        guild = jda.getGuildById(guildId);
+        botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
 
         taskScheduler.addRepetitiveTask(() -> {
             try {
@@ -139,10 +149,10 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("development"));
 
-        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
-                .injectValue("version", guildSettings.getVersion())
-                .toMessageEmbed()
-        ).queue();
+//        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
+//                .injectValue("version", settingsService.getVersion(guildId))
+//                .toMessageEmbed()
+//        ).queue();
         return this;
     }
 
@@ -159,12 +169,12 @@ public class Levelbot {
 
     public Levelbot indexMembers() {
         List<Member> guildMembers = guild.getMembers();
-        guildMembers.forEach(member -> userService.createIfAbsent(member.getIdLong()));
+        guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
 
         List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
-        userService.getAll().forEach(botUser -> {
+        userService.getAllUsers().forEach(botUser -> {
             if (!guildMemberIds.contains(botUser.getUserId())) {
-                userService.delete(botUser.getUserId());
+                userService.deleteUser(botUser.getUserId());
             }
         });
         return this;
@@ -194,7 +204,7 @@ public class Levelbot {
     }
 
     public void checkForExpiredItems() {
-        userService.getAll().forEach(botUser -> {
+        userService.getAllUsers().forEach(botUser -> {
             for (Transaction transaction : botUser.getTransactions()) {
                 Item item = transaction.getItem();
                 long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
@@ -220,7 +230,7 @@ public class Levelbot {
     }
 
     public void dmRankInfo() {
-        userService.getByDailyEnabled().forEach(botUser -> {
+        userService.getUsersByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
             user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(generateRankInfo(user).build()))
                     .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
@@ -228,9 +238,9 @@ public class Levelbot {
     }
 
     public void checkForNitroBoostersRewards() {
-        userService.getActiveNitroBoosters().forEach(nitroBooster -> {
+        boosterService.getActiveNitroBoosters().forEach(nitroBooster -> {
             if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - nitroBooster.getBoostStart()) % 30 == 0) {
-                userService.addMonthlyReward(nitroBooster.getUserId());
+                boosterService.addMonthlyReward(nitroBooster.getUserId());
             }
         });
     }
@@ -250,7 +260,7 @@ public class Levelbot {
     }
 
     public EmbedBuilder generateRankInfo(User target) {
-        BotUser botUser = userService.getById(target.getIdLong());
+        BotUser botUser = userService.getUserById(target.getIdLong());
 
         Rank currentRank = levelService.getCurrentRank(botUser.getUserId());
         Rank nextRank = levelService.getNextRank(botUser.getUserId());
@@ -294,6 +304,16 @@ public class Levelbot {
     }
 
     @Produces
+    public SettingsService getSettingsService() {
+        return settingsService;
+    }
+
+    @Produces
+    public BoosterService getBoosterService() {
+        return boosterService;
+    }
+
+    @Produces
     public JDA getJda() {
         return jda;
     }
@@ -306,6 +326,10 @@ public class Levelbot {
     @Produces
     public Levelbot getLevelbot() {
         return this;
+    }
+
+    public JDACommands getJdaCommands() {
+        return jdaCommands;
     }
 
     public TextChannel getBotChannel() {

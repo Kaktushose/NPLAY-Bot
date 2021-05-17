@@ -8,7 +8,7 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import com.github.kaktushose.jda.commands.entities.CommandSettings;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.service.UserService;
+import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
 @CommandController("setperms")
@@ -35,8 +35,8 @@ public class SetPermsCommand {
             return;
         }
 
-        BotUser executor = userService.getById(event.getAuthor().getIdLong());
-        BotUser target = userService.getById(member.getIdLong());
+        BotUser executor = userService.getUserById(event.getAuthor().getIdLong());
+        BotUser target = userService.getUserById(member.getIdLong());
 
         // can only update users with lower perms
         if (executor.getPermissionLevel() < level + 1 || executor.getPermissionLevel() < target.getPermissionLevel()) {

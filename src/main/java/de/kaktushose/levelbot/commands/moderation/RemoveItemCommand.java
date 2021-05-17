@@ -9,7 +9,7 @@ import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.service.UserService;
+import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;

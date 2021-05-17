@@ -16,12 +16,12 @@ public class JoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        levelbot.getUserService().createIfAbsent(event.getMember().getIdLong());
+        levelbot.getUserService().createUserIfAbsent(event.getMember().getIdLong());
         levelbot.addRankRole(event.getMember().getIdLong(), 1);
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        levelbot.getUserService().delete(event.getUser().getIdLong());
+        levelbot.getUserService().deleteUser(event.getUser().getIdLong());
     }
 }

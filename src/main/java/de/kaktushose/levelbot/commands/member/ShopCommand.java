@@ -10,8 +10,8 @@ import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.service.LevelService;
-import de.kaktushose.levelbot.database.service.UserService;
+import de.kaktushose.levelbot.database.services.LevelService;
+import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -193,7 +193,7 @@ public class ShopCommand {
     }
 
     private Optional<String> buy(Member member, Item item) {
-        BotUser botUser = userService.getById(member.getIdLong());
+        BotUser botUser = userService.getUserById(member.getIdLong());
 
         if (userService.hasItem(member.getIdLong(), item.getItemId())) {
             return Optional.of("Du besitzt dieses Item bereits!");

@@ -25,7 +25,7 @@
   },
   "memberNotFound": {
     "title": "Fehler!",
-    "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588>.",
+    "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588> .",
     "color": "#aa0c14"
   },
   "confirmAction": {
@@ -113,7 +113,7 @@
       },
       {
         "name": "Credits",
-        "value": "Konzept und Idee: <@307973135746072578>\nProgrammierung: <@393843637437464588>\nLogo und Testing: <@487320784759685130>"
+        "value": "Konzept und Idee: <@307973135746072578> \nProgrammierung: <@393843637437464588> \nLogo und Testing: <@487320784759685130> "
       }
     ]
   },
@@ -199,7 +199,7 @@
   },
   "shopOverview": {
     "title": ":shopping_cart: Shop",
-    "description": "Eine genaue Übersicht über alle Items findest du in <#829101385173041213>",
+    "description": "Eine genaue Übersicht über alle Items findest du in <#829101385173041213> ",
     "color": "#86c240",
     "fields": [
       {
@@ -245,6 +245,11 @@
         "value": ":timer_clock: {days} Tage"
       }
     ]
+  },
+  "shopConfirm": {
+    "title": "Überschrift: Bestätige Deinen Kauf! :gift:",
+    "description": "Bist du sicher, dass Du {item} für {price} Münzen :moneybag: erwerben möchtest? Klicke auf den :white_check_mark:, um den Kauf zu bestätigen.",
+    "color": "#f4cd53"
   },
   "shopError": {
     "title": "Fehler!",
@@ -300,5 +305,20 @@
     "title": "Erfolg!",
     "description": "Der Preis wurde erfolgreich geändert!",
     "color": "#86c240"
+  },
+  "nitroBoostStart": {
+    "title": "Vielen Dank für Deine Unterstützung {user}!",
+    "description": "Danke, dass Du den nordrheintvplay Discord mit Deinem Nitro-Boost unterstützt.\nAls kleine Aufmerksamkeit hast Du einige coole einmalige Belohnung erhalten:\n> **EINMALIG:**\n\n> :icon_confirmation2: 250 XP :star2: geschenkt\n> :icon_confirmation2: 250 Münzen :moneybag: geschenkt\n> :icon_confirmation2: 25 Diamanten :gem: geschenkt\n>+ PREMIUM unlimited, gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n\n**FORTLAUFEND:**\n> :icon_confirmation2: 50 XP :star2: jeden Monat zusätzlich!\n> :icon_confirmation2: 50 Münzen :moneybag:\n> :icon_confirmation2: 5 Diamanten :gem:\n> :icon_confirmation2: Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
+    "color": "#f47fff"
+  },
+  "nitroBoostResume": {
+    "title": "Vielen Dank für Deine Unterstützung {user}!",
+    "description": "Danke, dass Du den nordrheintvplay Discord erneut mit Deinem Nitro-Boost unterstützt. \nAls kleine Aufmerksamkeit hast Du PREMIUM unlimited :star: erhalten. Die Rolle gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n> :icon_confirmation2: 50 XP :star2: jeden Monat zusätzlich!\n> :icon_confirmation2: 50 Münzen :moneybag:\n> :icon_confirmation2: 5 Diamanten :gem:\n> :icon_confirmation2: Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
+    "color": "#f47fff"
+  },
+  "nitroBoostStop": {
+    "title": "Information zu Deinem Server-Boost bei nordrheintvplay",
+    "description": "Lieber {user},\nschade, dass du unseren Server nicht mehr mit einem Server-Boost unterstützt.\nWir möchten dich darüber informieren, dass mit der Beendigung des Boosts auch die dazugehörigen fortlaufenden Belohnungen entfallen. \nWir bedanken uns für Deine Treue und wünschen Dir weiterhin viel Spaß auf dem Server.\nDein Serverteam\n",
+    "color": "#f4cd53"
   }
 }

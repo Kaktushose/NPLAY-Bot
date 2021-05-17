@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.database.service;
+package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.repositories.*;
@@ -19,8 +19,9 @@ public class LevelService {
     private final SettingsRepository settingsRepository;
     private final ChancesRepository chancesRepository;
     private final UserService userService;
+    private final SettingsService settingsService;
 
-    public LevelService(UserService userService) {
+    public LevelService(UserService userService, SettingsService settingsService) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         rankRepository = context.getBean(RankRepository.class);
@@ -28,6 +29,7 @@ public class LevelService {
         settingsRepository = context.getBean(SettingsRepository.class);
         chancesRepository = context.getBean(ChancesRepository.class);
         this.userService = userService;
+        this.settingsService = settingsService;
     }
 
     public Rank getRank(int rankId) {
@@ -35,7 +37,7 @@ public class LevelService {
     }
 
     public Rank getPreviousRank(long userId) {
-        BotUser botUser = userService.getById(userId);
+        BotUser botUser = userService.getUserById(userId);
         if (botUser.getLevel() == 1) {
             return getRank(1);
         }
@@ -43,12 +45,12 @@ public class LevelService {
     }
 
     public Rank getCurrentRank(long userId) {
-        BotUser botUser = userService.getById(userId);
+        BotUser botUser = userService.getUserById(userId);
         return getRank(botUser.getLevel());
     }
 
     public Rank getNextRank(long userId) {
-        BotUser botUser = userService.getById(userId);
+        BotUser botUser = userService.getUserById(userId);
         if (botUser.getLevel() == 10) {
             return getRank(10);
         }
@@ -85,25 +87,15 @@ public class LevelService {
         return new Pagination(pageSize, userRepository.getDiamondsLeaderboard(), jda, Pagination.CurrencyType.DIAMONDS);
     }
 
-    public List<Long> getIgnoredChannels() {
-        return settingsRepository.getIgnoredChannels();
-    }
-
-    public GuildSettings getGuildSettings(long guildId) {
-        return settingsRepository.getGuildSettings(guildId).orElseThrow();
-    }
-
     public boolean isValidMessage(long userId, long guildId, long channelId) {
-        BotUser botUser = userService.getById(userId);
-        GuildSettings guildSettings = getGuildSettings(guildId);
-
-        if (getIgnoredChannels().contains(channelId)) {
+        BotUser botUser = userService.getUserById(userId);
+        if (settingsService.isIgnoredChannel(channelId)) {
             return false;
         }
         if (botUser.getPermissionLevel() < 1) {
             return false;
         }
-        return System.currentTimeMillis() - botUser.getLastValidMessage() >= guildSettings.getMessageCooldown();
+        return System.currentTimeMillis() - botUser.getLastValidMessage() >= settingsService.getMessageCooldown(guildId);
     }
 
     public long randomXp() {

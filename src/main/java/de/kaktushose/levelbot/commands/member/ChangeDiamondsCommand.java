@@ -9,7 +9,7 @@ import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.service.UserService;
+import de.kaktushose.levelbot.database.services.UserService;
 
 @CommandController({"tauschen", "wechseln"})
 public class ChangeDiamondsCommand {
@@ -22,13 +22,13 @@ public class ChangeDiamondsCommand {
     @Command(
             name = "Diamanten tauschen",
             usage = "{prefix}tauschen <anzahl>",
-            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 40 Münzen wert",
+            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert",
             category = "Levelsystem"
     )
     public void onChangeDiamonds(CommandEvent event, @Optional("1") long amount) {
-        BotUser botUser = userService.getById(event.getAuthor().getIdLong());
+        BotUser botUser = userService.getUserById(event.getAuthor().getIdLong());
         long diamonds = botUser.getDiamonds();
-        long coins = amount * 40;
+        long coins = amount * 20;
         if (diamonds == 0 || amount > diamonds) {
             event.reply(embedCache.getEmbed("missingCurrency").injectValue("currency", "Diamanten"));
             return;

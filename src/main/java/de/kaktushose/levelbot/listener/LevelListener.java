@@ -2,7 +2,7 @@ package de.kaktushose.levelbot.listener;
 
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.Rank;
-import de.kaktushose.levelbot.database.service.LevelService;
+import de.kaktushose.levelbot.database.services.LevelService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;

@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.database.service;
+package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.repositories.*;
@@ -27,44 +27,44 @@ public class UserService {
         settingsRepository = context.getBean(SettingsRepository.class);
     }
 
-    public List<BotUser> getAll() {
+    public List<BotUser> getAllUsers() {
         List<BotUser> result = new ArrayList<>();
         userRepository.findAll().forEach(result::add);
         return result;
     }
 
-    public BotUser getById(long userId) {
+    public BotUser getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow();
     }
 
-    public List<BotUser> getByPermission(int permissionLevel) {
+    public List<BotUser> getUsersByPermission(int permissionLevel) {
         return userRepository.findByPermissionLevel(permissionLevel);
     }
 
-    public List<BotUser> getByDailyEnabled() {
+    public List<BotUser> getUsersByDailyEnabled() {
         return userRepository.findByDailyUpdate(true);
     }
 
-    public BotUser create(long userId) {
+    public BotUser createUser(long userId) {
         return userRepository.save(new BotUser(userId));
     }
 
-    public BotUser createIfAbsent(long userId) {
+    public BotUser createUserIfAbsent(long userId) {
         Optional<BotUser> optional = userRepository.findById(userId);
         if (optional.isEmpty()) {
-            return create(userId);
+            return createUser(userId);
         }
         return optional.get();
     }
 
-    public void delete(long id) {
+    public void deleteUser(long id) {
         userRepository.deleteById(id);
     }
 
     public void exchangeDiamonds(long userId, long diamonds) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setDiamonds(botUser.getDiamonds() - diamonds);
-        botUser.setCoins(botUser.getCoins() + diamonds * 40);
+        botUser.setCoins(botUser.getCoins() + diamonds * 20);
         userRepository.save(botUser);
     }
 
@@ -73,7 +73,7 @@ public class UserService {
     }
 
     public void buyItem(long userId, int itemId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow();
         Transaction transaction = new Transaction();
         transaction.setBuyTime(System.currentTimeMillis());
@@ -85,7 +85,7 @@ public class UserService {
     }
 
     public void addUpItem(long userId, int itemId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow();
         Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
         Transaction transaction;
@@ -98,12 +98,12 @@ public class UserService {
             transaction.setItem(item);
         }
         botUser.getTransactions().add(transaction);
-        userRepository.save(botUser);
         transactionRepository.save(transaction);
+        userRepository.save(botUser);
     }
 
     public List<Item> getItems(long userId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         return botUser.getTransactions().stream().map(Transaction::getItem).collect(Collectors.toList());
     }
 
@@ -118,121 +118,75 @@ public class UserService {
     }
 
     public boolean switchDaily(long userId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setDailyUpdate(!botUser.isDailyUpdate());
         return userRepository.save(botUser).isDailyUpdate();
     }
 
     public void setPermission(long userId, int permissionLevel) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setPermissionLevel(permissionLevel);
         userRepository.save(botUser);
     }
 
     public long addCoins(long userId, long amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setCoins(botUser.getCoins() + amount);
         userRepository.save(botUser);
         return botUser.getCoins();
     }
 
     public long addXp(long userId, long amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setXp(botUser.getXp() + amount);
         userRepository.save(botUser);
         return botUser.getXp();
     }
 
     public long addDiamonds(long userId, long amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setDiamonds(botUser.getDiamonds() + amount);
         userRepository.save(botUser);
         return botUser.getDiamonds();
     }
 
     public void setCoins(long userId, int amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setCoins(amount);
         userRepository.save(botUser);
     }
 
     public void setXp(long userId, int amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setXp(amount);
         userRepository.save(botUser);
     }
 
     public void setDiamonds(long userId, int amount) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setDiamonds(amount);
         userRepository.save(botUser);
     }
 
     public void updateLastValidMessage(long userId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setLastValidMessage(System.currentTimeMillis());
         userRepository.save(botUser);
     }
 
     public void updateMessageCount(long userId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         botUser.setMessageCount(botUser.getMessageCount() + 1);
         userRepository.save(botUser);
     }
 
     public int increaseRank(long userId) {
-        BotUser botUser = getById(userId);
+        BotUser botUser = getUserById(userId);
         if (botUser.getLevel() == 10) {
             return 10;
         }
         botUser.setLevel(botUser.getLevel() + 1);
         userRepository.save(botUser);
         return botUser.getLevel();
-    }
-
-    public List<NitroBooster> getAllNitroBoosters() {
-        List<NitroBooster> result = new ArrayList<>();
-        nitroBoosterRepository.findAll().forEach(result::add);
-        return result;
-    }
-
-    public List<NitroBooster> getActiveNitroBoosters() {
-        return nitroBoosterRepository.getActiveNitroBoosters();
-    }
-
-    public boolean isNitroBooster(long userId) {
-        return nitroBoosterRepository.findById(userId).isPresent();
-    }
-
-    public void createNewNitroBooster(long userId) {
-        nitroBoosterRepository.save(new NitroBooster(userId, System.currentTimeMillis(), true));
-    }
-
-    public void changeNitroBoosterStatus(long userId, boolean active) {
-        NitroBooster nitroBooster = nitroBoosterRepository.findById(userId).orElseThrow();
-        nitroBooster.setActive(active);
-        nitroBoosterRepository.save(nitroBooster);
-    }
-
-    public String addMonthlyReward(long userId) {
-        Reward reward = settingsRepository.getMonthlyNitroBoosterReward();
-        addCoins(userId, reward.getCoins());
-        addXp(userId, reward.getXp());
-        addDiamonds(userId, reward.getDiamonds());
-        if (reward.getItem() != null) {
-            addUpItem(userId, reward.getItem().getItemId());
-        }
-        return reward.getMessage();
-    }
-
-    public String addOneTimeReward(long userId) {
-        Reward reward = settingsRepository.getOneTimeNitroBoosterReward();
-        addCoins(userId, reward.getCoins());
-        addXp(userId, reward.getXp());
-        addDiamonds(userId, reward.getDiamonds());
-        if (reward.getItem() != null) {
-            addUpItem(userId, reward.getItem().getItemId());
-        }
-        return reward.getMessage();
     }
 }
