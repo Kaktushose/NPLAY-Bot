@@ -73,7 +73,7 @@ public class RemoveItemCommand {
                         return;
                 }
                 userService.removeItem(member.getIdLong(), forRemoval.getItemId());
-                reactionWaiter.stopWaiting(true);
+                reactionWaiter.stopWaiting(false);
                 chooseMessage.delete().queue();
                 event.reply(embedCache.getEmbed("removeItemSuccess").injectValue("user", member.getAsMention()));
             });

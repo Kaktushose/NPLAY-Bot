@@ -27,13 +27,13 @@ import java.util.function.Consumer;
 @CommandController({"kaufen", "shop"})
 public class ShopCommand {
 
-    public static final String BACK = "◀️";
-    public static final String CANCEL = "❌";
-    public static final String PREMIUM = "⭐";
-    public static final String DJ = "\uD83C\uDFB5";
-    public static final String NICKNAME = "\uD83D\uDC68\uD83C\uDFFD";
-    public static final String COIN_BOOSTER = "\uD83D\uDCB0";
-    public static final String XP_BOOSTER = "\uD83C\uDF1F";
+    private static final String BACK = "◀️";
+    private static final String CANCEL = "❌";
+    private static final String PREMIUM = "⭐";
+    private static final String DJ = "\uD83C\uDFB5";
+    private static final String NICKNAME = "\uD83D\uDC68\uD83C\uDFFD";
+    private static final String COIN_BOOSTER = "\uD83D\uDCB0";
+    private static final String XP_BOOSTER = "\uD83C\uDF1F";
 
     @Inject
     private UserService userService;

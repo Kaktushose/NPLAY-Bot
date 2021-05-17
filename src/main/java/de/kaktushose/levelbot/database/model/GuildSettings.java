@@ -15,8 +15,6 @@ public class GuildSettings {
     private String botPrefix;
     private long botChannelId;
     private long messageCooldown;
-    private long shopChannelId;
-    private long shopMessageId;
 
     public GuildSettings() {
     }
@@ -35,8 +33,6 @@ public class GuildSettings {
         this.botPrefix = botPrefix;
         this.botChannelId = botChannelId;
         this.messageCooldown = messageCooldown;
-        this.shopChannelId = shopChannelId;
-        this.shopMessageId = shopMessageId;
     }
 
     public Long getGuildId() {
@@ -85,21 +81,5 @@ public class GuildSettings {
 
     public void setMessageCooldown(long messageCooldown) {
         this.messageCooldown = messageCooldown;
-    }
-
-    public long getShopChannelId() {
-        return shopChannelId;
-    }
-
-    public void setShopChannelId(long shopChannelId) {
-        this.shopChannelId = shopChannelId;
-    }
-
-    public long getShopMessageId() {
-        return shopMessageId;
-    }
-
-    public void setShopMessageId(long shopMessageId) {
-        this.shopMessageId = shopMessageId;
     }
 }

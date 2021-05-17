@@ -69,7 +69,8 @@ public class UserService {
     }
 
     public boolean hasItem(long userId, int itemId) {
-        return transactionRepository.findByUserIdAndItemId(userId, itemId).isPresent();
+        int categoryId = itemRepository.findById(itemId).orElseThrow().getCategoryId();
+        return getItems(userId).stream().anyMatch(item -> item.getCategoryId() == categoryId);
     }
 
     public void buyItem(long userId, int itemId) {

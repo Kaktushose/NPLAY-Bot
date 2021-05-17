@@ -14,10 +14,7 @@ import de.kaktushose.levelbot.database.services.BoosterService;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.SettingsService;
 import de.kaktushose.levelbot.database.services.UserService;
-import de.kaktushose.levelbot.listener.JoinLeaveListener;
-import de.kaktushose.levelbot.listener.LevelListener;
-import de.kaktushose.levelbot.listener.NitroBoosterListener;
-import de.kaktushose.levelbot.listener.VoiceTextLink;
+import de.kaktushose.levelbot.listener.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -98,7 +95,8 @@ public class Levelbot {
                 new JoinLeaveListener(this),
                 new LevelListener(this),
                 new VoiceTextLink(jda.getTextChannelById(839150041955565588L)),
-                new NitroBoosterListener(this)
+                new NitroBoosterListener(this),
+                new ShopListener(this)
         );
 
         log.debug("Starting ReactionListener...");

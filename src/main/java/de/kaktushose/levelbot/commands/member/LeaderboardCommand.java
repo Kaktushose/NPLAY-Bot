@@ -22,11 +22,11 @@ import static de.kaktushose.levelbot.util.Pagination.CurrencyType;
 @CommandController({"rangliste", "leaderboard", "lb"})
 public class LeaderboardCommand {
 
-    public static final String BACK = "◀️";
-    public static final String FORTH = "▶️";
-    public static final String XP = "\uD83C\uDF1F";
-    public static final String COINS = "\uD83D\uDCB0";
-    public static final String DIAMONDS = "\uD83D\uDC8E";
+    private static final String BACK = "◀️";
+    private static final String FORTH = "▶️";
+    private static final String XP = "\uD83C\uDF1F";
+    private static final String COINS = "\uD83D\uDCB0";
+    private static final String DIAMONDS = "\uD83D\uDC8E";
 
     @Inject
     private LevelService levelService;
