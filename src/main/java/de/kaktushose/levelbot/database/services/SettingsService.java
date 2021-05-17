@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 public class SettingsService {
 
-    private SettingsRepository settingsRepository;
+    private final SettingsRepository settingsRepository;
 
     public SettingsService() {
         ApplicationContext context = ApplicationContextHolder.getContext();

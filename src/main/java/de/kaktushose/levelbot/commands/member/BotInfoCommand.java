@@ -5,7 +5,6 @@ import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
-import de.kaktushose.levelbot.database.model.GuildSettings;
 import de.kaktushose.levelbot.database.services.SettingsService;
 
 @CommandController({"botinfo", "credits"})

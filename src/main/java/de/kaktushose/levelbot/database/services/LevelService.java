@@ -1,6 +1,9 @@
 package de.kaktushose.levelbot.database.services;
 
-import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.CurrencyChance;
+import de.kaktushose.levelbot.database.model.Item;
+import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.repositories.*;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;

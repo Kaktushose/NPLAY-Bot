@@ -6,11 +6,7 @@ import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @CommandController("embeds")
 @Permission("moderator")
@@ -49,7 +45,7 @@ public class WelcomeEmbedsCommand {
         embedCache.loadEmbedsToCache();
         TextChannel channel = event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID);
         channel.retrieveMessageById(messageId).flatMap(message ->
-            message.editMessage(embedCache.getEmbed(String.valueOf(messageId)).toMessageEmbed())
+                message.editMessage(embedCache.getEmbed(String.valueOf(messageId)).toMessageEmbed())
         ).queue();
     }
 }

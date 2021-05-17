@@ -41,7 +41,7 @@ public class NitroBoosterListener extends ListenerAdapter {
                     )).queue();
                     userService.addUpItem(userId, 3);
                 }
-            }  else {
+            } else {
                 boosterService.createNewNitroBooster(userId);
                 boosterService.addOneTimeReward(userId);
                 botChannel.sendMessage(member.getAsMention()).and(botChannel.sendMessage(
