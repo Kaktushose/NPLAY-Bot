@@ -2,6 +2,7 @@ package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.database.model.GuildSettings;
 import de.kaktushose.levelbot.database.model.Reward;
+import de.kaktushose.levelbot.database.repositories.RewardRepository;
 import de.kaktushose.levelbot.database.repositories.SettingsRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
@@ -9,10 +10,12 @@ import org.springframework.context.ApplicationContext;
 public class SettingsService {
 
     private final SettingsRepository settingsRepository;
+    private final RewardRepository rewardRepository;
 
     public SettingsService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
         this.settingsRepository = context.getBean(SettingsRepository.class);
+        this.rewardRepository = context.getBean(RewardRepository.class);
     }
 
     private GuildSettings getGuildSettings(long guildId) {
@@ -47,11 +50,15 @@ public class SettingsService {
         return settingsRepository.getIgnoredChannels().contains(channelId);
     }
 
+    public Reward getReward(int rewardLevel) {
+       return rewardRepository.findById(15 + rewardLevel).orElseThrow();
+    }
+
     public Reward getMonthlyNitroBoosterReward() {
-        return settingsRepository.getMonthlyNitroBoosterReward();
+        return rewardRepository.findById(12).orElseThrow();
     }
 
     public Reward getOneTimeNitroBoosterReward() {
-        return settingsRepository.getOneTimeNitroBoosterReward();
+        return rewardRepository.findById(11).orElseThrow();
     }
 }

@@ -192,4 +192,26 @@ public class UserService {
         userRepository.save(botUser);
         return botUser.getLevel();
     }
+
+    public int increaseRewardLevel(long userId) {
+        BotUser botUser = getUserById(userId);
+        int newLevel = botUser.getRewardLevel() + 1;
+        newLevel = newLevel > 7 ? 1 : newLevel;
+        botUser.setRewardLevel(newLevel);
+        userRepository.save(botUser);
+        return newLevel;
+    }
+
+    public int resetRewardLevel(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setRewardLevel(1);
+        userRepository.save(botUser);
+        return 1;
+    }
+
+    public void updateLastReward(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setLastReward(System.currentTimeMillis());
+        userRepository.save(botUser);
+    }
 }

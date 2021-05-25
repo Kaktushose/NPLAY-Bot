@@ -338,7 +338,12 @@
   },
   "statistics": {
     "title": "Ein paar Zahlen",
-    "description": "Hier haben wir für Dich einige spannende Statistiken rund um den Discord-Server, den YouTube- und den Twitch-Kanal zusammengestellt.\n\n__**Stats zum Server:**__\n\n**Mitglieder auf dem Server:**\n{totalMemberCount}\n\n**Mitglieder online:**\n{onlineMemberCount}\n\n**Mitglieder in Spielen:**\n:tractor: LS 19: {lsMemberCount}\n:truck: ETS 2: {etsMemberCount}\n:fire: Notruf 112: {notrufMemberCount}\n:bus: OMSI 2: {omsiMemberCount}\n:mountain_cableway: Winter Resort Simulator: {wrsMemberCount}\n:gun: GTA V: {gtaMemberCount}\n\n**Nitro-Booster:**\nDerzeit insgesamt {boosterMemberCount} <@&596780997727617045>, die uns mit {boosterCount} Boosts unterstützen.\n\n{boosterMemberList}\n\n**PREMIUM:**\nDerzeit ingesamt {premiumMemberCount} <@&386302591883018242>- Mitglieder.\n\n{premiumMemberList}\n\n__**Stats zu den Kanälen:**__\n\n**Abonnenten auf YouTube:** \n{ytFollowerCount}\n\n**Videos auf YouTube:**\n{ytVideoCount}\n\n**Views auf YouTube:**\n{ytViewCount}",
+    "description": "Hier haben wir für Dich einige spannende Statistiken rund um den Discord-Server, den YouTube- und den Twitch-Kanal zusammengestellt.\n\n__**Stats zum Server:**__\n\n**Mitglieder auf dem Server:**\n{totalMemberCount}\n\n**Mitglieder online:**\n{onlineMemberCount}\n\n**Mitglieder in Spielen:**\n:tractor: LS 19: {lsMemberCount}\n:truck: ETS 2: {etsMemberCount}\n:fire: Notruf 112: {notrufMemberCount}\n:bus: OMSI 2: {omsiMemberCount}\n:mountain_cableway: Winter Resort Simulator: {wrsMemberCount}\n:gun: GTA V: {gtaMemberCount}\n\n**Nitro-Booster:**\nDerzeit insgesamt {boosterMemberCount} <@&596780997727617045>, die uns mit {boosterCount} Boosts unterstützen.\n\n{boosterMemberList}\n\n**PREMIUM:**\nDerzeit ingesamt {premiumMemberCount} <@&386302591883018242>- Mitglieder.\n\n{premiumMemberList}\n\n__**Stats zum Kanal:**__\n\n**Abonnenten auf YouTube:** \n{ytFollowerCount}\n\n**Videos auf YouTube:**\n{ytVideoCount}\n\n**Views auf YouTube:**\n{ytViewCount}",
     "color": "#00ff00"
+  },
+  "dailyReward": {
+    "title": "Herzlichen Glückwunsch, {user}!",
+    "description": "Du hast Deine tägliche Belohnung \"{reward}\" erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei.",
+    "color": "#86c240"
   }
 }

@@ -1,9 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.CurrencyChance;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.repositories.*;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
@@ -13,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class LevelService {
 
@@ -161,6 +159,28 @@ public class LevelService {
         }
 
         return Optional.of(getRank(userService.increaseRank(userId)));
+    }
+
+    public Optional<String> getDailyReward(long userId) {
+        BotUser botUser = userService.getUserById(userId);
+        if (System.currentTimeMillis() - botUser.getLastReward() <= TimeUnit.DAYS.toMillis(1)) {
+            return Optional.empty();
+        }
+        int rewardLevel;
+        if (System.currentTimeMillis() - botUser.getLastReward() >= TimeUnit.DAYS.toMillis(2)) {
+            rewardLevel = userService.resetRewardLevel(userId);
+        } else {
+            rewardLevel = userService.increaseRewardLevel(userId);
+        }
+        Reward reward = settingsService.getReward(rewardLevel);
+        userService.addCoins(userId, reward.getCoins());
+        userService.addXp(userId, reward.getXp());
+        userService.addDiamonds(userId, reward.getDiamonds());
+        userService.updateLastReward(userId);
+        if (reward.getItem() != null) {
+            userService.addUpItem(userId, reward.getItem().getItemId());
+        }
+        return Optional.of(reward.getMessage());
     }
 
     public String applyRewards(long userId, int rankId) {

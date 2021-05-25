@@ -21,6 +21,8 @@ public class BotUser {
     @Column(name = "daily")
     private boolean dailyUpdate;
     private int permissionLevel;
+    private int rewardLevel;
+    private long lastReward;
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private List<Transaction> transactions;
@@ -46,6 +48,8 @@ public class BotUser {
                    long startDiamonds,
                    boolean dailyUpdate,
                    int permissionLevel,
+                   int rewardLevel,
+                   long lastReward,
                    List<Transaction> transactions) {
         this.userId = userId;
         this.level = level;
@@ -59,6 +63,8 @@ public class BotUser {
         this.startDiamonds = startDiamonds;
         this.dailyUpdate = dailyUpdate;
         this.permissionLevel = permissionLevel;
+        this.rewardLevel = rewardLevel;
+        this.lastReward = lastReward;
         this.transactions = transactions;
     }
 
@@ -156,6 +162,22 @@ public class BotUser {
 
     public void setPermissionLevel(int permissionLevel) {
         this.permissionLevel = permissionLevel;
+    }
+
+    public int getRewardLevel() {
+        return rewardLevel;
+    }
+
+    public void setRewardLevel(int rewardLevel) {
+        this.rewardLevel = rewardLevel;
+    }
+
+    public long getLastReward() {
+        return lastReward;
+    }
+
+    public void setLastReward(long lastReward) {
+        this.lastReward = lastReward;
     }
 
     public List<Transaction> getTransactions() {
