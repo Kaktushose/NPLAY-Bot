@@ -39,6 +39,10 @@ public class SettingsService {
         return getGuildSettings(guildId).getMessageCooldown();
     }
 
+    public String getYoutubeApiKey(long guildId) {
+        return getGuildSettings(guildId).getYoutubeApiKey();
+    }
+
     public boolean isIgnoredChannel(long channelId) {
         return settingsRepository.getIgnoredChannels().contains(channelId);
     }

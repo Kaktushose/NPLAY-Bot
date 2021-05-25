@@ -6,6 +6,7 @@ import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
+import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Rank;
@@ -15,6 +16,7 @@ import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.SettingsService;
 import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.listener.*;
+import de.kaktushose.levelbot.util.Statistics;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -46,6 +48,7 @@ public class Levelbot {
     private final BoosterService boosterService;
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
+    private final Statistics statistics;
     private final long guildId;
     private JDACommands jdaCommands;
     private JDA jda;
@@ -60,6 +63,7 @@ public class Levelbot {
         guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
+        statistics = new Statistics(this, guildId);
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
@@ -77,9 +81,10 @@ public class Levelbot {
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.GUILD_PRESENCES
         ).disableCache(
-                CacheFlag.ACTIVITY,
                 CacheFlag.EMOTE,
                 CacheFlag.CLIENT_STATUS
+        ).enableCache(
+                CacheFlag.ACTIVITY
         ).setChunkingFilter(
                 ChunkingFilter.ALL
         ).setMemberCachePolicy(
@@ -143,6 +148,14 @@ public class Levelbot {
                 log.error("An exception has occurred while executing daily tasks!", t);
             }
         }, 0, 1, TimeUnit.DAYS);
+
+        taskScheduler.addRepetitiveTask(() -> {
+            try {
+                updateStatistics();
+            } catch (Throwable t) {
+                log.error("An exception has occurred while updating statistics!", t);
+            }
+        }, 0, 4, TimeUnit.HOURS);
 
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("development"));
@@ -291,6 +304,14 @@ public class Levelbot {
         return embedBuilder;
     }
 
+    public void updateStatistics() {
+        statistics.queryStatistics();
+        TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
+        channel.retrieveMessageById(843881991446855730L).flatMap(message ->
+                message.editMessage(embedCache.getEmbed("statistics").injectFields(statistics).toMessageEmbed())
+        ).queue();
+    }
+
     @Produces
     public UserService getUserService() {
         return userService;
@@ -324,6 +345,10 @@ public class Levelbot {
     @Produces
     public Levelbot getLevelbot() {
         return this;
+    }
+
+    public Guild getGuild() {
+        return guild;
     }
 
     public JDACommands getJdaCommands() {

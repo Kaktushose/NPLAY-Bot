@@ -15,6 +15,7 @@ public class GuildSettings {
     private String botPrefix;
     private long botChannelId;
     private long messageCooldown;
+    private String youtubeApiKey;
 
     public GuildSettings() {
     }
@@ -25,14 +26,14 @@ public class GuildSettings {
                          String botPrefix,
                          long botChannelId,
                          long messageCooldown,
-                         long shopChannelId,
-                         long shopMessageId) {
+                         String youtubeApiKey) {
         this.guildId = guildId;
         this.version = version;
         this.botToken = botToken;
         this.botPrefix = botPrefix;
         this.botChannelId = botChannelId;
         this.messageCooldown = messageCooldown;
+        this.youtubeApiKey = youtubeApiKey;
     }
 
     public Long getGuildId() {
@@ -81,5 +82,13 @@ public class GuildSettings {
 
     public void setMessageCooldown(long messageCooldown) {
         this.messageCooldown = messageCooldown;
+    }
+
+    public String getYoutubeApiKey() {
+        return youtubeApiKey;
+    }
+
+    public void setYoutubeApiKey(String youtubeApiKey) {
+        this.youtubeApiKey = youtubeApiKey;
     }
 }

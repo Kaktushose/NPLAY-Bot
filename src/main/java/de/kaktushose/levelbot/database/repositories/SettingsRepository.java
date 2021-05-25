@@ -22,5 +22,4 @@ public interface SettingsRepository extends CrudRepository<GuildSettings, Long> 
 
     @Query(value = "SELECT * FROM rewards where reward_id = 11", nativeQuery = true)
     Reward getOneTimeNitroBoosterReward();
-
 }
