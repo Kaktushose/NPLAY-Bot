@@ -22,6 +22,7 @@ public class Statistics {
 
     private static final Logger log = LoggerFactory.getLogger(Statistics.class);
     private final Levelbot levelbot;
+    private final String youtubeApiKey;
     private int totalMemberCount;
     private int onlineMemberCount;
     private int lsMemberCount;
@@ -38,7 +39,6 @@ public class Statistics {
     private String ytViewCount;
     private String boosterMemberList;
     private String premiumMemberList;
-    private String youtubeApiKey;
 
     public Statistics(Levelbot levelbot, long guildId) {
         this.levelbot = levelbot;

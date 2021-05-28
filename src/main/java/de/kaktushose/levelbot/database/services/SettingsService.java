@@ -51,7 +51,7 @@ public class SettingsService {
     }
 
     public Reward getReward(int rewardLevel) {
-       return rewardRepository.findById(15 + rewardLevel).orElseThrow();
+        return rewardRepository.findById(15 + rewardLevel).orElseThrow();
     }
 
     public Reward getMonthlyNitroBoosterReward() {

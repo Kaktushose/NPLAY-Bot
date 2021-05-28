@@ -34,7 +34,7 @@ public class ShopCommand {
     private static final String NICKNAME = "\uD83D\uDC68\uD83C\uDFFD";
     private static final String COIN_BOOSTER = "\uD83D\uDCB0";
     private static final String XP_BOOSTER = "\uD83C\uDF1F";
-
+    private final Map<ItemCategory, EmbedBuilder> specificShops;
     @Inject
     private UserService userService;
     @Inject
@@ -43,9 +43,7 @@ public class ShopCommand {
     private EmbedCache embedCache;
     @Inject
     private Levelbot levelbot;
-
     private EmbedBuilder shopOverview;
-    private final Map<ItemCategory, EmbedBuilder> specificShops;
 
     public ShopCommand() {
         specificShops = new HashMap<>();

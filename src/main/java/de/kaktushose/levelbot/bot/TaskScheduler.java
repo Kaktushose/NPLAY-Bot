@@ -19,5 +19,4 @@ public class TaskScheduler {
     public void addRepetitiveTask(Runnable runnable, long initialDelay, long period, TimeUnit timeUnit) {
         executorService.scheduleAtFixedRate(runnable, initialDelay, period, timeUnit);
     }
-
 }

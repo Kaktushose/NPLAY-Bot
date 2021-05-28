@@ -1,4 +1,5 @@
 .idea
 target/
 src/main/resources/application.properties
+dependency-reduced-pom.xml
 *.iml

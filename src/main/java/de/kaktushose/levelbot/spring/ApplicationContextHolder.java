@@ -11,12 +11,12 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext context;
 
+    public static ApplicationContext getContext() {
+        return context;
+    }
+
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
-    }
-
-    public static ApplicationContext getContext() {
-        return context;
     }
 }

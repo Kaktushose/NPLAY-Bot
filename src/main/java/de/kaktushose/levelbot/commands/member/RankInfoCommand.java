@@ -25,3 +25,4 @@ public class RankInfoCommand {
         event.reply(levelbot.generateRankInfo(target.getUser()));
     }
 }
+

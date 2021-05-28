@@ -27,5 +27,4 @@ public class PingCommand {
                 .injectValue("restPing", restPing)
         );
     }
-
 }

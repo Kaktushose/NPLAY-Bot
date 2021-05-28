@@ -21,7 +21,6 @@ public class Pagination {
         this.jda = jda;
         this.currencyType = currencyType;
         this.index = 0;
-
     }
 
     public void nextPage() {

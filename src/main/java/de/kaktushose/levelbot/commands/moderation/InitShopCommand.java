@@ -63,3 +63,4 @@ public class InitShopCommand {
         event.reply(embedCache.getEmbed("shopInitSuccess"));
     }
 }
+
