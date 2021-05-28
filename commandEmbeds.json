@@ -345,5 +345,25 @@
     "title": "Herzlichen Glückwunsch, {user}!",
     "description": "Du hast Deine tägliche Belohnung \"{reward}\" erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei.",
     "color": "#86c240"
+  },
+  "balanceEventList": {
+    "title": "Folgende Balance Events sind verfügbar",
+    "description": "0: XP-Booster x2\n1: Münzen-Rush x2\n2: Diamanten-Regen x2\n3: Cooldown -67%",
+    "color": "#86c240"
+  },
+  "unknownEventId": {
+    "title": "Fehler!",
+    "description": "Unbekannte Event ID. Siehe `event <balance|collect> list` für Details!",
+    "color": "#aa0c14"
+  },
+  "balanceEventStart": {
+    "title": "Erfolg!",
+    "description": "Das Event \"{name}\" wurde erfolgreich aktiviert",
+    "color": "#86c240"
+  },
+  "balanceEventStop": {
+    "title": "Erfolg!",
+    "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert",
+    "color": "#86c240"
   }
 }

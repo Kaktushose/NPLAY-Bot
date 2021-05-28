@@ -42,6 +42,12 @@ public class SettingsService {
         return getGuildSettings(guildId).getMessageCooldown();
     }
 
+    public void setMessageCooldown(long guildId, long cooldown) {
+        GuildSettings settings = getGuildSettings(guildId);
+        settings.setMessageCooldown(cooldown);
+        settingsRepository.save(settings);
+    }
+
     public String getYoutubeApiKey(long guildId) {
         return getGuildSettings(guildId).getYoutubeApiKey();
     }

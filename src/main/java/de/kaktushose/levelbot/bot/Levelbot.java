@@ -11,10 +11,7 @@ import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.model.Transaction;
-import de.kaktushose.levelbot.database.services.BoosterService;
-import de.kaktushose.levelbot.database.services.LevelService;
-import de.kaktushose.levelbot.database.services.SettingsService;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.database.services.*;
 import de.kaktushose.levelbot.listener.*;
 import de.kaktushose.levelbot.util.Statistics;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -45,6 +42,7 @@ public class Levelbot {
     private final UserService userService;
     private final SettingsService settingsService;
     private final LevelService levelService;
+    private final EventService eventService;
     private final BoosterService boosterService;
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
@@ -60,6 +58,7 @@ public class Levelbot {
         settingsService = new SettingsService();
         levelService = new LevelService(userService, settingsService);
         boosterService = new BoosterService(userService, settingsService);
+        eventService = new EventService(settingsService);
         guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
@@ -334,6 +333,11 @@ public class Levelbot {
     }
 
     @Produces
+    public EventService getEventService() {
+        return eventService;
+    }
+
+    @Produces
     public JDA getJda() {
         return jda;
     }
@@ -370,6 +374,5 @@ public class Levelbot {
         GuildType(long id) {
             this.id = id;
         }
-
     }
 }

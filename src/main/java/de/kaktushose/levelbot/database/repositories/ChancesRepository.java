@@ -2,7 +2,7 @@ package de.kaktushose.levelbot.database.repositories;
 
 import de.kaktushose.levelbot.database.model.CurrencyChance;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ type 0 = xp
 type 1 = coins
 type 2 = diamonds
  */
-public interface ChancesRepository extends Repository<CurrencyChance, Integer> {
+public interface ChancesRepository extends CrudRepository<CurrencyChance, Integer> {
 
     @Query(value = "SELECT * FROM currency_chances WHERE type = 0", nativeQuery = true)
     List<CurrencyChance> getXpChances();
