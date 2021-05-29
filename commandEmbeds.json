@@ -365,5 +365,15 @@
     "title": "Erfolg!",
     "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert",
     "color": "#86c240"
+  },
+  "contestEventStart": {
+    "title": "Erfolg!",
+    "description": "Das Bilder Contest Event wurde erfolgreich aktiviert",
+    "color": "#86c240"
+  },
+  "contestEventStop": {
+    "title": "Erfolg!",
+    "description": "Das Bilder Contest Event wurde erfolgreich deaktiviert",
+    "color": "#86c240"
   }
 }

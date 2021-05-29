@@ -16,6 +16,8 @@ public class GuildSettings {
     private long botChannelId;
     private long messageCooldown;
     private String youtubeApiKey;
+    private long eventChannelId;
+    private String eventEmote;
 
     public GuildSettings() {
     }
@@ -26,7 +28,9 @@ public class GuildSettings {
                          String botPrefix,
                          long botChannelId,
                          long messageCooldown,
-                         String youtubeApiKey) {
+                         String youtubeApiKey,
+                         long eventChannelId,
+                         String eventEmote) {
         this.guildId = guildId;
         this.version = version;
         this.botToken = botToken;
@@ -34,6 +38,8 @@ public class GuildSettings {
         this.botChannelId = botChannelId;
         this.messageCooldown = messageCooldown;
         this.youtubeApiKey = youtubeApiKey;
+        this.eventChannelId = eventChannelId;
+        this.eventEmote = eventEmote;
     }
 
     public Long getGuildId() {
@@ -90,5 +96,21 @@ public class GuildSettings {
 
     public void setYoutubeApiKey(String youtubeApiKey) {
         this.youtubeApiKey = youtubeApiKey;
+    }
+
+    public long getEventChannelId() {
+        return eventChannelId;
+    }
+
+    public void setEventChannelId(long eventChannelId) {
+        this.eventChannelId = eventChannelId;
+    }
+
+    public String getEventEmote() {
+        return eventEmote;
+    }
+
+    public void setEventEmote(String eventEmote) {
+        this.eventEmote = eventEmote;
     }
 }

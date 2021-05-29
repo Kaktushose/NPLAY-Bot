@@ -101,7 +101,8 @@ public class Levelbot {
                 new VoiceTextLink(jda.getTextChannelById(839150041955565588L)),
                 new NitroBoosterListener(this),
                 new ShopListener(this),
-                new DailyRewardListener(this)
+                new DailyRewardListener(this),
+                new ContestEventListener(settingsService, eventService)
         );
 
         log.debug("Starting ReactionListener...");

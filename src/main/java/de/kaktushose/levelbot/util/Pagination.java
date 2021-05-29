@@ -1,6 +1,5 @@
 package de.kaktushose.levelbot.util;
 
-import de.kaktushose.levelbot.database.model.BotUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 
@@ -11,11 +10,11 @@ public class Pagination {
 
     private final CurrencyType currencyType;
     private final JDA jda;
-    private final List<BotUser> leaderboard;
+    private final List<? extends Pageable> leaderboard;
     private final int pageSize; // elements per page
     private int index; // current page index
 
-    public Pagination(int pageSize, List<BotUser> leaderboard, JDA jda, CurrencyType currencyType) {
+    public Pagination(int pageSize, List<? extends Pageable> leaderboard, JDA jda, CurrencyType currencyType) {
         this.pageSize = pageSize;
         this.leaderboard = leaderboard;
         this.jda = jda;
@@ -61,15 +60,17 @@ public class Pagination {
         return (int) Math.ceil((float) leaderboard.size() / (float) pageSize);
     }
 
-    private String format(BotUser botUser) {
-        User user = jda.getUserById(botUser.getUserId());
+    private String format(Pageable pageable) {
+        User user = jda.getUserById(pageable.getUserId());
         switch (currencyType) {
             case XP:
-                return String.format("%s#%s (%d XP)", user.getName(), user.getDiscriminator(), botUser.getXp());
+                return String.format("%s#%s (%d XP)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.XP));
             case COINS:
-                return String.format("%s#%s (%d Münzen)", user.getName(), user.getDiscriminator(), botUser.getCoins());
+                return String.format("%s#%s (%d Münzen)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.COINS));
             case DIAMONDS:
-                return String.format("%s#%s (%d Diamanten)", user.getName(), user.getDiscriminator(), botUser.getDiamonds());
+                return String.format("%s#%s (%d Diamanten)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.DIAMONDS));
+            case CONTEST:
+                return String.format("%s#%s (%d Votes)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.CONTEST));
             default:
                 throw new IllegalArgumentException("Unsupported currency type!");
         }
@@ -78,6 +79,7 @@ public class Pagination {
     public enum CurrencyType {
         XP,
         COINS,
-        DIAMONDS
+        DIAMONDS,
+        CONTEST
     }
 }

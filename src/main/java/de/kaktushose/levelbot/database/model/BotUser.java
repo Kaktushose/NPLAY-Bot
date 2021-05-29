@@ -1,11 +1,14 @@
 package de.kaktushose.levelbot.database.model;
 
+import de.kaktushose.levelbot.util.Pageable;
+import de.kaktushose.levelbot.util.Pagination;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class BotUser {
+public class BotUser implements Pageable {
 
     @Id
     private Long userId;
@@ -68,8 +71,23 @@ public class BotUser {
         this.transactions = transactions;
     }
 
+    @Override
     public Long getUserId() {
         return userId;
+    }
+
+    @Override
+    public long getCount(Pagination.CurrencyType currencyType) {
+        switch (currencyType) {
+            case XP:
+                return getXp();
+            case DIAMONDS:
+                return getDiamonds();
+            case COINS:
+                return getCoins();
+            default:
+                return 0;
+        }
     }
 
     public void setUserId(Long userId) {

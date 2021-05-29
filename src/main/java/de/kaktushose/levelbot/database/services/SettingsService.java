@@ -67,4 +67,26 @@ public class SettingsService {
     public Reward getOneTimeNitroBoosterReward() {
         return rewardRepository.findById(11).orElseThrow();
     }
+
+    public void setEventChannelId(long guildId, long channelId) {
+        GuildSettings settings = getGuildSettings(guildId);
+        settings.setEventChannelId(channelId);
+        settingsRepository.save(settings);
+    }
+
+    public long getEventChannelId(long guildId) {
+        GuildSettings settings = getGuildSettings(guildId);
+        return settings.getEventChannelId();
+    }
+
+    public void setEventEmote(long guildId, String emote) {
+        GuildSettings settings = getGuildSettings(guildId);
+        settings.setEventEmote(emote);
+        settingsRepository.save(settings);
+    }
+
+    public String getEventEmote(long guildId) {
+        GuildSettings settings = getGuildSettings(guildId);
+        return settings.getEventEmote();
+    }
 }
