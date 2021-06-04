@@ -76,7 +76,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.1_265</version>
+            <version>4.2.1_266</version>
         </dependency>
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
