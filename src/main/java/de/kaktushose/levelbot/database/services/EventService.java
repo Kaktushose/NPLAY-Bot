@@ -3,14 +3,12 @@ package de.kaktushose.levelbot.database.services;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.ContestEntry;
 import de.kaktushose.levelbot.database.model.CurrencyChance;
-import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.CollectEventRepository;
 import de.kaktushose.levelbot.database.repositories.ContestRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -23,13 +21,15 @@ public class EventService {
     private final ContestRepository contestRepository;
     private final CollectEventRepository collectEventRepository;
     private final SettingsService settingsService;
+    private final UserService userService;
 
-    public EventService(SettingsService settingsService) {
+    public EventService(SettingsService settingsService, UserService userService) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         this.chancesRepository = context.getBean(ChancesRepository.class);
         this.contestRepository = context.getBean(ContestRepository.class);
         this.collectEventRepository = context.getBean(CollectEventRepository.class);
         this.settingsService = settingsService;
+        this.userService = userService;
     }
 
     public String startBalanceEvent(int eventId, long guildId) {
@@ -154,6 +154,7 @@ public class EventService {
 
     public String startCollectEvent(int id, long guildId) {
         settingsService.setActiveCollectEvent(guildId, id);
+        userService.getAllUsers().forEach(botUser -> userService.resetEventPoints(botUser.getUserId()));
         return getCollectEvent(id).getName();
     }
 

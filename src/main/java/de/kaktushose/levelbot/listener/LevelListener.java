@@ -1,8 +1,12 @@
 package de.kaktushose.levelbot.listener;
 
+import com.github.kaktushose.jda.commands.api.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.LevelService;
+import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -15,42 +19,77 @@ import java.util.Optional;
 public class LevelListener extends ListenerAdapter {
 
     private final LevelService levelService;
+    private final EventService eventService;
+    private final UserService userService;
+    private final EmbedCache embedCache;
     private final Levelbot levelbot;
 
     public LevelListener(Levelbot levelbot) {
         this.levelService = levelbot.getLevelService();
+        this.eventService = levelbot.getEventService();
+        this.userService = levelbot.getUserService();
+        this.embedCache = levelbot.getEmbedCache();
         this.levelbot = levelbot;
     }
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         Guild guild = event.getGuild();
+        long guildId = event.getGuild().getIdLong();
         User author = event.getAuthor();
+        long userId = author.getIdLong();
         if (author.isBot()) {
             return;
         }
-        if (!levelService.isValidMessage(author.getIdLong(), guild.getIdLong(), event.getChannel().getIdLong())) {
+        if (!levelService.isValidMessage(userId, guildId, event.getChannel().getIdLong())) {
             return;
         }
         if (event.getMessage().getContentStripped().length() < 10) {
             return;
         }
 
-        Optional<Rank> optional = levelService.onValidMessage(author.getIdLong());
+        TextChannel channel = levelbot.getBotChannel();
+
+        if (eventService.isCollectEventActive(guildId)) {
+            CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
+            long eventPoints = userService.increaseEventPoints(userId);
+
+            if (eventPoints == collectEvent.getItemBound()) {
+                userService.addUpItem(userId, collectEvent.getItem().getItemId());
+                levelbot.addItemRole(userId, collectEvent.getItem().getItemId());
+
+                channel.sendMessage(author.getAsMention())
+                        .and(channel.sendMessage(embedCache.getEmbed("collectEventItemReward")
+                                .injectValue("user", author.getName())
+                                .toMessageEmbed())
+                        ).queue();
+
+            } else if (eventPoints == collectEvent.getRoleId()) {
+                levelbot.addCollectEventRole(userId);
+
+                channel.sendMessage(author.getAsMention())
+                        .and(channel.sendMessage(embedCache.getEmbed("collectEventRoleReward")
+                                .injectValue("user", author.getName())
+                                .toMessageEmbed())
+                        ).queue();
+            }
+        }
+
+        Optional<Rank> optional = levelService.onValidMessage(userId);
+
         if (optional.isEmpty()) {
             return;
         }
 
         Rank currentRank = optional.get();
-        Rank nextRank = levelService.getNextRank(author.getIdLong());
-        TextChannel channel = levelbot.getBotChannel();
-        String rewards = levelService.applyRewards(author.getIdLong(), currentRank.getRankId());
+        Rank nextRank = levelService.getNextRank(userId);
+        String rewards = levelService.applyRewards(userId, currentRank.getRankId());
 
-        levelbot.addRankRole(author.getIdLong(), currentRank.getRankId());
-        levelbot.removeRankRole(author.getIdLong(), levelService.getPreviousRank(author.getIdLong()).getRankId());
+        levelbot.addRankRole(userId, currentRank.getRankId());
+        levelbot.removeRankRole(userId, levelService.getPreviousRank(userId).getRankId());
 
         channel.sendMessage(author.getAsMention())
-                .and(channel.sendMessage(levelbot.getEmbedCache().getEmbed("levelUp")
+                .and(channel.sendMessage(embedCache.getEmbed("levelUp")
                         .injectValue("user", author.getAsMention())
                         .injectValue("color", currentRank.getColor())
                         .injectValue("currentRank", guild.getRoleById(currentRank.getRoleId()).getAsMention())

@@ -8,7 +8,6 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.services.EventService;
-import de.kaktushose.levelbot.database.services.LevelService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 

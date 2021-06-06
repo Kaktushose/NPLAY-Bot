@@ -54,9 +54,9 @@ public class Levelbot {
     public Levelbot(GuildType guildType) {
         userService = new UserService();
         settingsService = new SettingsService();
-        levelService = new LevelService(userService, settingsService);
+        eventService = new EventService(settingsService, userService);
         boosterService = new BoosterService(userService, settingsService);
-        eventService = new EventService(settingsService);
+        levelService = new LevelService(userService, settingsService, eventService);
         guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
@@ -213,6 +213,11 @@ public class Levelbot {
         guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
+    public void addCollectEventRole(long userId) {
+        CollectEvent event = eventService.getActiveCollectEvent(guildId);
+        guild.addRoleToMember(userId, guild.getRoleById(event.getRoleId())).queue();
+    }
+
     public void checkForExpiredItems() {
         userService.getAllUsers().forEach(botUser -> {
             for (Transaction transaction : botUser.getTransactions()) {
@@ -304,7 +309,7 @@ public class Levelbot {
             if (eventPoints >= collectEvent.getItemBound()) {
                 embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "Event Rolle " + collectEvent.getName());
             } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", "Event Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", "Event Rolle \n" + collectEvent.getName());
             } else {
                 embedDTO.injectValue("eventRewards", ":x: noch keine");
             }

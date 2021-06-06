@@ -463,5 +463,15 @@
     "title": "Fehler!",
     "description": "Es ist kein Sammel Event aktiviert.",
     "color": "#aa0c14"
+  },
+  "collectEventItemReward": {
+    "title": "Danke für deine Hilfe, {user}",
+    "description": "item reward",
+    "color": "#86c240"
+  },
+  "collectEventRoleReward": {
+    "title": "Danke für deine Hilfe, {user}",
+    "description": "role reward",
+    "color": "#86c240"
   }
 }

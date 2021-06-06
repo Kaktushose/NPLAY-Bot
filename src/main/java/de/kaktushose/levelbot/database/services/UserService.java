@@ -214,4 +214,16 @@ public class UserService {
         botUser.setLastReward(System.currentTimeMillis());
         userRepository.save(botUser);
     }
+
+    public void resetEventPoints(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setEventPoints(0);
+        userRepository.save(botUser);
+    }
+
+    public long increaseEventPoints(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setEventPoints(botUser.getEventPoints() + 1);
+        return userRepository.save(botUser).getEventPoints();
+    }
 }

@@ -21,8 +21,9 @@ public class LevelService {
     private final ChancesRepository chancesRepository;
     private final UserService userService;
     private final SettingsService settingsService;
+    private final EventService eventService;
 
-    public LevelService(UserService userService, SettingsService settingsService) {
+    public LevelService(UserService userService, SettingsService settingsService, EventService eventService) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         rankRepository = context.getBean(RankRepository.class);
@@ -31,6 +32,7 @@ public class LevelService {
         chancesRepository = context.getBean(ChancesRepository.class);
         this.userService = userService;
         this.settingsService = settingsService;
+        this.eventService = eventService;
     }
 
     public Rank getRank(int rankId) {
