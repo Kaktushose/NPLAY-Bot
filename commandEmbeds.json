@@ -315,8 +315,8 @@
     ]
   },
   "shopConfirm": {
-    "title": "Überschrift: Bestätige Deinen Kauf! :gift:",
-    "description": "Bist du sicher, dass Du {item} für {price} Münzen :moneybag: erwerben möchtest? Klicke auf den :white_check_mark:, um den Kauf zu bestätigen.",
+    "title": "Bestätige Deinen Kauf! :gift:",
+    "description": "Bist du sicher, dass Du das Item \"{item}\" für {price} Münzen :moneybag: erwerben möchtest? Klicke auf den :white_check_mark:, um den Kauf zu bestätigen.",
     "color": "#f4cd53"
   },
   "shopError": {

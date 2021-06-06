@@ -37,7 +37,7 @@ public class ChangeDiamondsCommand {
         event.reply(
                 embedCache.getEmbed("confirmAction").injectValue(
                         "action",
-                        String.format("du %d Diamanten gegen %d Münzen tauschen möchtest?", diamonds, coins)
+                        String.format("du %d Diamanten gegen %d Münzen tauschen möchtest?", amount, coins)
                 ),
                 confirmMessage -> {
                     confirmMessage.addReaction(EmoteType.THUMBSUP.unicode)
@@ -53,7 +53,7 @@ public class ChangeDiamondsCommand {
 
                     reactionWaiter.onEvent(reactionEvent -> {
                         if (reactionEvent.getEmote().equals(EmoteType.THUMBSUP.unicode)) {
-                            userService.exchangeDiamonds(botUser.getUserId(), diamonds);
+                            userService.exchangeDiamonds(botUser.getUserId(), amount);
                             event.reply(embedCache.getEmbed("diamondChangeSuccess")
                                     .injectValue("diamonds", amount)
                                     .injectValue("coins", coins)

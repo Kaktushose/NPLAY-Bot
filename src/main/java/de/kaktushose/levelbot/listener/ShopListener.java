@@ -17,6 +17,8 @@ import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -32,6 +34,7 @@ public class ShopListener extends ListenerAdapter {
     public static final String XP_BOOSTER_MESSAGE_ID = "843849356695175168";
     private static final String CONFIRM = "✅";
     private static final String CANCEL = "❌";
+    private final Set<Long> activeUsers;
     private final UserService userService;
     private final LevelService levelService;
     private final EmbedCache embedCache;
@@ -42,6 +45,7 @@ public class ShopListener extends ListenerAdapter {
         this.levelService = levelbot.getLevelService();
         this.embedCache = levelbot.getEmbedCache();
         this.levelbot = levelbot;
+        this.activeUsers = new HashSet<>();
     }
 
     @Override
@@ -55,6 +59,15 @@ public class ShopListener extends ListenerAdapter {
         if (event.getChannel().getIdLong() != 839150041955565588L) {
             return;
         }
+
+        // indicates active purchase
+        if (activeUsers.contains(event.getUser().getIdLong())) {
+            event.getReaction().removeReaction(event.getUser()).queue(
+                    null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
+            );
+            return;
+        }
+
         Member member = event.getMember();
         ItemCategory itemCategory;
         switch (event.getMessageId()) {
@@ -127,6 +140,7 @@ public class ShopListener extends ListenerAdapter {
                     ).build()
             ).queue(delete);
         } else {
+            activeUsers.add(member.getIdLong());
             channel.sendMessage( // confirm transaction
                     builder.setEmbed(embedCache.getEmbed("shopConfirm")
                             .injectValue("item", item.getName())
@@ -151,6 +165,7 @@ public class ShopListener extends ListenerAdapter {
                                         .toMessageEmbed()
                         ).queue(delete);
                     }
+                    activeUsers.remove(member.getIdLong());
                     waiter.stopWaiting(false);
                 });
             });

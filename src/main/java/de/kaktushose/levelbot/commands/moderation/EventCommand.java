@@ -123,7 +123,7 @@ public class EventCommand {
             category = "Moderation"
     )
     public void onCollectEventStop(CommandEvent event) {
-        if (eventService.stopCollectEvent(event.getGuild())) {
+        if (eventService.stopCollectEvent(event.getGuild().getIdLong())) {
             event.reply(embedCache.getEmbed("collectEventStop"));
         } else {
             event.reply(embedCache.getEmbed("noActiveCollectEvent"));

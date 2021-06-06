@@ -6,6 +6,7 @@ import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.EmbedDTO;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
+import com.github.kaktushose.jda.commands.util.CommandDocumentation;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.database.model.*;
@@ -96,7 +97,7 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(839150041955565588L)),
+                new VoiceTextLink(jda.getTextChannelById(545967082253189121L)),
                 new NitroBoosterListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
@@ -159,10 +160,15 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing("development"));
 
-//        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
-//                .injectValue("version", settingsService.getVersion(guildId))
-//                .toMessageEmbed()
-//        ).queue();
+        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
+                .injectValue("version", settingsService.getVersion(guildId))
+                .toMessageEmbed()
+        ).queue();
+
+        CommandDocumentation documentation = new CommandDocumentation(jdaCommands.getCommands(), "{prefix}", "!");
+        documentation.generate();
+        documentation.saveToFile(new File("./docs.md"));
+
         return this;
     }
 
@@ -307,9 +313,9 @@ public class Levelbot {
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
             if (eventPoints >= collectEvent.getItemBound()) {
-                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "Event Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\nEvent Rolle " + collectEvent.getName());
             } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", "Event Rolle \n" + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", "Event Rolle " + collectEvent.getName());
             } else {
                 embedDTO.injectValue("eventRewards", ":x: noch keine");
             }

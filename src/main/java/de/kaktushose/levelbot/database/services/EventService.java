@@ -167,13 +167,11 @@ public class EventService {
         return getCollectEvent(id).getName();
     }
 
-    public boolean stopCollectEvent(Guild guild) {
-        long guildId = guild.getIdLong();
+    public boolean stopCollectEvent(long guildId) {
         if (!isCollectEventActive(guildId)) {
             return false;
         }
         CollectEvent collectEvent = getCollectEvent(settingsService.getActiveCollectEventId(guildId));
-        guild.getRoleById(collectEvent.getRoleId()).delete().queue();
         settingsService.setActiveCollectEvent(guildId, -1);
         return true;
     }

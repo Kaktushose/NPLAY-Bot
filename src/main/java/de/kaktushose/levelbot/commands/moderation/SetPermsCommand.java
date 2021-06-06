@@ -47,7 +47,7 @@ public class SetPermsCommand {
         }
 
         // update in db
-        userService.setPermission(executor.getUserId(), level);
+        userService.setPermission(target.getUserId(), level);
         // update in jda-commands
         CommandSettings commandSettings = event.getJdaCommands().getDefaultSettings();
         // first remove user from all levels, then reapply them
@@ -61,6 +61,8 @@ public class SetPermsCommand {
                 commandSettings.getPermissionHolders("admin").add(target.getUserId());
             case 2:
                 commandSettings.getPermissionHolders("moderator").add(target.getUserId());
+            case 1:
+                commandSettings.getMutedUsers().remove(target.getUserId());
         }
 
         // reply

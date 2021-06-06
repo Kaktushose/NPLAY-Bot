@@ -45,7 +45,7 @@ public class DailyRewardListener extends ListenerAdapter {
             MessageBuilder builder = new MessageBuilder().append(user.getAsMention());
             builder.setEmbed(levelbot.getEmbedCache()
                     .getEmbed("dailyReward")
-                    .injectValue("user", user.getAsMention())
+                    .injectValue("user", user.getName())
                     .injectValue("reward", reward.get())
                     .toMessageEmbed()
             );
