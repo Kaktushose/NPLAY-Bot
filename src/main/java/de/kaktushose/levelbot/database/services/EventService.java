@@ -1,9 +1,9 @@
 package de.kaktushose.levelbot.database.services;
 
-import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.ContestEntry;
 import de.kaktushose.levelbot.database.model.CurrencyChance;
+import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.CollectEventRepository;
 import de.kaktushose.levelbot.database.repositories.ContestRepository;
@@ -13,9 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.context.ApplicationContext;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -97,6 +95,7 @@ public class EventService {
     public void startContestEvent(long guildId, long channelId, String emote) {
         settingsService.setEventChannelId(guildId, channelId);
         settingsService.setEventEmote(guildId, emote.replaceAll(":", ""));
+        contestRepository.deleteAll();
     }
 
     public void stopContestEvent(long guildId) {
@@ -139,6 +138,10 @@ public class EventService {
         return collectEventRepository.existsById(id);
     }
 
+    public boolean collectEventExistsById(int id) {
+        return collectEventRepository.existsById(id);
+    }
+
     public CollectEvent getCollectEvent(int id) {
         return collectEventRepository.findById(id).orElseThrow();
     }
@@ -149,25 +152,24 @@ public class EventService {
         return result;
     }
 
-    public CollectEvent createCollectEvent(CollectEvent collectEvent, Guild guild) {
-        CollectEvent event = collectEventRepository.save(collectEvent);
-        guild.createRole()
-                .setName(event.getName() + " " + Calendar.getInstance().get(Calendar.YEAR))
-                .setColor(Color.decode(event.getColor()))
-                .queue(role -> {
-                    event.setRoleId(role.getIdLong());
-                    collectEventRepository.save(event);
-                });
-        return collectEvent;
+    public String startCollectEvent(int id, long guildId) {
+        settingsService.setActiveCollectEvent(guildId, id);
+        return getCollectEvent(id).getName();
     }
 
-    public boolean deleteCollectEvent(int id, Guild guild) {
-        if (!collectEventRepository.existsById(id)) {
+    public boolean stopCollectEvent(long guildId) {
+        if (!isCollectEventActive(guildId)) {
             return false;
         }
-        CollectEvent event = getCollectEvent(id);
-        guild.getRoleById(event.getRoleId()).delete().queue();
-        collectEventRepository.deleteById(id);
+        settingsService.setActiveCollectEvent(guildId, -1);
         return true;
+    }
+
+    public CollectEvent getActiveCollectEvent(long guildId) {
+        return getCollectEvent(settingsService.getActiveCollectEventId(guildId));
+    }
+
+    public boolean isCollectEventActive(long guildId) {
+        return settingsService.getActiveCollectEventId(guildId) > -1;
     }
 }

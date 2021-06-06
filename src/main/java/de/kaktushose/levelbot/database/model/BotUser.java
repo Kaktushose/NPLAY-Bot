@@ -26,6 +26,7 @@ public class BotUser implements Pageable {
     private int permissionLevel;
     private int rewardLevel;
     private long lastReward;
+    private long eventPoints;
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private List<Transaction> transactions;
@@ -53,6 +54,7 @@ public class BotUser implements Pageable {
                    int permissionLevel,
                    int rewardLevel,
                    long lastReward,
+                   long eventPoints,
                    List<Transaction> transactions) {
         this.userId = userId;
         this.level = level;
@@ -68,6 +70,7 @@ public class BotUser implements Pageable {
         this.permissionLevel = permissionLevel;
         this.rewardLevel = rewardLevel;
         this.lastReward = lastReward;
+        this.eventPoints = eventPoints;
         this.transactions = transactions;
     }
 
@@ -196,6 +199,14 @@ public class BotUser implements Pageable {
 
     public void setLastReward(long lastReward) {
         this.lastReward = lastReward;
+    }
+
+    public long getEventPoints() {
+        return eventPoints;
+    }
+
+    public void setEventPoints(long eventPoints) {
+        this.eventPoints = eventPoints;
     }
 
     public List<Transaction> getTransactions() {

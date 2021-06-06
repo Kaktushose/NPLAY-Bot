@@ -3,14 +3,12 @@ package de.kaktushose.levelbot.bot;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
+import com.github.kaktushose.jda.commands.entities.EmbedDTO;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Rank;
-import de.kaktushose.levelbot.database.model.Transaction;
+import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.services.*;
 import de.kaktushose.levelbot.listener.*;
 import de.kaktushose.levelbot.util.Statistics;
@@ -281,7 +279,10 @@ public class Levelbot {
         long coinsGain = botUser.getCoins() - botUser.getStartCoins();
         long diamondsGain = botUser.getDiamonds() - botUser.getStartDiamonds();
 
-        EmbedBuilder embedBuilder = embedCache.getEmbed("rankInfo")
+        // if event is active, load another template
+        String embed = eventService.isCollectEventActive(guildId) ? "eventRankInfo" : "rankInfo";
+
+        EmbedDTO embedDTO = embedCache.getEmbed(embed)
                 .injectValue("user", target.getAsMention())
                 .injectValue("color", currentRank.getColor())
                 .injectValue("currentRank", String.format("<@&%d>", currentRank.getRoleId()))
@@ -290,8 +291,26 @@ public class Levelbot {
                 .injectValue("xpGain", xpGain)
                 .injectValue("coinsGain", coinsGain)
                 .injectValue("diamondsGain", diamondsGain)
-                .injectFields(botUser)
-                .toEmbedBuilder();
+                .injectFields(botUser);
+
+
+        if (eventService.isCollectEventActive(guildId)) {
+            CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
+            long eventPoints = botUser.getEventPoints();
+            embedDTO.injectValue("eventName", collectEvent.getName())
+                    .injectValue("currencyName", collectEvent.getCurrencyName())
+                    .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
+                    .injectValue("currencyPoints", eventPoints);
+            if (eventPoints >= collectEvent.getItemBound()) {
+                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "Event Rolle " + collectEvent.getName());
+            } else if (eventPoints >= collectEvent.getRoleBound()) {
+                embedDTO.injectValue("eventRewards", "Event Rolle " + collectEvent.getName());
+            } else {
+                embedDTO.injectValue("eventRewards", ":x: noch keine");
+            }
+        }
+
+        EmbedBuilder embedBuilder = embedDTO.toEmbedBuilder();
 
         if (botUser.getTransactions().isEmpty()) {
             embedBuilder.addField("Keine Items in Besitz", "", false);

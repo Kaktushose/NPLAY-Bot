@@ -3,6 +3,7 @@ package de.kaktushose.levelbot.database.model;
 import javax.persistence.*;
 
 @Table(name = "collect_events")
+@Entity
 public class CollectEvent {
 
     @Id
@@ -14,7 +15,8 @@ public class CollectEvent {
     @JoinColumn(name = "itemId", referencedColumnName = "itemId")
     private Item item;
     private long roleId;
-    private String color;
+    private int itemBound;
+    private int roleBound;
 
     public CollectEvent() {
     }
@@ -25,14 +27,16 @@ public class CollectEvent {
                         String currencyEmote,
                         Item item,
                         long roleId,
-                        String color) {
+                        int itemBound,
+                        int roleBound) {
         this.eventId = eventId;
         this.name = name;
         this.currencyName = currencyName;
         this.currencyEmote = currencyEmote;
         this.item = item;
         this.roleId = roleId;
-        this.color = color;
+        this.itemBound = itemBound;
+        this.roleBound = roleBound;
     }
 
     public Integer getEventId() {
@@ -83,11 +87,19 @@ public class CollectEvent {
         this.roleId = roleId;
     }
 
-    public String getColor() {
-        return color;
+    public int getItemBound() {
+        return itemBound;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setItemBound(int itemBound) {
+        this.itemBound = itemBound;
+    }
+
+    public int getRoleBound() {
+        return roleBound;
+    }
+
+    public void setRoleBound(int roleBound) {
+        this.roleBound = roleBound;
     }
 }

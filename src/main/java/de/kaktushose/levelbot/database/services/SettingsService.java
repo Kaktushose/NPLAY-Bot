@@ -89,4 +89,14 @@ public class SettingsService {
         GuildSettings settings = getGuildSettings(guildId);
         return settings.getEventEmote();
     }
+
+    public void setActiveCollectEvent(long guildId, int id) {
+        GuildSettings settings = getGuildSettings(guildId);
+        settings.setCollectEventId(id);
+        settingsRepository.save(settings);
+    }
+
+    public int getActiveCollectEventId(long guildId) {
+        return getGuildSettings(guildId).getCollectEventId();
+    }
 }

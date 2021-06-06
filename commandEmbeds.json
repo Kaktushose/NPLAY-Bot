@@ -193,6 +193,74 @@
       "text": "Mit dem Befehl !kaufen kannst du dir Items kaufen."
     }
   },
+  "eventRankInfo": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe",
+        "value": ":dart: {nextRank}"
+      },
+      {
+        "name": "",
+        "value": "__Währungen__:"
+      },
+      {
+        "name": "XP:",
+        "value": ":star2: {xp}",
+        "inline": true
+      },
+      {
+        "name": "Münzen:",
+        "value": ":moneybag: {coins}",
+        "inline": true
+      },
+      {
+        "name": "Diamanten:",
+        "value": ":gem: {diamonds}",
+        "inline": true
+      },
+      {
+        "name": "",
+        "value": "__Statistiken__:"
+      },
+      {
+        "name": "Ressourcen-Zuwachs:",
+        "value": ":star2: {xpGain} | :moneybag: {coinsGain} | :gem: {diamondsGain}"
+      },
+      {
+        "name": "Gezählte Nachrichten:",
+        "value": ":chart_with_upwards_trend: {messageCount}"
+      },
+      {
+        "name": "",
+        "value": "__{eventName}__:"
+      },
+      {
+        "name": "{currencyName}:",
+        "value": "{currencyEmote} {currencyPoints}"
+      },
+      {
+        "name": "Belohnungen:",
+        "value": "{eventRewards}"
+      },
+      {
+        "name": "",
+        "value": "__Items__:"
+      }
+    ],
+    "footer": {
+      "text": "Mit dem Befehl !kaufen kannst du dir Items kaufen."
+    }
+  },
   "leaderboard": {
     "title": "Rangliste {guild}: {currency}",
     "color": "#86c240"
@@ -358,22 +426,42 @@
   },
   "balanceEventStart": {
     "title": "Erfolg!",
-    "description": "Das Event \"{name}\" wurde erfolgreich aktiviert",
+    "description": "Das Event \"{name}\" wurde erfolgreich aktiviert.",
     "color": "#86c240"
   },
   "balanceEventStop": {
     "title": "Erfolg!",
-    "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert",
+    "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert.",
     "color": "#86c240"
   },
   "contestEventStart": {
     "title": "Erfolg!",
-    "description": "Das Bilder Contest Event wurde erfolgreich aktiviert",
+    "description": "Das Bilder Contest Event wurde erfolgreich aktiviert.",
     "color": "#86c240"
   },
   "contestEventStop": {
     "title": "Erfolg!",
-    "description": "Das Bilder Contest Event wurde erfolgreich deaktiviert",
+    "description": "Das Bilder Contest Event wurde erfolgreich deaktiviert.",
     "color": "#86c240"
+  },
+  "collectEventStart": {
+    "title": "Erfolg!",
+    "description": "Das Sammel Event \"{name}\" wurde erfolgreich aktiviert.",
+    "color": "#86c240"
+  },
+  "collectEventStop": {
+    "title": "Erfolg!",
+    "description": "Das Sammel Event wurde erfolgreich deaktiviert.",
+    "color": "#86c240"
+  },
+  "collectEventList": {
+    "title": "Folgende Collect Events sind verfügbar",
+    "description": "{list}",
+    "color": "#86c240"
+  },
+  "noActiveCollectEvent": {
+    "title": "Fehler!",
+    "description": "Es ist kein Sammel Event aktiviert.",
+    "color": "#aa0c14"
   }
 }

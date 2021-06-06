@@ -19,7 +19,7 @@ public class SetPriceCommand {
 
     @Command(
             name = "Preis ändern",
-            usage = "{prefix}setprice <item id> <price>",
+            usage = "{prefix}setprice <itemId> <price>",
             desc = "Setzt den Preis eines Items auf den angegebenen Wert",
             category = "Moderation"
     )
