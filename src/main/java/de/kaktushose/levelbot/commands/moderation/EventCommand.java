@@ -111,7 +111,7 @@ public class EventCommand {
             event.reply(embedCache.getEmbed("unknownEventId"));
             return;
         }
-        String name = eventService.startCollectEvent(id, event.getGuild().getIdLong());
+        String name = eventService.startCollectEvent(id, event.getGuild());
         event.reply(embedCache.getEmbed("collectEventStart").injectValue("name", name));
     }
 
@@ -123,7 +123,7 @@ public class EventCommand {
             category = "Moderation"
     )
     public void onCollectEventStop(CommandEvent event) {
-        if (eventService.stopCollectEvent(event.getGuild().getIdLong())) {
+        if (eventService.stopCollectEvent(event.getGuild())) {
             event.reply(embedCache.getEmbed("collectEventStop"));
         } else {
             event.reply(embedCache.getEmbed("noActiveCollectEvent"));
