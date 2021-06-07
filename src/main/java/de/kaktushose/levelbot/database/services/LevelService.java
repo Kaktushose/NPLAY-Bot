@@ -152,7 +152,7 @@ public class LevelService {
         userService.addCoins(userId, coins);
         long newXp = userService.addXp(userId, xp);
 
-        if (getCurrentRank(userId).getRankId() == 10) {
+        if (getCurrentRank(userId).getRankId() == 13) {
             return Optional.empty();
         }
 
