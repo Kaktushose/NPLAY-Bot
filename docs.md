@@ -1,7 +1,22 @@
-> Auto generated command manual | 2021/06/07 13:31:35
+> Auto generated command manual | 2021/06/07 16:59:51
 
 Owner
 =====
+
+### Code ausführen
+
+**Description:**
+
+Führt Code in der aktuellen Runtime des Bots aus
+
+**Usage:**
+
+`!eval <code>`
+
+**Permissions:**
+
+- owner
+
 ### Bot herunterfahren
 
 **Description:**
@@ -20,31 +35,138 @@ Fährt den Bot herunter.
 
 - owner
 
-### Code ausführen
+Moderation
+==========
+
+### Reaction Shop einrichten
 
 **Description:**
 
-Führt Code in der aktuellen Runtime des Bots aus
+Fügt die benötigten Reactions für den Shop hinzu
 
 **Usage:**
 
-`!eval <code>`
+`!initshop <textChannel>`
 
 **Permissions:**
 
-- owner
+- moderator
 
-Moderation
-==========
-### Münzen setzen
+### Willkommen Embeds senden
 
 **Description:**
 
-Setzt die Anzahl der Münzen eines Benutzers auf den angegbenen Wert.
+Sendet die Embeds in <#551483788337872927>
 
 **Usage:**
 
-`!set coins <member> <amount>`
+`!embeds resend <messageId>`
+
+**Permissions:**
+
+- moderator
+
+### Preis ändern
+
+**Description:**
+
+Setzt den Preis eines Items auf den angegebenen Wert
+
+**Usage:**
+
+`!setprice <itemId> <price>`
+
+**Permissions:**
+
+- moderator
+
+### Benutzer entsperren
+
+**Description:**
+
+Entfernt einen Benutzer von der Blacklist
+
+**Usage:**
+
+`!blacklist remove <member>`
+
+**Aliases:**
+
+- blacklist rm
+- banlist remove
+- banlist rm
+- bl remove
+- bl rm
+
+**Permissions:**
+
+- moderator
+
+### XP setzen
+
+**Description:**
+
+Setzt die Anzahl der XP eines Benutzers auf den angegbenen Wert.
+
+**Usage:**
+
+`!set xp <member> <amount>`
+
+**Permissions:**
+
+- moderator
+
+### XP ändern
+
+**Description:**
+
+Ändert die Anzahl der XP eines Benutzers um den angegbenen Wert.
+
+**Usage:**
+
+`!add xp <member> <amount>`
+
+**Permissions:**
+
+- moderator
+
+### Münzen ändern
+
+**Description:**
+
+Ändert die Anzahl der Münzen eines Benutzers um den angegbenen Wert.
+
+**Usage:**
+
+`!add coins <member> <amount>`
+
+**Permissions:**
+
+- moderator
+
+### Balance Event aktivieren
+
+**Description:**
+
+Startet das Balance Event mit der angegeben ID
+
+**Usage:**
+
+`!event balance start <id>`
+
+**Permissions:**
+
+- moderator
+
+### Balance Event Arten
+
+**Description:**
+
+Zeigt eine Liste aller verfügbaren Balance Events an
+
+**Usage:**
+
+`!event balance list`
 
 **Permissions:**
 
@@ -63,6 +185,148 @@ Entfernt ein Item aus dem Besitz eines Benutzers
 **Aliases:**
 
 - rm
+
+**Permissions:**
+
+- moderator
+
+### Sammel Event aktivieren
+
+**Description:**
+
+Startet das Sammel Event mit der angegeben ID
+
+**Usage:**
+
+`!event collect start <id>`
+
+**Permissions:**
+
+- moderator
+
+### Diamanten ändern
+
+**Description:**
+
+Ändert die Anzahl der Diamanten eines Benutzers um den angegbenen Wert.
+
+**Usage:**
+
+`!add diamonds <member> <amount>`
+
+**Permissions:**
+
+- moderator
+
+### Collect Event Arten
+
+**Description:**
+
+Zeigt eine Liste aller verfügbaren Collect Events an
+
+**Usage:**
+
+`!event collect list`
+
+**Permissions:**
+
+- moderator
+
+### Willkommen Embeds senden
+
+**Description:**
+
+Sendet die Embeds in <#551483788337872927>
+
+**Usage:**
+
+`!embeds send`
+
+**Permissions:**
+
+- moderator
+
+### Nachrichten löschen
+
+**Description:**
+
+Löscht die angegebene Zahl von Nachrichten aus einem Channel
+
+**Usage:**
+
+`!delete <amount>`
+
+**Aliases:**
+
+- purge
+- clear
+
+**Permissions:**
+
+- moderator
+
+### Contest Event aktivieren
+
+**Description:**
+
+Startet ein Bilder Contest Event
+
+**Usage:**
+
+`!event contest start <channel> <emoji>`
+
+**Permissions:**
+
+- moderator
+
+### Münzen setzen
+
+**Description:**
+
+Setzt die Anzahl der Münzen eines Benutzers auf den angegbenen Wert.
+
+**Usage:**
+
+`!set coins <member> <amount>`
+
+**Permissions:**
+
+- moderator
+
+### Gesperrte Benutzer
+
+**Description:**
+
+Zeigt alle Nutzer, die auf der Blacklist stehen
+
+**Usage:**
+
+`!blacklist show`
+
+**Aliases:**
+
+- blacklist list
+- blacklist view
+- banlist show
+- banlist list
+- banlist view
+- bl show
+- bl list
+- bl view
+
+**Permissions:**
+
+- moderator
+
+### Balance Event deaktivieren
+
+**Description:**
+
+Stoppt das Balance Event mit der angegeben ID
+
+**Usage:**
+
+`!event balance stop <id>`
 
 **Permissions:**
 
@@ -96,185 +360,15 @@ Stoppt ein Bilder Contest Event
 
 - moderator
 
-### Diamanten ändern
+### Berechtigung ändern
 
 **Description:**
 
-Ändert die Anzahl der Diamanten eines Benutzers um den angegbenen Wert.
+Setzt das Berechtigungslevel eines Benutzers auf den angegebenen Wert
 
 **Usage:**
 
-`!add diamonds <member> <amount>`
-
-**Permissions:**
-
-- moderator
-
-### Sammel Event aktivieren
-
-**Description:**
-
-Startet das Sammel Event mit der angegeben ID
-
-**Usage:**
-
-`!event collect start <id>`
-
-**Permissions:**
-
-- moderator
-
-### Nachrichten löschen
-
-**Description:**
-
-Löscht die angegebene Zahl von Nachrichten aus einem Channel
-
-**Usage:**
-
-`!delete <amount>`
-
-**Aliases:**
-
-- purge
-- clear
-
-**Permissions:**
-
-- moderator
-
-### Willkommen Embeds senden
-
-**Description:**
-
-Sendet die Embeds in <#551483788337872927>
-
-**Usage:**
-
-`!embeds resend <messageId>`
-
-**Permissions:**
-
-- moderator
-
-### Diamanten setzen
-
-**Description:**
-
-Setzt die Anzahl der Diamanten eines Benutzers auf den angegbenen Wert.
-
-**Usage:**
-
-`!set diamonds <member> <amount>`
-
-**Permissions:**
-
-- moderator
-
-### Gesperrte Benutzer
-
-**Description:**
-
-Zeigt alle Nutzer, die auf der Blacklist stehen
-
-**Usage:**
-
-`!blacklist show`
-
-**Aliases:**
-
-- blacklist list
-- blacklist view
-- banlist show
-- banlist list
-- banlist view
-- bl show
-- bl list
-- bl view
-
-**Permissions:**
-
-- moderator
-
-### Willkommen Embeds senden
-
-**Description:**
-
-Sendet die Embeds in <#551483788337872927>
-
-**Usage:**
-
-`!embeds send`
-
-**Permissions:**
-
-- moderator
-
-### XP ändern
-
-**Description:**
-
-Ändert die Anzahl der XP eines Benutzers um den angegbenen Wert.
-
-**Usage:**
-
-`!add xp <member> <amount>`
-
-**Permissions:**
-
-- moderator
-
-### Preis ändern
-
-**Description:**
-
-Setzt den Preis eines Items auf den angegebenen Wert
-
-**Usage:**
-
-`!setprice <itemId> <price>`
-
-**Permissions:**
-
-- moderator
-
-### Balance Event Arten
-
-**Description:**
-
-Zeigt eine Liste aller verfügbaren Balance Events an
-
-**Usage:**
-
-`!event balance list`
-
-**Permissions:**
-
-- moderator
-
-### Contest Event aktivieren
-
-**Description:**
-
-Startet ein Bilder Contest Event
-
-**Usage:**
-
-`!event contest start <channel> <emoji>`
-
-**Permissions:**
-
-- moderator
-
-### Reaction Shop einrichten
-
-**Description:**
-
-Fügt die benötigten Reactions für den Shop hinzu
-
-**Usage:**
-
-`!initshop <textChannel>`
+`!setperms <member> <level>`
 
 **Permissions:**
 
@@ -299,107 +393,15 @@ Fügt einen Benutzer zur Blacklist hinzu
 
 - moderator
 
-### XP setzen
+### Diamanten setzen
 
 **Description:**
 
-Setzt die Anzahl der XP eines Benutzers auf den angegbenen Wert.
+Setzt die Anzahl der Diamanten eines Benutzers auf den angegbenen Wert.
 
 **Usage:**
 
-`!set xp <member> <amount>`
-
-**Permissions:**
-
-- moderator
-
-### Balance Event aktivieren
-
-**Description:**
-
-Startet das Balance Event mit der angegeben ID
-
-**Usage:**
-
-`!event balance start <id>`
-
-**Permissions:**
-
-- moderator
-
-### Benutzer entsperren
-
-**Description:**
-
-Entfernt einen Benutzer von der Blacklist
-
-**Usage:**
-
-`!blacklist remove <member>`
-
-**Aliases:**
-
-- blacklist rm
-- banlist remove
-- banlist rm
-- bl remove
-- bl rm
-
-**Permissions:**
-
-- moderator
-
-### Balance Event deaktivieren
-
-**Description:**
-
-Stoppt das Balance Event mit der angegeben ID
-
-**Usage:**
-
-`!event balance stop <id>`
-
-**Permissions:**
-
-- moderator
-
-### Berechtigung ändern
-
-**Description:**
-
-Setzt das Berechtigungslevel eines Benutzers auf den angegebenen Wert
-
-**Usage:**
-
-`!setperms <member> <level>`
-
-**Permissions:**
-
-- moderator
-
-### Münzen ändern
-
-**Description:**
-
-Ändert die Anzahl der Münzen eines Benutzers um den angegbenen Wert.
-
-**Usage:**
-
-`!add coins <member> <amount>`
-
-**Permissions:**
-
-- moderator
-
-### Collect Event Arten
-
-**Description:**
-
-Zeigt eine Liste aller verfügbaren Collect Events an
-
-**Usage:**
-
-`!event collect list`
+`!set diamonds <member> <amount>`
 
 **Permissions:**
 
@@ -407,24 +409,6 @@ Zeigt eine Liste aller verfügbaren Collect Events an
 
 Levelsystem
 ===========
-### Kontoinformation abrufen
-
-**Description:**
-
-Zeigt die Kontoinformationen zu einem User an
-
-**Usage:**
-
-`!info <member>`
-
-**Aliases:**
-
-- rank
-- konto
-
-**Permissions:**
-
-
 
 ### Level-Shop
 
@@ -442,7 +426,68 @@ Mit diesem Command kannst du Items aus dem Levelshop kaufen
 
 **Permissions:**
 
+### Kontoinformation abrufen
 
+**Description:**
+
+Zeigt die Kontoinformationen zu einem User an
+
+**Usage:**
+
+`!info <member>`
+
+**Aliases:**
+
+- rank
+- konto
+
+**Permissions:**
+
+### Diamanten tauschen
+
+**Description:**
+
+Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert
+
+**Usage:**
+
+`!tauschen <anzahl>`
+
+**Aliases:**
+
+- wechseln
+
+**Permissions:**
+
+### Level-Shop
+
+**Description:**
+
+Fügt ein Item einem anderen Nutzer hinzu
+
+**Usage:**
+
+`!kaufen <member>`
+
+**Aliases:**
+
+- shop for
+
+**Permissions:**
+
+- moderator
+
+### Täglich Command
+
+**Description:**
+
+Aktiviert bzw. deaktiviert die täglichen Kontoinformationen
+
+**Usage:**
+
+`!täglich`
+
+**Permissions:**
 
 ### Rangliste
 
@@ -463,40 +508,9 @@ Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten
 
 
 
-### Diamanten tauschen
-
-**Description:**
-
-Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert
-
-**Usage:**
-
-`!tauschen <anzahl>`
-
-**Aliases:**
-
-- wechseln
-
-**Permissions:**
-
-
-
-### Täglich Command
-
-**Description:**
-
-Aktiviert bzw. deaktiviert die täglichen Kontoinformationen
-
-**Usage:**
-
-`!täglich`
-
-**Permissions:**
-
-
-
 Sonstiges
 =========
+
 ### Bot Information
 
 **Description:**
@@ -512,8 +526,6 @@ Zeigt allgemeine Inforamtionen über den Bot an
 - credits
 
 **Permissions:**
-
-
 
 ### Ping Command
 

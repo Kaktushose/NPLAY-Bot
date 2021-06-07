@@ -3,6 +3,7 @@ package de.kaktushose.levelbot.commands.member;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
@@ -57,10 +58,23 @@ public class ShopCommand {
     )
     public void onShop(CommandEvent event) {
         generateEmbeds();
-        sendDefaultShop(event, null);
+        sendDefaultShop(event, null, event.getMember());
     }
 
-    private void sendDefaultShop(CommandEvent event, Message shopMessage) {
+    @Command(
+            value = "for",
+            name = "Level-Shop",
+            usage = "{prefix}kaufen <member>",
+            desc = "Fügt ein Item einem anderen Nutzer hinzu",
+            category = "Levelsystem"
+    )
+    @Permission("moderator")
+    public void onShop(CommandEvent event, Member member) {
+        generateEmbeds();
+        sendDefaultShop(event, null, member);
+    }
+
+    private void sendDefaultShop(CommandEvent event, Message shopMessage, Member target) {
         Consumer<Message> success = message -> {
 
             message.clearReactions()
@@ -76,19 +90,19 @@ public class ShopCommand {
             reactionWaiter.onEvent(reactionEvent -> {
                 switch (reactionEvent.getEmote()) {
                     case PREMIUM:
-                        sendSpecificShop(event, message, ItemCategory.PREMIUM);
+                        sendSpecificShop(event, message, target, ItemCategory.PREMIUM);
                         break;
                     case DJ:
-                        sendSpecificShop(event, message, ItemCategory.DJ);
+                        sendSpecificShop(event, message, target, ItemCategory.DJ);
                         break;
                     case NICKNAME:
-                        sendSpecificShop(event, message, ItemCategory.NICKNAME);
+                        sendSpecificShop(event, message, target, ItemCategory.NICKNAME);
                         break;
                     case COIN_BOOSTER:
-                        sendSpecificShop(event, message, ItemCategory.COINS_BOOSTER);
+                        sendSpecificShop(event, message, target, ItemCategory.COINS_BOOSTER);
                         break;
                     case XP_BOOSTER:
-                        sendSpecificShop(event, message, ItemCategory.XP_BOOSTER);
+                        sendSpecificShop(event, message, target, ItemCategory.XP_BOOSTER);
                         break;
                     case CANCEL:
                         message.delete().and(event.getMessage().delete()).queue();
@@ -105,7 +119,7 @@ public class ShopCommand {
         }
     }
 
-    private void sendSpecificShop(CommandEvent event, Message shopMessage, ItemCategory itemCategory) {
+    private void sendSpecificShop(CommandEvent event, Message shopMessage, Member target, ItemCategory itemCategory) {
         EmbedBuilder embedBuilder = specificShops.get(itemCategory);
         List<Item> items = levelService.getItemsByCategoryId(itemCategory.id);
         long amount = items.stream().filter(Item::isVisible).count();
@@ -140,7 +154,7 @@ public class ShopCommand {
                         variant = 4;
                         break;
                     case BACK:
-                        sendDefaultShop(event, message);
+                        sendDefaultShop(event, message, target);
                         reactionWaiter.stopWaiting(false);
                         return;
                     case CANCEL:
@@ -153,7 +167,8 @@ public class ShopCommand {
                 }
 
                 Item item = items.get(variant - 1);
-                Optional<String> buyResult = buy(event.getMember(), item);
+                boolean selfBuy = target == event.getMember();
+                Optional<String> buyResult = buy(target, item, selfBuy);
 
                 if (buyResult.isEmpty()) {
                     message.editMessage(embedCache.getEmbed("shopSuccess")
@@ -171,7 +186,7 @@ public class ShopCommand {
                         ReactionWaiter waiter = new ReactionWaiter(message, event.getMember(), BACK, CANCEL);
                         waiter.onEvent(errorMessageEvent -> {
                             if (errorMessageEvent.getEmote().equals(BACK)) {
-                                sendDefaultShop(event, message);
+                                sendDefaultShop(event, message, target);
                             } else {
                                 message.delete().and(event.getMessage().delete()).queue();
                             }
@@ -190,15 +205,19 @@ public class ShopCommand {
         }
     }
 
-    private Optional<String> buy(Member member, Item item) {
+    private Optional<String> buy(Member member, Item item, boolean selfBuy) {
         BotUser botUser = userService.getUserById(member.getIdLong());
 
         if (userService.hasItem(member.getIdLong(), item.getItemId())) {
             return Optional.of("Du besitzt dieses Item bereits!");
         }
 
-        if (botUser.getCoins() < item.getPrice()) {
-            return Optional.of("Du hast nicht genug Münzen!");
+        if (selfBuy) {
+            if (botUser.getCoins() < item.getPrice()) {
+                return Optional.of("Du hast nicht genug Münzen!");
+            }
+        } else {
+            userService.addCoins(member.getIdLong(), item.getPrice());
         }
 
         userService.buyItem(botUser.getUserId(), item.getItemId());

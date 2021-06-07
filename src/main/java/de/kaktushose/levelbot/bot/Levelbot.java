@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +46,7 @@ public class Levelbot {
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
     private final Statistics statistics;
-    private ShutdownHttpServer httpServer;
+    private final ShutdownHttpServer httpServer;
     private final long guildId;
     private JDACommands jdaCommands;
     private JDA jda;
