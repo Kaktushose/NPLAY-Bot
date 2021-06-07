@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ public class Levelbot {
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
     private final Statistics statistics;
+    private ShutdownHttpServer httpServer;
     private final long guildId;
     private JDACommands jdaCommands;
     private JDA jda;
@@ -62,6 +64,7 @@ public class Levelbot {
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
         statistics = new Statistics(this, guildId);
+        httpServer = new ShutdownHttpServer(this, 8080);
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
@@ -157,17 +160,20 @@ public class Levelbot {
             }
         }, 0, 4, TimeUnit.HOURS);
 
+        String version = settingsService.getVersion(guildId);
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
-        jda.getPresence().setActivity(Activity.playing("development"));
+        jda.getPresence().setActivity(Activity.playing(version));
 
         getBotChannel().sendMessage(embedCache.getEmbed("botStart")
-                .injectValue("version", settingsService.getVersion(guildId))
+                .injectValue("version", version)
                 .toMessageEmbed()
         ).queue();
 
         CommandDocumentation documentation = new CommandDocumentation(jdaCommands.getCommands(), "{prefix}", "!");
         documentation.generate();
         documentation.saveToFile(new File("./docs.md"));
+
+        httpServer.start();
 
         return this;
     }
@@ -180,7 +186,7 @@ public class Levelbot {
     }
 
     public void terminate(int status) {
-        System.exit(0);
+        System.exit(status);
     }
 
     public Levelbot indexMembers() {
