@@ -54,8 +54,8 @@ public class LevelService {
 
     public Rank getNextRank(long userId) {
         BotUser botUser = userService.getUserById(userId);
-        if (botUser.getLevel() == 10) {
-            return getRank(10);
+        if (botUser.getLevel() == 13) {
+            return getRank(13);
         }
         return getRank(botUser.getLevel() + 1);
     }
