@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>reactionwaiter</artifactId>
-            <version>90610cb4cc</version>
+            <version>71c2dd9ba2</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
