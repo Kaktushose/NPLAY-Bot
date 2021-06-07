@@ -334,7 +334,7 @@ public class Levelbot {
 
         botUser.getTransactions().forEach(transaction -> {
             Item item = transaction.getItem();
-            embedBuilder.addField(item.getName(), item.getRemainingTimeAsDate(transaction.getBuyTime()), false);
+            embedBuilder.addField(item.getName(), "noch " + item.getRemainingTimeAsDate(transaction.getBuyTime()), false);
         });
 
         return embedBuilder;
