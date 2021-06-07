@@ -1,0 +1,25 @@
+13:31:27 [main] INFO de.kaktushose.levelbot.Bootstrapper - Starting bot...
+13:31:28 [main] INFO de.kaktushose.levelbot.Bootstrapper - Starting Bootstrapper using Java 11.0.2 on PC-Matti with PID 14788 (C:\Users\Matti\IdeaProjects\Levelbot Rewrite\target\classes started by Matti in C:\Users\Matti\IdeaProjects\Levelbot Rewrite)
+13:31:28 [main] INFO de.kaktushose.levelbot.Bootstrapper - No active profile set, falling back to default profiles: default
+13:31:29 [main] INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+13:31:29 [main] INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 101 ms. Found 10 JPA repository interfaces.
+13:31:29 [main] INFO org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+13:31:29 [main] INFO org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.31.Final
+13:31:30 [main] INFO org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+13:31:30 [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+13:31:30 [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+13:31:30 [main] INFO org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL55Dialect
+13:31:31 [main] INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+13:31:31 [main] INFO org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+13:31:32 [main] INFO de.kaktushose.levelbot.Bootstrapper - Started Bootstrapper in 4.194 seconds (JVM running for 5.643)
+13:31:32 [main] INFO org.springframework.boot.availability.ApplicationAvailabilityBean - Application availability state LivenessState changed to CORRECT
+13:31:32 [main] INFO org.springframework.boot.availability.ApplicationAvailabilityBean - Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+13:31:32 [main] INFO de.kaktushose.levelbot.bot.Levelbot - Bot is running at version 2.3.0-beta
+13:31:33 [main] INFO net.dv8tion.jda.api.JDA - Login Successful!
+13:31:34 [JDA MainWS-ReadThread] INFO net.dv8tion.jda.internal.requests.WebSocketClient - Connected to WebSocket
+13:31:34 [JDA MainWS-ReadThread] INFO net.dv8tion.jda.api.JDA - Finished Loading!
+13:31:34 [main] INFO com.github.kaktushose.jda.commands.internal.CommandDispatcher - Starting JDA-Commands...
+13:31:34 [main] INFO org.reflections.Reflections - Reflections took 52 ms to scan 1 urls, producing 3 keys and 32 values 
+13:31:34 [main] INFO com.github.kaktushose.jda.commands.internal.CommandRegistry - Command indexing done! Indexed a total of 33 commands!
+13:31:34 [main] INFO com.github.kaktushose.jda.commands.internal.CommandDispatcher - Finished loading!
+13:31:36 [main] INFO de.kaktushose.levelbot.Bootstrapper - Successfully started bot! Took 8 seconds

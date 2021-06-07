@@ -1,4 +1,4 @@
-> Auto generated command manual | 2021/06/07 11:03:41
+> Auto generated command manual | 2021/06/07 13:31:35
 
 Owner
 =====
@@ -68,57 +68,57 @@ Entfernt ein Item aus dem Besitz eines Benutzers
 
 - moderator
 
-### Balance Event Arten
+### Collect Event deaktivieren
 
 **Description:**
 
-Zeigt eine Liste aller verfügbaren Balance Events an
+Stoppt das aktuelle Collect Event
 
 **Usage:**
 
-`!event balance list`
+`!event collect stop`
 
 **Permissions:**
 
 - moderator
 
-### Collect Event Arten
+### Contest Event deaktivieren
 
 **Description:**
 
-Zeigt eine Liste aller verfügbaren Collect Events an
+Stoppt ein Bilder Contest Event
 
 **Usage:**
 
-`!event collect list`
+`!event contest stop`
 
 **Permissions:**
 
 - moderator
 
-### XP ändern
+### Diamanten ändern
 
 **Description:**
 
-Ändert die Anzahl der XP eines Benutzers um den angegbenen Wert.
+Ändert die Anzahl der Diamanten eines Benutzers um den angegbenen Wert.
 
 **Usage:**
 
-`!add xp <member> <amount>`
+`!add diamonds <member> <amount>`
 
 **Permissions:**
 
 - moderator
 
-### Balance Event aktivieren
+### Sammel Event aktivieren
 
 **Description:**
 
-Startet das Balance Event mit der angegeben ID
+Startet das Sammel Event mit der angegeben ID
 
 **Usage:**
 
-`!event balance start <id>`
+`!event collect start <id>`
 
 **Permissions:**
 
@@ -171,23 +171,26 @@ Setzt die Anzahl der Diamanten eines Benutzers auf den angegbenen Wert.
 
 - moderator
 
-### Benutzer entsperren
+### Gesperrte Benutzer
 
 **Description:**
 
-Entfernt einen Benutzer von der Blacklist
+Zeigt alle Nutzer, die auf der Blacklist stehen
 
 **Usage:**
 
-`!blacklist remove <member>`
+`!blacklist show`
 
 **Aliases:**
 
-- blacklist rm
-- banlist remove
-- banlist rm
-- bl remove
-- bl rm
+- blacklist list
+- blacklist view
+- banlist show
+- banlist list
+- banlist view
+- bl show
+- bl list
+- bl view
 
 **Permissions:**
 
@@ -207,15 +210,15 @@ Sendet die Embeds in <#551483788337872927>
 
 - moderator
 
-### Münzen ändern
+### XP ändern
 
 **Description:**
 
-Ändert die Anzahl der Münzen eines Benutzers um den angegbenen Wert.
+Ändert die Anzahl der XP eines Benutzers um den angegbenen Wert.
 
 **Usage:**
 
-`!add coins <member> <amount>`
+`!add xp <member> <amount>`
 
 **Permissions:**
 
@@ -235,29 +238,29 @@ Setzt den Preis eines Items auf den angegebenen Wert
 
 - moderator
 
-### Collect Event deaktivieren
+### Balance Event Arten
 
 **Description:**
 
-Stoppt das aktuelle Collect Event
+Zeigt eine Liste aller verfügbaren Balance Events an
 
 **Usage:**
 
-`!event collect stop`
+`!event balance list`
 
 **Permissions:**
 
 - moderator
 
-### Sammel Event aktivieren
+### Contest Event aktivieren
 
 **Description:**
 
-Startet das Sammel Event mit der angegeben ID
+Startet ein Bilder Contest Event
 
 **Usage:**
 
-`!event collect start <id>`
+`!event contest start <channel> <emoji>`
 
 **Permissions:**
 
@@ -310,54 +313,51 @@ Setzt die Anzahl der XP eines Benutzers auf den angegbenen Wert.
 
 - moderator
 
-### Contest Event aktivieren
+### Balance Event aktivieren
 
 **Description:**
 
-Startet ein Bilder Contest Event
+Startet das Balance Event mit der angegeben ID
 
 **Usage:**
 
-`!event contest start <channel> <emoji>`
+`!event balance start <id>`
 
 **Permissions:**
 
 - moderator
 
-### Gesperrte Benutzer
+### Benutzer entsperren
 
 **Description:**
 
-Zeigt alle Nutzer, die auf der Blacklist stehen
+Entfernt einen Benutzer von der Blacklist
 
 **Usage:**
 
-`!blacklist show`
+`!blacklist remove <member>`
 
 **Aliases:**
 
-- blacklist list
-- blacklist view
-- banlist show
-- banlist list
-- banlist view
-- bl show
-- bl list
-- bl view
+- blacklist rm
+- banlist remove
+- banlist rm
+- bl remove
+- bl rm
 
 **Permissions:**
 
 - moderator
 
-### Contest Event deaktivieren
+### Balance Event deaktivieren
 
 **Description:**
 
-Stoppt ein Bilder Contest Event
+Stoppt das Balance Event mit der angegeben ID
 
 **Usage:**
 
-`!event contest stop`
+`!event balance stop <id>`
 
 **Permissions:**
 
@@ -377,29 +377,29 @@ Setzt das Berechtigungslevel eines Benutzers auf den angegebenen Wert
 
 - moderator
 
-### Diamanten ändern
+### Münzen ändern
 
 **Description:**
 
-Ändert die Anzahl der Diamanten eines Benutzers um den angegbenen Wert.
+Ändert die Anzahl der Münzen eines Benutzers um den angegbenen Wert.
 
 **Usage:**
 
-`!add diamonds <member> <amount>`
+`!add coins <member> <amount>`
 
 **Permissions:**
 
 - moderator
 
-### Balance Event deaktivieren
+### Collect Event Arten
 
 **Description:**
 
-Stoppt das Balance Event mit der angegeben ID
+Zeigt eine Liste aller verfügbaren Collect Events an
 
 **Usage:**
 
-`!event balance stop <id>`
+`!event collect list`
 
 **Permissions:**
 
