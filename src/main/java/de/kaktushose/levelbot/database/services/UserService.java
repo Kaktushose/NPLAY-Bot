@@ -185,7 +185,7 @@ public class UserService {
 
     public int increaseRank(long userId) {
         BotUser botUser = getUserById(userId);
-        if (botUser.getLevel() == 10) {
+        if (botUser.getLevel() == 13) {
             return 10;
         }
         botUser.setLevel(botUser.getLevel() + 1);
