@@ -1,7 +1,10 @@
 package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.database.model.*;
-import de.kaktushose.levelbot.database.repositories.*;
+import de.kaktushose.levelbot.database.repositories.ChancesRepository;
+import de.kaktushose.levelbot.database.repositories.ItemRepository;
+import de.kaktushose.levelbot.database.repositories.RankRepository;
+import de.kaktushose.levelbot.database.repositories.UserRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;

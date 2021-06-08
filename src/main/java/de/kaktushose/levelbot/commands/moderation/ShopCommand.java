@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.commands.member;
+package de.kaktushose.levelbot.commands.moderation;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @CommandController({"kaufen", "shop"})
+@Permission("moderator")
 public class ShopCommand {
 
     private static final String BACK = "◀️";
@@ -52,23 +53,10 @@ public class ShopCommand {
 
     @Command(
             name = "Level-Shop",
-            usage = "{prefix}kaufen",
-            desc = "Mit diesem Command kannst du Items aus dem Levelshop kaufen",
-            category = "Levelsystem"
-    )
-    public void onShop(CommandEvent event) {
-        generateEmbeds();
-        sendDefaultShop(event, null, event.getMember());
-    }
-
-    @Command(
-            value = "for",
-            name = "Level-Shop",
-            usage = "{prefix}kaufen for <member>",
+            usage = "{prefix}kaufen <member>",
             desc = "Fügt ein Item einem anderen Nutzer hinzu",
-            category = "Levelsystem"
+            category = "Moderation"
     )
-    @Permission("moderator")
     public void onShop(CommandEvent event, Member member) {
         generateEmbeds();
         sendDefaultShop(event, null, member);
