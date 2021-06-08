@@ -298,11 +298,13 @@ public class Levelbot {
         // if event is active, load another template
         String embed = eventService.isCollectEventActive(guildId) ? "eventRankInfo" : "rankInfo";
 
+        String nextRankInfo = currentRank.equals(nextRank) ? "N/A" : String.format("<@&%d> (noch %d XP)", nextRank.getRoleId(), nextRankXp);
+
         EmbedDTO embedDTO = embedCache.getEmbed(embed)
                 .injectValue("user", target.getAsMention())
                 .injectValue("color", currentRank.getColor())
                 .injectValue("currentRank", String.format("<@&%d>", currentRank.getRoleId()))
-                .injectValue("nextRank", String.format("<@&%d> (noch %d XP)", nextRank.getRoleId(), nextRankXp))
+                .injectValue("nextRank", nextRankInfo)
                 .injectValue("avatarUrl", target.getAvatarUrl())
                 .injectValue("xpGain", xpGain)
                 .injectValue("coinsGain", coinsGain)

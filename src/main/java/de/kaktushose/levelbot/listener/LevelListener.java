@@ -88,14 +88,17 @@ public class LevelListener extends ListenerAdapter {
         levelbot.addRankRole(userId, currentRank.getRankId());
         levelbot.removeRankRole(userId, levelService.getPreviousRank(userId).getRankId());
 
+        String nextRankInfo = currentRank.equals(nextRank) ? "N/A" : String.format("<@&%d>", nextRank.getRoleId());
+        String xp = currentRank.equals(nextRank) ? "0" : String.valueOf(nextRank.getBound());
+
         channel.sendMessage(author.getAsMention())
                 .and(channel.sendMessage(embedCache.getEmbed("levelUp")
                         .injectValue("user", author.getAsMention())
                         .injectValue("color", currentRank.getColor())
                         .injectValue("currentRank", guild.getRoleById(currentRank.getRoleId()).getAsMention())
-                        .injectValue("nextRank", guild.getRoleById(nextRank.getRoleId()).getAsMention())
+                        .injectValue("nextRank", nextRankInfo)
                         .injectValue("reward", rewards)
-                        .injectValue("xp", nextRank.getBound())
+                        .injectValue("xp", xp)
                         .toMessageEmbed())
                 ).queue();
     }

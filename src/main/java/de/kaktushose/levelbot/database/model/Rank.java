@@ -2,6 +2,7 @@ package de.kaktushose.levelbot.database.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ranks")
@@ -74,5 +75,13 @@ public class Rank {
 
     public void setRankRewards(List<Reward> rewards) {
         this.rewards = rewards;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rank rank = (Rank) o;
+        return rankId.equals(rank.getRankId());
     }
 }
