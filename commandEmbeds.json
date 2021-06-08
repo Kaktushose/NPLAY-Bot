@@ -411,7 +411,7 @@
   },
   "dailyReward": {
     "title": "Herzlichen Glückwunsch, {user}!",
-    "description": "Du hast Deine tägliche Belohnung \"{reward}\" erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei.",
+    "description": "Du hast Deine tägliche Belohnung in Höhe von {reward} erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei.",
     "color": "#86c240"
   },
   "balanceEventList": {
@@ -473,5 +473,10 @@
     "title": "Danke für deine Hilfe, {user}",
     "description": "role reward",
     "color": "#86c240"
+  },
+  "rewardAlreadyClaimed": {
+    "title": "Fehler!",
+    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nDie nächste Belohnung ist in {nextReward} verfügbar!",
+    "color": "#f4cd53"
   }
 }

@@ -50,6 +50,14 @@ public class DailyRewardListener extends ListenerAdapter {
                     .toMessageEmbed()
             );
             event.getChannel().sendMessage(builder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
+        } else {
+            MessageBuilder builder = new MessageBuilder().append(user.getAsMention());
+            builder.setEmbed(levelbot.getEmbedCache()
+                    .getEmbed("rewardAlreadyClaimed")
+                    .injectValue("nextReward", levelbot.getLevelService().getNextRewardTime(user.getIdLong()))
+                    .toMessageEmbed()
+            );
+            event.getChannel().sendMessage(builder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
         }
     }
 }

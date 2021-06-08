@@ -185,6 +185,16 @@ public class LevelService {
         return Optional.of(reward.getMessage());
     }
 
+    public String getNextRewardTime(long userId) {
+        BotUser botUser = userService.getUserById(userId);
+        long millis = TimeUnit.DAYS.toMillis(1) - (System.currentTimeMillis() - botUser.getLastReward());
+        long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
+        String hoursPattern = hours != 1 ? "%d Stunden" : "einer Stunde";
+        String minutesPattern = minutes != 1 ? "%d Minuten" : "einer Minute";
+        return String.format(hoursPattern, hours) + " und " + String.format(minutesPattern, minutes);
+    }
+
     public String applyRewards(long userId, int rankId) {
         Rank rank = getRank(rankId);
         StringBuilder rewardText = new StringBuilder();
