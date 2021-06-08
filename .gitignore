@@ -1,5 +1,6 @@
-.idea
+.idea/
 target/
-backupper.sh
-config.yaml
+logs/
+src/main/resources/application.properties
+dependency-reduced-pom.xml
 *.iml
