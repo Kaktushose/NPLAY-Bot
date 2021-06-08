@@ -39,7 +39,7 @@ public class NitroBoosterListener extends ListenerAdapter {
                     botChannel.sendMessage(member.getAsMention()).and(botChannel.sendMessage(
                             embedCache.getEmbed("nitroBoostResume").injectValue("user", member.getAsMention()).toMessageEmbed()
                     )).queue();
-                    userService.addUpItem(userId, 3);
+                    userService.addUpItem(userId, 3, levelbot);
                 }
             } else {
                 boosterService.createNewNitroBooster(userId);
@@ -54,7 +54,7 @@ public class NitroBoosterListener extends ListenerAdapter {
             User user = event.getJDA().getUserById(nitroBooster.getUserId());
             if (!currentBoosterIds.contains(nitroBooster.getUserId())) {
                 boosterService.changeNitroBoosterStatus(nitroBooster.getUserId(), true);
-                userService.removeItem(nitroBooster.getUserId(), 3);
+                userService.removeItem(nitroBooster.getUserId(), 3, levelbot);
                 botChannel.sendMessage(user.getAsMention()).and(botChannel.sendMessage(
                         embedCache.getEmbed("nitroBoostResume").injectValue("user", user.getAsMention()).toMessageEmbed()
                 )).queue();

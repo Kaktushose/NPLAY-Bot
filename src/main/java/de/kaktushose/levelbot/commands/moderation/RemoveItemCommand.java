@@ -8,6 +8,7 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.util.NumberEmojis;
@@ -26,6 +27,8 @@ public class RemoveItemCommand {
     private UserService userService;
     @Inject
     private EmbedCache embedCache;
+    @Inject
+    private Levelbot levelbot;
 
     @Command(
             name = "Item entfernen",
@@ -72,7 +75,7 @@ public class RemoveItemCommand {
                     default:
                         return;
                 }
-                userService.removeItem(member.getIdLong(), forRemoval.getItemId());
+                userService.removeItem(member.getIdLong(), forRemoval.getItemId(), levelbot);
                 reactionWaiter.stopWaiting(false);
                 chooseMessage.delete().queue();
                 event.reply(embedCache.getEmbed("removeItemSuccess").injectValue("user", member.getAsMention()));

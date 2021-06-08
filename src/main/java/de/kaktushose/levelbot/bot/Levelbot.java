@@ -56,8 +56,8 @@ public class Levelbot {
         userService = new UserService();
         settingsService = new SettingsService();
         eventService = new EventService(settingsService, userService);
-        boosterService = new BoosterService(userService, settingsService);
-        levelService = new LevelService(userService, settingsService);
+        boosterService = new BoosterService(this);
+        levelService = new LevelService(this);
         guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
@@ -241,14 +241,12 @@ public class Levelbot {
                     continue;
                 }
                 if (remaining < 0) {
-                    userService.removeItem(userId, itemId);
-                    removeItemRole(userId, itemId);
+                    userService.removeItem(userId, itemId, this);
                     sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
                 } else if (remaining < 86400000) {
                     taskScheduler.addSingleTask(() -> {
                         try {
-                            userService.removeItem(userId, itemId);
-                            removeItemRole(userId, itemId);
+                            userService.removeItem(userId, itemId, this);
                             sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
                         } catch (Throwable t) {
                             log.error("An exception has occurred while removing an item!", t);

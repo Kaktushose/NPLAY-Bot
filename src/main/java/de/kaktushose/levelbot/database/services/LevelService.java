@@ -1,5 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.*;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.ItemRepository;
@@ -23,15 +24,17 @@ public class LevelService {
     private final ChancesRepository chancesRepository;
     private final UserService userService;
     private final SettingsService settingsService;
+    private final Levelbot levelbot;
 
-    public LevelService(UserService userService, SettingsService settingsService) {
+    public LevelService(Levelbot levelbot) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         rankRepository = context.getBean(RankRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
         chancesRepository = context.getBean(ChancesRepository.class);
-        this.userService = userService;
-        this.settingsService = settingsService;
+        this.userService = levelbot.getUserService();
+        this.settingsService = levelbot.getSettingsService();
+        this.levelbot = levelbot;
     }
 
     public Rank getRank(int rankId) {
@@ -179,7 +182,7 @@ public class LevelService {
         userService.addDiamonds(userId, reward.getDiamonds());
         userService.updateLastReward(userId);
         if (reward.getItem() != null) {
-            userService.addUpItem(userId, reward.getItem().getItemId());
+            userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
         }
         return Optional.of(reward.getMessage());
     }
@@ -202,7 +205,7 @@ public class LevelService {
             userService.addDiamonds(userId, rankReward.getDiamonds());
             userService.addXp(userId, rankReward.getXp());
             if (rankReward.getItem() != null) {
-                userService.addUpItem(userId, rankReward.getItem().getItemId());
+                userService.addUpItem(userId, rankReward.getItem().getItemId(), levelbot);
             }
             rewardText.append(rankReward.getMessage()).append("\n");
         });

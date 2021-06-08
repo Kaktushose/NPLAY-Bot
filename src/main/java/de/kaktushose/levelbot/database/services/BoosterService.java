@@ -1,5 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.NitroBooster;
 import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.NitroBoosterRepository;
@@ -12,14 +13,16 @@ import java.util.List;
 public class BoosterService {
 
     private final NitroBoosterRepository nitroBoosterRepository;
+    private final Levelbot levelbot;
     private final UserService userService;
     private final SettingsService settingsService;
 
-    public BoosterService(UserService userService, SettingsService settingsService) {
+    public BoosterService(Levelbot levelbot) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         nitroBoosterRepository = context.getBean(NitroBoosterRepository.class);
-        this.userService = userService;
-        this.settingsService = settingsService;
+        this.userService = levelbot.getUserService();
+        this.settingsService = levelbot.getSettingsService();
+        this.levelbot = levelbot;
     }
 
     public List<NitroBooster> getAllNitroBoosters() {
@@ -52,7 +55,7 @@ public class BoosterService {
         userService.addXp(userId, reward.getXp());
         userService.addDiamonds(userId, reward.getDiamonds());
         if (reward.getItem() != null) {
-            userService.addUpItem(userId, reward.getItem().getItemId());
+            userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
         }
         return reward.getMessage();
     }
@@ -63,7 +66,7 @@ public class BoosterService {
         userService.addXp(userId, reward.getXp());
         userService.addDiamonds(userId, reward.getDiamonds());
         if (reward.getItem() != null) {
-            userService.addUpItem(userId, reward.getItem().getItemId());
+            userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
         }
         return reward.getMessage();
     }

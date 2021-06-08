@@ -1,5 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Transaction;
@@ -87,7 +88,7 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public void addUpItem(long userId, int itemId) {
+    public void addUpItem(long userId, int itemId, Levelbot levelbot) {
         BotUser botUser = getUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow();
         Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
@@ -99,6 +100,7 @@ public class UserService {
             transaction = new Transaction();
             transaction.setBuyTime(System.currentTimeMillis());
             transaction.setItem(item);
+            levelbot.addItemRole(userId, item.getItemId());
         }
         botUser.getTransactions().add(transaction);
         transactionRepository.save(transaction);
@@ -115,9 +117,10 @@ public class UserService {
         return itemRepository.findByCategoryId(categoryId).stream().anyMatch(userItems::contains);
     }
 
-    public void removeItem(long userId, int itemId) {
+    public void removeItem(long userId, int itemId, Levelbot levelbot) {
         Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
         optional.ifPresent(transactionRepository::delete);
+        levelbot.removeItemRole(userId, itemId);
     }
 
     public boolean switchDaily(long userId) {
