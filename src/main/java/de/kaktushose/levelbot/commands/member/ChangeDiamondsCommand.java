@@ -54,10 +54,11 @@ public class ChangeDiamondsCommand {
                     reactionWaiter.onEvent(reactionEvent -> {
                         if (reactionEvent.getEmote().equals(EmoteType.THUMBSUP.unicode)) {
                             userService.exchangeDiamonds(botUser.getUserId(), amount);
-                            event.reply(embedCache.getEmbed("diamondChangeSuccess")
+                            confirmMessage.editMessage(embedCache.getEmbed("diamondChangeSuccess")
                                     .injectValue("diamonds", amount)
                                     .injectValue("coins", coins)
-                            );
+                                    .toMessageEmbed()
+                            ).queue();
                         }
                         reactionWaiter.stopWaiting(true);
                     });
