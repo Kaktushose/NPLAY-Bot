@@ -90,17 +90,18 @@ public class UserService {
 
     public void addUpItem(long userId, int itemId, Levelbot levelbot) {
         BotUser botUser = getUserById(userId);
-        Item item = itemRepository.findById(itemId).orElseThrow();
-        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
+        Item itemToAdd = itemRepository.findById(itemId).orElseThrow();
+        List<Item> items = getItems(userId);
+        Optional<Item> optional = items.stream().filter(item -> item.getCategoryId() == itemToAdd.getCategoryId()).findFirst();
         Transaction transaction;
         if (optional.isPresent()) {
-            transaction = optional.get();
-            transaction.setBuyTime(transaction.getBuyTime() + item.getDuration());
+            transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
+            transaction.setBuyTime(transaction.getBuyTime() + itemToAdd.getDuration());
         } else {
             transaction = new Transaction();
             transaction.setBuyTime(System.currentTimeMillis());
-            transaction.setItem(item);
-            levelbot.addItemRole(userId, item.getItemId());
+            transaction.setItem(itemToAdd);
+            levelbot.addItemRole(userId, itemToAdd.getItemId());
         }
         botUser.getTransactions().add(transaction);
         transactionRepository.save(transaction);
