@@ -22,7 +22,7 @@ public class RankInfoCommand {
     )
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         Member target = member == null ? event.getMember() : member;
-        event.reply(levelbot.generateRankInfo(target.getUser()));
+        event.reply(levelbot.generateRankInfo(target.getUser(), false));
     }
 }
 

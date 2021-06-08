@@ -10,7 +10,8 @@ public interface UserRepository extends CrudRepository<BotUser, Long> {
 
     List<BotUser> findByPermissionLevel(int permissionLevel);
 
-    List<BotUser> findByDailyUpdate(boolean dailyUpdate);
+    @Query(value = "SELECT * FROM users where daily = true", nativeQuery = true)
+    List<BotUser> getAllWithDaily();
 
     @Query(value = "SELECT * FROM users order by xp desc", nativeQuery = true)
     List<BotUser> getXpLeaderboard();

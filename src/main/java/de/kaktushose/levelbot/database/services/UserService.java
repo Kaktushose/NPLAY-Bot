@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public List<BotUser> getUsersByDailyEnabled() {
-        return userRepository.findByDailyUpdate(true);
+        return userRepository.getAllWithDaily();
     }
 
     public BotUser createUser(long userId) {

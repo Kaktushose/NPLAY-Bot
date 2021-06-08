@@ -17,22 +17,18 @@ public class LevelService {
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
     private final ItemRepository itemRepository;
-    private final SettingsRepository settingsRepository;
     private final ChancesRepository chancesRepository;
     private final UserService userService;
     private final SettingsService settingsService;
-    private final EventService eventService;
 
-    public LevelService(UserService userService, SettingsService settingsService, EventService eventService) {
+    public LevelService(UserService userService, SettingsService settingsService) {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         rankRepository = context.getBean(RankRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
-        settingsRepository = context.getBean(SettingsRepository.class);
         chancesRepository = context.getBean(ChancesRepository.class);
         this.userService = userService;
         this.settingsService = settingsService;
-        this.eventService = eventService;
     }
 
     public Rank getRank(int rankId) {

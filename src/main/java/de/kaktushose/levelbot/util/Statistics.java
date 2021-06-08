@@ -61,14 +61,14 @@ public class Statistics {
         // booster
         boosterMemberCount = guild.getBoosters().size();
         StringBuilder boosters = new StringBuilder();
-        guild.getBoosters().forEach(member -> boosters.append(member.getAsMention()).append(" ,"));
+        guild.getBoosters().forEach(member -> boosters.append(member.getAsMention()).append(", "));
         boosterMemberList = boosters.length() > 1 ? boosters.substring(0, boosters.length() - 2) : "";
         boosterCount = guild.getBoostCount();
         // premium
         List<Member> premiumMembers = guild.getMembersWithRoles(guild.getRolesByName("premium", true));
         premiumMemberCount = premiumMembers.size();
         StringBuilder premium = new StringBuilder();
-        premiumMembers.forEach(member -> premium.append(member.getAsMention()).append(" ,"));
+        premiumMembers.forEach(member -> premium.append(member.getAsMention()).append(", "));
         premiumMemberList = premium.length() > 1 ? premium.substring(0, premium.length() - 2) : "";
         // yt
         try {

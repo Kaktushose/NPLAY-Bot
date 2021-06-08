@@ -6,7 +6,6 @@ import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
 import com.github.kaktushose.jda.commands.entities.EmbedDTO;
 import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
-import com.github.kaktushose.jda.commands.util.CommandDocumentation;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.database.model.*;
@@ -58,7 +57,7 @@ public class Levelbot {
         settingsService = new SettingsService();
         eventService = new EventService(settingsService, userService);
         boosterService = new BoosterService(userService, settingsService);
-        levelService = new LevelService(userService, settingsService, eventService);
+        levelService = new LevelService(userService, settingsService);
         guildId = guildType.id;
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
@@ -142,10 +141,15 @@ public class Levelbot {
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
 
         taskScheduler.addRepetitiveTask(() -> {
+            log.info("Starting daily tasks!");
             try {
+                log.info("Checking for expired items...");
                 checkForExpiredItems();
+                log.info("Sending dm rank infos...");
                 dmRankInfo();
+                log.info("Checking for boosters...");
                 checkForNitroBoostersRewards();
+                log.info("Done!");
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
             }
@@ -232,6 +236,10 @@ public class Levelbot {
                 long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
                 long userId = botUser.getUserId();
                 int itemId = item.getItemId();
+                // premium unlimited, skip this one
+                if (itemId == 3) {
+                    continue;
+                }
                 if (remaining < 0) {
                     userService.removeItem(userId, itemId);
                     removeItemRole(userId, itemId);
@@ -254,8 +262,9 @@ public class Levelbot {
     public void dmRankInfo() {
         userService.getUsersByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
-            user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(generateRankInfo(user).build()))
-                    .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+            user.openPrivateChannel().flatMap(privateChannel ->
+                    privateChannel.sendMessage(generateRankInfo(user, true).build())
+            ).queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
         });
     }
 
@@ -281,7 +290,7 @@ public class Levelbot {
                 }));
     }
 
-    public EmbedBuilder generateRankInfo(User target) {
+    public EmbedBuilder generateRankInfo(User target, boolean dm) {
         BotUser botUser = userService.getUserById(target.getIdLong());
 
         Rank currentRank = levelService.getCurrentRank(botUser.getUserId());
@@ -294,14 +303,17 @@ public class Levelbot {
         // if event is active, load another template
         String embed = eventService.isCollectEventActive(guildId) ? "eventRankInfo" : "rankInfo";
 
-        String nextRankInfo = currentRank.equals(nextRank) ? "N/A" : String.format("<@&%d> (noch %d XP)", nextRank.getRoleId(), nextRankXp);
+        String currentRankInfo = dm ? currentRank.getName() : String.format("<@&%d>", currentRank.getRoleId());
+        String nextRankInfo = dm ? String.format("%s (noch %d XP)", nextRank.getName(), nextRankXp) : String.format("<@&%d> (noch %d XP)", nextRank.getRoleId(), nextRankXp);
+        nextRankInfo = currentRank.equals(nextRank) ? "N/A" : nextRankInfo;
+        String url = target.getAvatarUrl() == null ? "https://cdn.discordapp.com/embed/avatars/0.png" : target.getAvatarUrl();
 
         EmbedDTO embedDTO = embedCache.getEmbed(embed)
                 .injectValue("user", target.getAsMention())
                 .injectValue("color", currentRank.getColor())
-                .injectValue("currentRank", String.format("<@&%d>", currentRank.getRoleId()))
+                .injectValue("currentRank", currentRankInfo)
                 .injectValue("nextRank", nextRankInfo)
-                .injectValue("avatarUrl", target.getAvatarUrl())
+                .injectValue("avatarUrl", url)
                 .injectValue("xpGain", xpGain)
                 .injectValue("coinsGain", coinsGain)
                 .injectValue("diamondsGain", diamondsGain)
@@ -341,7 +353,7 @@ public class Levelbot {
     public void updateStatistics() {
         statistics.queryStatistics();
         TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(843881991446855730L).flatMap(message ->
+        channel.retrieveMessageById(851788766036361227L).flatMap(message ->
                 message.editMessage(embedCache.getEmbed("statistics").injectFields(statistics).toMessageEmbed())
         ).queue();
     }

@@ -64,7 +64,7 @@ public class ShopCommand {
     @Command(
             value = "for",
             name = "Level-Shop",
-            usage = "{prefix}kaufen <member>",
+            usage = "{prefix}kaufen for <member>",
             desc = "Fügt ein Item einem anderen Nutzer hinzu",
             category = "Levelsystem"
     )
