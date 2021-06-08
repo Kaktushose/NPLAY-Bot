@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class DailyRewardListener extends ListenerAdapter {
 
     // this should find it's way into the database one day as well
-    public static final long DAILY_REWARD_MESSAGE_ID = 846777362166579241L;
+    public static final long DAILY_REWARD_MESSAGE_ID = 851454384893067274L;
     private final Levelbot levelbot;
 
     public DailyRewardListener(Levelbot levelbot) {
@@ -27,7 +27,7 @@ public class DailyRewardListener extends ListenerAdapter {
             return;
         }
         // must be in channel #levelsystem
-        if (event.getChannel().getIdLong() != 839150041955565588L) {
+        if (event.getChannel().getIdLong() != 851388807239827466L) {
             return;
         }
         // must be right message

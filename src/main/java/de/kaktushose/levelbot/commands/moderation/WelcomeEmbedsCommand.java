@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 @Permission("moderator")
 public class WelcomeEmbedsCommand {
 
-    public static final long WELCOME_CHANNEL_ID = 545967082253189121L;
+    public static final long WELCOME_CHANNEL_ID = 851434963316375602L;
     private final EmbedCache welcomeEmbedCache;
     @Inject
     private EmbedCache embedCache;

@@ -27,11 +27,11 @@ import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 public class ShopListener extends ListenerAdapter {
 
     // this should find it's way into the database one day
-    public static final String PREMIUM_MESSAGE_ID = "843849280992837642";
-    public static final String DJ_MESSAGE_ID = "843849285199462430";
-    public static final String NICKNAME_MESSAGE_ID = "843849300672643103";
-    public static final String COINS_BOOSTER_MESSAGE_ID = "843849313167605790";
-    public static final String XP_BOOSTER_MESSAGE_ID = "843849356695175168";
+    public static final String PREMIUM_MESSAGE_ID = "851454666591698965";
+    public static final String DJ_MESSAGE_ID = "851454738904907827";
+    public static final String NICKNAME_MESSAGE_ID = "851454813623681024";
+    public static final String COINS_BOOSTER_MESSAGE_ID = "851454959224225813";
+    public static final String XP_BOOSTER_MESSAGE_ID = "851454895788654625";
     private static final String CONFIRM = "✅";
     private static final String CANCEL = "❌";
     private final Set<Long> activeUsers;
@@ -56,7 +56,7 @@ public class ShopListener extends ListenerAdapter {
         }
 
         // must be in channel #levelsystem
-        if (event.getChannel().getIdLong() != 839150041955565588L) {
+        if (event.getChannel().getIdLong() != 851388807239827466L) {
             return;
         }
 

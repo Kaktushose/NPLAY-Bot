@@ -18,7 +18,7 @@ public class BotInfoCommand {
     @Command(
             name = "Bot Information",
             usage = "{prefix}botinfo",
-            desc = "Zeigt allgemeine Inforamtionen über den Bot an",
+            desc = "Zeigt allgemeine Informationen über den Bot an",
             category = "Sonstiges"
     )
     public void onBotInfo(CommandEvent event) {

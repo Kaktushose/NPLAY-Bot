@@ -99,7 +99,7 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(545967082253189121L)),
+                new VoiceTextLink(jda.getTextChannelById(839226183409467442L)),
                 new NitroBoosterListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
@@ -167,10 +167,6 @@ public class Levelbot {
                 .injectValue("version", version)
                 .toMessageEmbed()
         ).queue();
-
-        CommandDocumentation documentation = new CommandDocumentation(jdaCommands.getCommands(), "{prefix}", "!");
-        documentation.generate();
-        documentation.saveToFile(new File("./docs.md"));
 
         httpServer.start();
 
