@@ -52,6 +52,19 @@ public class Levelbot {
     private Guild guild;
     private TextChannel botChannel;
 
+    public Levelbot() {
+        userService = null;
+        settingsService = null;
+        levelService = null;
+        eventService = null;
+        boosterService = null;
+        embedCache = null;
+        taskScheduler = null;
+        statistics = null;
+        httpServer = null;
+        guildId = 0;
+    }
+
     public Levelbot(GuildType guildType) {
         userService = new UserService();
         settingsService = new SettingsService();
