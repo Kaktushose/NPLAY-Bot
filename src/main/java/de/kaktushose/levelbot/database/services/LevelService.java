@@ -162,7 +162,9 @@ public class LevelService {
             return Optional.empty();
         }
 
-        return Optional.of(getRank(userService.increaseRank(userId)));
+        Rank rank = rankRepository.getRankByXp(newXp);
+
+        return Optional.of(getRank(userService.setRank(userId, rank.getRankId())));
     }
 
     public Optional<String> getDailyReward(long userId) {

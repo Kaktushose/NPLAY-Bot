@@ -187,12 +187,12 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public int increaseRank(long userId) {
+    public int setRank(long userId, int rank) {
         BotUser botUser = getUserById(userId);
         if (botUser.getLevel() == 13) {
-            return 10;
+            return 13;
         }
-        botUser.setLevel(botUser.getLevel() + 1);
+        botUser.setLevel(rank);
         userRepository.save(botUser);
         return botUser.getLevel();
     }
