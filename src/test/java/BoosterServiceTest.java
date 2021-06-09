@@ -30,11 +30,6 @@ public class BoosterServiceTest {
         userService = levelbot.getUserService();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        System.out.println(userService.getAllUsers().size());
-    }
-
     @Test
     public void getAllNitroBoosters_WithoutUsers_ShouldReturnEmptyList() {
         assertTrue( boosterService.getAllNitroBoosters().isEmpty());
