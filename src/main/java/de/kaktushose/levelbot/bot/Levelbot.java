@@ -193,14 +193,17 @@ public class Levelbot {
     }
 
     public Levelbot indexMembers() {
-        List<Member> guildMembers = guild.getMembers();
-        guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
+        log.info("Indexing members...");
+        guild.loadMembers().onSuccess(guildMembers -> {
+            guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
 
-        List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
-        userService.getAllUsers().forEach(botUser -> {
-            if (!guildMemberIds.contains(botUser.getUserId())) {
-                userService.deleteUser(botUser.getUserId());
-            }
+            List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
+            userService.getAllUsers().forEach(botUser -> {
+                if (!guildMemberIds.contains(botUser.getUserId())) {
+                    log.info("Removing " + botUser.getUserId());
+                    userService.deleteUser(botUser.getUserId());
+                }
+            });
         });
         return this;
     }
@@ -225,6 +228,9 @@ public class Levelbot {
 
     public void removeItemRole(long userId, int itemId) {
         Item item = levelService.getItem(itemId);
+        if (item.getRoleId() == -1) {
+            return;
+        }
         guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
