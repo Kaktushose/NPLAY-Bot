@@ -484,5 +484,20 @@
     "title": ":information_source: Hinweis",
     "description": "Der Shop-Command wurde entfernt.\nItems kannst du ab sofort direkt in <#851388807239827466> kaufen.",
     "color": "#f4cd53"
+  },
+  "mutedChannelsAdd": {
+    "title": "Erfolg!",
+    "description": "{channel} wird ab sofort vom Levelsystem ignoriert.",
+    "color": "#86c240"
+  },
+  "mutedChannelsRemove": {
+    "title": "Erfolg!",
+    "description": "{channel} wird nicht mehr vom Levelsystem ignoriert.",
+    "color": "#86c240"
+  },
+  "mutedChannelsList": {
+    "title": "Folgende Kanäle werden vom Levelsystem ignoriert:",
+    "description": "{list}",
+    "color": "#86c240"
   }
 }

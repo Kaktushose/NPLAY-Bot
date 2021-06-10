@@ -7,6 +7,8 @@ import de.kaktushose.levelbot.database.repositories.SettingsRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
+
 public class SettingsService {
 
     private final SettingsRepository settingsRepository;
@@ -54,6 +56,18 @@ public class SettingsService {
 
     public boolean isIgnoredChannel(long channelId) {
         return settingsRepository.getIgnoredChannels().contains(channelId);
+    }
+
+    public List<Long> getIgnoredChannels() {
+        return settingsRepository.getIgnoredChannels();
+    }
+
+    public void addIgnoredChannel(long channelId) {
+        settingsRepository.addIgnoredChannel(channelId);
+    }
+
+    public void removeIgnoredChannel(long channelId) {
+        settingsRepository.removeIgnoredChannel(channelId);
     }
 
     public Reward getReward(int rewardLevel) {
