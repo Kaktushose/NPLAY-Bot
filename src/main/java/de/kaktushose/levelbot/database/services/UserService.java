@@ -187,6 +187,14 @@ public class UserService {
         userRepository.save(botUser);
     }
 
+    public void updateStatistics(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setStartCoins(botUser.getCoins());
+        botUser.setStartXp(botUser.getXp());
+        botUser.setStartDiamonds(botUser.getDiamonds());
+        userRepository.save(botUser);
+    }
+
     public int setRank(long userId, int rank) {
         BotUser botUser = getUserById(userId);
         if (botUser.getLevel() == 13) {

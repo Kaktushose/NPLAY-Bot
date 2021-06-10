@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -140,6 +141,9 @@ public class Levelbot {
         guild = jda.getGuildById(guildId);
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
 
+        // get offset time until its 0 am, also ensures that this task only runs once every 24 hours
+        long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
+        long delay = TimeUnit.HOURS.toMinutes(24) - current;
         taskScheduler.addRepetitiveTask(() -> {
             log.info("Starting daily tasks!");
             try {
@@ -153,7 +157,7 @@ public class Levelbot {
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
             }
-        }, 0, 1, TimeUnit.DAYS);
+        }, delay, TimeUnit.HOURS.toMinutes(24), TimeUnit.MINUTES);
 
         taskScheduler.addRepetitiveTask(() -> {
             try {
@@ -231,6 +235,7 @@ public class Levelbot {
 
     public void checkForExpiredItems() {
         userService.getAllUsers().forEach(botUser -> {
+            userService.updateStatistics(botUser.getUserId());
             for (Transaction transaction : botUser.getTransactions()) {
                 Item item = transaction.getItem();
                 long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
