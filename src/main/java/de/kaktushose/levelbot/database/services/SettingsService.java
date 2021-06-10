@@ -113,4 +113,9 @@ public class SettingsService {
     public int getActiveCollectEventId(long guildId) {
         return getGuildSettings(guildId).getCollectEventId();
     }
+
+    public long getStatisticsMessageId(long guildId) {
+        return getGuildSettings(guildId).getStatisticsMessageId();
+    }
+
 }

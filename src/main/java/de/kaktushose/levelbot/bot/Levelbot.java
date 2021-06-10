@@ -362,7 +362,7 @@ public class Levelbot {
     public void updateStatistics() {
         statistics.queryStatistics();
         TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(851788766036361227L).flatMap(message ->
+        channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
                 message.editMessage(embedCache.getEmbed("statistics").injectFields(statistics).toMessageEmbed())
         ).queue();
     }
