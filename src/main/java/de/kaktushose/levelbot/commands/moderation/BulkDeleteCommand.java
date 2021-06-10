@@ -7,6 +7,8 @@ import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,8 @@ public class BulkDeleteCommand {
 
         event.reply(embedCache.getEmbed("bulkDeleteSuccess")
                         .injectValue("amount", amount),
-                message -> message.delete().queueAfter(10, TimeUnit.SECONDS) // delete success message after 10 secs
-        );
+                message -> message.delete().queueAfter(10, TimeUnit.SECONDS,
+                        null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+                )); // delete success message after 10 secs
     }
 }
