@@ -489,5 +489,10 @@
     "title": "Fehler!",
     "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nDie nächste Belohnung ist in {nextReward} verfügbar!",
     "color": "#f4cd53"
+  },
+  "shopCommandDeprecated": {
+    "title": ":information_source: Hinweis",
+    "description": "Der Shop-Command wurde entfernt.\nItems kannst du ab sofort direkt in <#851388807239827466> kaufen.",
+    "color": "#f4cd53"
   }
 }
