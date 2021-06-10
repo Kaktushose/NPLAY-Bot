@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@CommandController({"kaufen", "shop"})
+@CommandController("additem")
 @Permission("moderator")
 public class ShopCommand {
 
@@ -53,12 +53,12 @@ public class ShopCommand {
 
     @Command(
             name = "Level-Shop",
-            usage = "{prefix}kaufen <member>",
+            usage = "{prefix}additem <member>",
             desc = "Fügt ein Item einem anderen Nutzer hinzu",
             category = "Moderation"
     )
     public void onShop(CommandEvent event, Member member) {
-        generateEmbeds();
+        generateEmbeds(member.getAsMention());
         sendDefaultShop(event, null, member);
     }
 
@@ -155,11 +155,11 @@ public class ShopCommand {
                 }
 
                 Item item = items.get(variant - 1);
-                boolean selfBuy = target == event.getMember();
-                Optional<String> buyResult = buy(target, item, selfBuy);
+                Optional<String> buyResult = buy(target, item);
 
                 if (buyResult.isEmpty()) {
-                    message.editMessage(embedCache.getEmbed("shopSuccess")
+                    message.editMessage(embedCache.getEmbed("addItemSuccess")
+                            .injectValue("user", target.getAsMention())
                             .injectValue("item", item.getName())
                             .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
                             .toMessageEmbed()
@@ -193,20 +193,15 @@ public class ShopCommand {
         }
     }
 
-    private Optional<String> buy(Member member, Item item, boolean selfBuy) {
+    private Optional<String> buy(Member member, Item item) {
         BotUser botUser = userService.getUserById(member.getIdLong());
 
         if (userService.hasItem(member.getIdLong(), item.getItemId())) {
-            return Optional.of("Du besitzt dieses Item bereits!");
+            return Optional.of(member.getAsMention() + " besitzt dieses Item bereits!");
         }
 
-        if (selfBuy) {
-            if (botUser.getCoins() < item.getPrice()) {
-                return Optional.of("Du hast nicht genug Münzen!");
-            }
-        } else {
-            userService.addCoins(member.getIdLong(), item.getPrice());
-        }
+        // add coins because buy message will remove them
+        userService.addCoins(member.getIdLong(), item.getPrice());
 
         userService.buyItem(botUser.getUserId(), item.getItemId());
         levelbot.addItemRole(botUser.getUserId(), item.getItemId());
@@ -214,8 +209,8 @@ public class ShopCommand {
         return Optional.empty();
     }
 
-    private void generateEmbeds() {
-        shopOverview = embedCache.getEmbed("shopOverview").toEmbedBuilder();
+    private void generateEmbeds(String mention) {
+        shopOverview = embedCache.getEmbed("shopOverview").injectValue("user", mention).toEmbedBuilder();
 
         for (ItemCategory itemCategory : ItemCategory.values()) {
             EmbedBuilder specificShop = embedCache.getEmbed("specificShop").toEmbedBuilder();

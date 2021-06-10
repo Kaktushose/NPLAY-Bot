@@ -267,7 +267,7 @@
   },
   "shopOverview": {
     "title": ":shopping_cart: Shop",
-    "description": "Eine genaue Übersicht über alle Items findest du in <#829101385173041213> ",
+    "description": "Item hinzufügen für {user}",
     "color": "#86c240",
     "fields": [
       {
@@ -306,6 +306,17 @@
   "shopSuccess": {
     "title": ":shopping_bags: Erfolgreicher Kauf!",
     "description": "Du besitzt jetzt das Item \"{item}\"",
+    "color": "#86c240",
+    "fields": [
+      {
+        "name": "Dauer:",
+        "value": ":timer_clock: {days} Tage"
+      }
+    ]
+  },
+  "addItemSuccess": {
+    "title": "Erfolg!",
+    "description": "{user} besitzt jetzt das Item \"{item}\"",
     "color": "#86c240",
     "fields": [
       {
