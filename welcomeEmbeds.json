@@ -1,35 +1,146 @@
 {
-  "851788764707815444": {
-    "title": "logo"
+  "logo": {
+    "title": "Offizieller nordrheintvplay Server",
+    "description": "https://discord.gg/nordrheintvplay",
+    "thumbnail": {
+      "url": "https://cdn.discordapp.com/attachments/510209791214223380/659861897360703488/regular_picture.png"
+    },
+    "image": {
+      "url": "https://cdn.discordapp.com/attachments/583764384246136866/851457866464362587/Discord-LogoWordmark-Color.png"
+    },
+    "color": "#00ff00"
   },
-  "851788765369991230": {
-    "title": "welcome"
+  "welcome": {
+    "title": "Willkommen auf Deinem Simulatoren Discord!",
+    "description": "Diskutiere über spannende Simulatoren, die Videos auf dem YouTube-Kanal von nordrheintvplay, einem der bekanntesten Simulatoren-Kanäle auf YouTube, nimm an Gewinnspielen teil oder finde Freunde zum gemeinsamen Zocken.\n\nFür all diese Dinge bieten wir eine Plattform in stets angenehmer Atmosphäre.\n\nWir wünschen Dir viel Spaß beim Chatten und Unterhalten!\nDas Serverteam",
+    "author": {
+      "name": "nordrheintvplay",
+      "icon_url": "https://media.discordapp.net/attachments/510209791214223380/659861897360703488/regular_picture.png"
+    },
+    "color": "#00ff00"
   },
-  "851788767228592148": {
-    "title": "team"
+  "statistics": {
+    "title": "Fehler!",
+    "description": "Da ist etwas schiefgelaufen. Bitte kontaktiere <@393843637437464588>!",
+    "color": "#aa0c14"
   },
-  "851788767618007102": {
-    "title": "level system"
+  "team": {
+    "title": "Serverteam",
+    "description": "Wir sind jederzeit für Dich da!\n\n<@278591435417059328> | Inhaber\n<@307973135746072578> | Serverleitung\n\n<@393843637437464588> | Moderation, Entwickler des Level-Systems\n<@315877643616649220> | Moderation\n<@522867524484726785> | Moderation\n<@142670727236026368> | Moderation\n<@427782609058398229> | Moderation\n\n*Bei Fragen oder anderen Anliegen freuen wir uns auf Deine Nachricht\nim Support oder via PN.*",
+    "color": "#00ff00"
   },
-  "851788786065342465": {
-    "title": "kategorien"
+  "levelSystem": {
+    "title": "NEW Level-System",
+    "description": "Unser selbst entwickeltes, abwechslungsreiches Level-System belohnt Dich mit tollen Geschenken, wie gratis Keys für aktuelle Simulatoren!\n\nDu hast NITRO? Booste unseren Server und erhalte ein tolles Supportpaket, unter anderem mit einer dauerhaften PREMIUM-Rolle!\n\nSchau dich im Kanal <#851388807239827466> um und erfahre, wie der Bot funktioniert!\nSteuere den Bot mit einfachen Befehlen in <#665625766444138537>.\n\nSchau auf unserem Entwickler-Discord vorbei, um auch über die vielen neuen Erweiterungen in der Zukunft informiert zu bleiben!\nhttps://discord.gg/JYWezvQ",
+    "image": {
+      "url": "https://media.discordapp.net/attachments/487343298910879767/668939091772964904/BannerHQ.png"
+    },
+    "color": "#00ff00"
   },
-  "851788787448807435": {
-    "title": "links"
+  "categories": {
+    "title": "Serverkategorien",
+    "description": "Der Server ist in 4 übersichtliche Kategorien aufgeteilt:\n\n**- Informationen:**\nHier findest du alle wichtigen Kanäle rund um organisatorische Aspekte des Servers sowie den Support.\n\n**- Projekte:**\nTausche Dich hier mit anderen Zuschauern über die Entwicklung des YouTube-Kanals nordrheintvplay und dessen aktuelle Projekte aus.\nAuch für das neue Projekt <#817402362712555531> haben wir einen eigenen Kanal!\n\n**- Simulatoren:**\nDiskutiere in den Spiele-Kanälen über Updates, teile deine Bilder und schönste Spielerlebnisse, oder erhalte Support. In <#606645000687583236> finden alle Spiele Platz, für die es keinen eigenen Kanal gibt!\n\n**- Community:**\nDer Bereich des Servers, in welchem alles abseits der Simulatoren diskutiert werden kann: Im <#575918262689333259> können interessante News gepostet und im <#386277336406032385> kann ausgelassen geplaudert werden. Die besten Beiträge des Servers sind jederzeit im <#690664642623701012> zu finden!\n\n*Zudem bieten wir einen Unbegrenzten Talk sowie einen 2 User Talk an.\nBei Bedarf können jederzeit weitere Kanäle eröffnet werden.*",
+    "color": "#00ff00"
   },
-  "851788788282818560": {
-    "title": "regeln"
+  "links": {
+    "title": "Nützliche Links",
+    "fields": [
+      {
+        "name": "Youtube",
+        "value": "https://bit.ly/2QkZHA6",
+        "inline": true
+      },
+      {
+        "name": "Facebook-Seite:",
+        "value": "https://bit.ly/39i2jqS",
+        "inline": true
+      },
+      {
+        "name": "Facebook-Gruppe:",
+        "value": "https://bit.ly/37bEzD1",
+        "inline": true
+      },
+      {
+        "name": "Instagram:",
+        "value": "https://bit.ly/2EVMvwf",
+        "inline": true
+      },
+      {
+        "name": "Twitter:",
+        "value": "https://bit.ly/35YgkYQ",
+        "inline": true
+      },
+      {
+        "name": "Twitch:",
+        "value": "https://bit.ly/2tOJOtY",
+        "inline": true
+      },
+      {
+        "name": "Website:",
+        "value": "https://bit.ly/3a7IkMi",
+        "inline": true
+      },
+      {
+        "name": "Ackerländle:",
+        "value": "https://bit.ly/3g8ALIM",
+        "inline": true
+      },
+      {
+        "name": "Nitrado:",
+        "value": "https://bit.ly/LSServerNitrado",
+        "inline": true
+      }
+    ],
+    "color": "#00ff00"
   },
-  "851788789122465813": {
-    "title": "regelverstöße"
+  "rules": {
+    "title": "Serverregeln",
+    "description": "*Bitte beachte unsere Regeln.\nDamit hilfst Du, auf dem Server eine angenehme Atmosphäre zu wahren.\nDu erklärst dich mit ihnen einverstanden, wenn du auf dem Server bleibst.*",
+    "fields": [
+      {
+        "name": "§1. ALLGEMEINES",
+        "value": "- Sei höflich zu anderen Nutzern auf dem Server – nutze ihn so, dass sich jeder in angenehmer Atmosphäre unterhalten kann!\n- Den Anweisungen der Serverleitung und der Moderation ist immer Folge zu leisten."
+      },
+      {
+        "name": "§2. TEXTKANÄLE",
+        "value": "- Jegliche Formen von Beleidigung, Missachtung, Diskriminierung, Hetze und Rassismus gegenüber anderen Usern und Dritten sind in den Textkanälen strengstens untersagt.\n- Werbung für eigene oder fremde Inhalte ist direkt auf dem Server und in den Privatnachrichten untersagt (Ausnahme: Inhalte von nordrheintvplay). Eine Genehmigung kann in Ausnahmefällen bei der Serverleitung angefragt werden.\n- Das Erwähnen und Werben für fragwürdige Shops, wie MMOGA, G2A, Kinguin u.ä. ist verboten.\n- Die Chats dürfen nur für themengerechte Inhalte genutzt werden, welche in der Kanalbeschreibung ersichtlich sind. Die Serversprache ist in der Regel Deutsch, welches in angemessener Orthographie und Grammatik zu verfassen ist.\nKurze Diskussionsstränge in anderen Sprachen sind zulässig.\n- Trolling, Spamming, das Auslösen von unnötigen bzw. nicht konstruktiven Diskussionen, welche keinen Bezug zum Kanalthema aufweisen sowie die ausnahmslose Verwendung von Caps oder Emojis sind verboten."
+      },
+      {
+        "name": "§3: SPRACHKANÄLE",
+        "value": "- Jegliche Formen von Beleidigung, Missachtung, Diskriminierung, Hetze und Rassismus gegenüber anderen Usern und Dritten sind in den Sprachkanälen strengstens untersagt.\n- Keine Aufnahme von Gesprächen, keine Stimmverzerrer, Soundboards nur mit Einverständnis der anderen User. Channel nicht ständig wechseln."
+      },
+      {
+        "name": "§4: IDENTITÄT",
+        "value": "- Hacking, Identitätsdiebstahl, Umgehen von Banns, Doppel-Accounts usw. sind untersagt!\n- Der Nickname darf nicht zur Verwechslung anderer Persönlichkeiten führen oder anstößig sein, keine Kürzel (z.b:[xyz]) enthalten, nicht nur aus einzelnen Zeichen bestehen (z.B. „!“ ) und muss aus lateinischen Schriftzeichen zusammengesetzt sein (keine Schnörkelschrift o.ä.).\nGgf. wird er ansonsten vom Moderationsteam geändert User, die ihren Nickname nicht selbstständig ändern können, fragen für eine Änderung das Serverteam. Er darf auch mit PREMIUM nicht ständig geändert werden!"
+      },
+      {
+        "name": "§5: SUPPORT",
+        "value": "- Der Support ist nur verfügbar, wenn ein Teammitglied verfügbar ist und dieser gerade für Support-Anfragen zur Verfügung steht.\n- Der Missbrauch des Support-Dienstes für Spaß-Anfragen oder ähnlichem ist untersagt. Für genauere Informationen bitte die Hinweise im Reiter Support in <#851434963316375602> lesen."
+      },
+      {
+        "name": "§6: WEITERES",
+        "value": "- Das permanente Verlassen und Wiederbetreten des Servers ist zu unterlassen.\n- Das permanente Anschreiben, anpingen bzw. Zuspammen anderer User im Zusammenhang mit dem Server ist zu unterlassen.\n\n*Das Kopieren unserer Fassung der Server-Regeln ist untersagt. Bei entsprechenden Zwischenfällen behalten wir uns einen Ausschluss vom Server vor.*"
+      }
+    ],
+    "color": "#00ff00"
   },
-  "851788789608349737": {
-    "title": "support"
+  "rule violations": {
+    "title": "Regelverstöße",
+    "description": ":bangbang: Im Falle eines Verstoßes müssen wir Maßnahmen ergreifen. Um unsere Moderation einfach und transparent zu halten, halten wir uns dabei in der Regel an die folgende Vorgehensweise:\n\n__1+ 2. Verstoß:__ **Warnung** über den Carl-Bot mit Hinweis auf das Fehlverhalten.\n__3. Verstoß:__ **Mute für mind. 2 Tage** über den Carl-Bot mit Angabe des Grundes\n__4. Verstoß:__ **Mute für mind. 7 Tage** über den Carl-Bot mit Angabe des Grundes.\n__5. Verstoß:__ **30 Tage Bann** oder je nach Verstoß **permanenter Bann** über den Carl-Bot mit Angabe des Grundes.\n\nVon dieser Reihenfolge kann in Sonderfällen auch abgewichen werden.\nJeder Verstoß gegen unsere Regeln wird gleichwertig eingestuft.\nBei Fragen dazu wende Dich gerne an das Moderationsteam.",
+    "color": "#00ff00"
   },
-  "851788808101691392": {
-    "title": "rollen"
+  "support": {
+    "title": "Support",
+    "description": "- In<#386279631189311500> helfen wir Dir bei Problemen und Fragen rund um den Discord-Server. Außerdem freuen wir uns jederzeit über Deine Wünsche - wir behalten die Zukunft im Auge und wollen das User-Erlebnis weiter verbessern.\n\n- Alle Fragen rund um Gaming und den Kanal nordrheintvplay bitte in den entsprechenden Spiele-Kanälen in \"Simulatoren\" bzw. in <#459805064840740864> stellen und mit anderen Usern austauschen!",
+    "color": "#00ff00"
   },
-  "851788808936620052": {
-    "title": "rollen zuweisung"
+  "roles": {
+    "title": "Serverrollen",
+    "description": "__Automatisch beim Betreten des Servers:__\n\n**- Welcome**\nDie Level-System-Stufen Bronze bis BLACK durch Aktivität auf dem Server, siehe <#851388807239827466>\n\n**- Kanalmitglieder / Twitch-Subscriber**\nEinfach Deinen Discord-Account mit Deinem YouTube-Kanal verknüpfen. Sofern Du ein Play-Support-Abo abgeschlossen hast, wird Dir die Rolle automatisch zugewiesen.\nSolltest Du dein Abo kündigen, wird die Rolle nach 24 Stunden auch auf dem Server entfernt.\n\n__Manuell anforderbare Rollen:__\n\n**1. Modder**\n- Beim hobbymäßigen Erstellen von gratis Inhalten für Simulatoren\n- Wir vergeben die Rolle nur nach Qualität. Egal, ob die Mods veröffentlicht sind oder privat.\n- Du erhältst ein Kürzel vor dem Nicknamen als Kennzeichnung für das entsprechende Spiel.\n\n**2. Entwickler / Publisher**\n- Nur für professionelle Entwickler, welche eigene Software entwickeln und (anschließend) veröffentlichen.\n- Gilt nicht nur für Simulatoren, sondern für jegliche Art von Programmen!\n\n**3. Influencer**\n- Für alle aktiven YouTuber und Streamer auf einer beliebigen Streaming-Plattform in allen Genres.\n- Ab 2500 Abonnenten auf deinem Kanal + mind. 1 Video bzw. 1 Stream im Monat.\n\n*Bitte kontaktiere einen Moderator oder die Serverleitung via PN. Du erhältst dann alle Informationen zum Vorgang der Verifizierung.*\n\n__PREMIUM-Rolle:__\n\n- Hol Dir unsere **PREMIUM-Rolle** mit Münzen, die Du durch Aktivität mit dem NEW-Level-System gratis erhältst!\n- Sichere Dir mit der Rolle jede Menge tolle Vorteile und lohnenswerte Ersparnisse!\n- Mehr Informationen findest Du im Kanal <#851388807239827466>.",
+    "color": "#00ff00"
+  },
+  "select roles": {
+    "description": "__Diese Rollen kannst Du dir ganz bequem selbst zuweisen:__\n\nKlicke einfach auf das entsprechende Icon unter diesem Embed. Um die Rolle wieder zu entfernen, einfach die Reaktion löschen!\n\n:a: **: Aktiver Zuschauer**\nRolle für alle aktiven Zuschauer des Kanals.\n\n:movie_camera: **: Videoalarm**\nErhalte eine Benachrichtigung in #video-box, wenn ein neues Video auf dem Kanal veröffentlicht wird!\n\n**Subscriber-Rollen**\nDu wirst bei News zu den ausgewählten Spielen und Projekten benachrichtigt:\n\n:microphone2: : Podcast Subscriber\n:seedling: : Ackerländle Subscriber\n:cow: : FarmerTown Subscriber\n:tractor: : LS19 Subscriber\n:truck: : ETS 2 Subscriber\n:fire: : Notruf 112 Subscriber\n:bus: : OMSI 2 Subscriber\n:mountain_cableway: : Winter Resort Simulator Subscriber\n:snowflake: : Snowrunner Subscriber\n:tram: : LOTUS Subscriber\n:airplane: : Flug-Simulatoren Subscriber\n:train2: : Zug-Simulatoren Subscriber\n:gun: : GTA V + LSPDFR Subscriber",
+    "color": "#00ff00"
   }
 }

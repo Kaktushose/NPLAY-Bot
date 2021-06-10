@@ -25,37 +25,17 @@ public class WelcomeEmbedsCommand {
     }
 
     @Command(
-            value = "init",
+            value = "send",
             name = "Willkommen Embeds senden",
             usage = "{prefix}embeds send",
             desc = "Sendet die Embeds in <#551483788337872927>",
             category = "Moderation"
     )
     public void sendEmbeds(CommandEvent event) {
-        for (int i = 0; i < 12; i++) {
-            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(
-                    new EmbedBuilder().setTitle(String.valueOf(i)).build()
-            ).queue(message -> message.editMessage(new EmbedBuilder().setTitle(message.getId()).build()).queue());
-        }
-    }
-
-    @Command(
-            value = "resend",
-            name = "Willkommen Embeds senden",
-            usage = "{prefix}embeds resend <messageId>",
-            desc = "Sendet die Embeds in <#551483788337872927>",
-            category = "Moderation"
-    )
-    public void reloadEmbeds(CommandEvent event, long messageId) {
         welcomeEmbedCache.loadEmbedsToCache();
-        TextChannel channel = event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(messageId).flatMap(message ->
-                message.editMessage(welcomeEmbedCache.getEmbed(String.valueOf(messageId)).toMessageEmbed())
-        ).queue(success -> {
-            event.reply(embedCache.getEmbed("messageReloadSuccess"));
-        }, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, e -> {
-            event.reply(embedCache.getEmbed("messageReloadError"));
-        }));
+        welcomeEmbedCache.values().forEach(embedDTO -> {
+            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(embedDTO.toMessageEmbed()).queue();
+        });
     }
 }
 
