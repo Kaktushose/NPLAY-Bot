@@ -17,4 +17,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: nohup bash /home/levelbot/scripts/workflow.sh > /home/levelbot/scripts/nohup.log
+          script: nohup bash /home/levelbot/scripts/workflow.sh > /home/levelbot/scripts/nohup.log &

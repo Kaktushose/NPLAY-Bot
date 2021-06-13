@@ -4,15 +4,12 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.BoosterService;
 import de.kaktushose.levelbot.database.services.UserService;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class NitroBoosterListener extends ListenerAdapter {
 
@@ -28,36 +25,53 @@ public class NitroBoosterListener extends ListenerAdapter {
         BoosterService boosterService = levelbot.getBoosterService();
         TextChannel botChannel = levelbot.getBotChannel();
         EmbedCache embedCache = levelbot.getEmbedCache();
-        List<Long> currentBoosterIds = event.getGuild().getBoosters().stream().map(Member::getIdLong).collect(Collectors.toList());
 
+        // iterate through all actual nitro boosters
         event.getGuild().getBoosters().forEach(member -> {
             long userId = member.getIdLong();
-            if (boosterService.isNitroBooster(userId)) {
-                if (boosterService.getActiveNitroBoosters().stream().noneMatch(nitroBooster -> nitroBooster.getUserId() == userId)) {
-                    boosterService.changeNitroBoosterStatus(userId, true);
-                    boosterService.addMonthlyReward(userId);
-                    botChannel.sendMessage(member.getAsMention()).and(botChannel.sendMessage(
-                            embedCache.getEmbed("nitroBoostResume").injectValue("user", member.getAsMention()).toMessageEmbed()
-                    )).queue();
-                    userService.addUpItem(userId, 3, levelbot);
-                }
-            } else {
-                boosterService.createNewNitroBooster(userId);
-                boosterService.addOneTimeReward(userId);
-                botChannel.sendMessage(member.getAsMention()).and(botChannel.sendMessage(
-                        embedCache.getEmbed("nitroBoostStart").injectValue("user", member.getAsMention()).toMessageEmbed()
-                )).queue();
+
+            // user is already registered as an active booster in db, skip this one
+            if (boosterService.isActiveNitroBooster(userId)) {
+                return;
             }
+
+            // user is in db, must be a resumed booster
+            if (boosterService.isNitroBooster(userId)) {
+                boosterService.changeNitroBoosterStatus(userId, true);
+                boosterService.addMonthlyReward(userId);
+                userService.addUpItem(userId, 3, levelbot);
+                botChannel.sendMessage(member.getAsMention())
+                        .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostResume")
+                                .injectValue("user", member.getEffectiveName())
+                                .toMessageEmbed()
+                        )).queue();
+                return;
+            }
+
+            // else, user is not in db, must be a first time booster
+            boosterService.createNewNitroBooster(userId);
+            boosterService.addOneTimeReward(userId);
+            userService.addUpItem(userId, 3, levelbot);
+            botChannel.sendMessage(member.getAsMention())
+                    .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostStart")
+                            .injectValue("user", member.getEffectiveName())
+                            .toMessageEmbed()
+                    )).queue();
         });
 
+        // iterate through all active boosters and compare with actual boosters
         boosterService.getActiveNitroBoosters().forEach(nitroBooster -> {
-            User user = event.getJDA().getUserById(nitroBooster.getUserId());
-            if (!currentBoosterIds.contains(nitroBooster.getUserId())) {
-                boosterService.changeNitroBoosterStatus(nitroBooster.getUserId(), true);
-                userService.removeItem(nitroBooster.getUserId(), 3, levelbot);
-                botChannel.sendMessage(user.getAsMention()).and(botChannel.sendMessage(
-                        embedCache.getEmbed("nitroBoostResume").injectValue("user", user.getAsMention()).toMessageEmbed()
-                )).queue();
+            Long userId = nitroBooster.getUserId();
+            Member member = event.getGuild().getMemberById(userId);
+
+            if (event.getGuild().getBoosters().stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
+                boosterService.changeNitroBoosterStatus(userId, false);
+                userService.removeItem(userId, 3, levelbot);
+                botChannel.sendMessage(member.getAsMention())
+                        .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostStop")
+                                .injectValue("user", member.getAsMention())
+                                .toMessageEmbed()
+                        )).queue();
             }
         });
     }

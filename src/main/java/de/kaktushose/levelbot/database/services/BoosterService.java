@@ -39,6 +39,10 @@ public class BoosterService {
         return nitroBoosterRepository.findById(userId).isPresent();
     }
 
+    public boolean isActiveNitroBooster(long userId) {
+        return getActiveNitroBoosters().stream().map(NitroBooster::getUserId).anyMatch(((Long) userId)::equals);
+    }
+
     public void createNewNitroBooster(long userId) {
         nitroBoosterRepository.save(new NitroBooster(userId, System.currentTimeMillis(), true));
     }
