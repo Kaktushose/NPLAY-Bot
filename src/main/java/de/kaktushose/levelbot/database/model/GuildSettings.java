@@ -20,6 +20,7 @@ public class GuildSettings {
     private String eventEmote;
     private int collectEventId;
     private long statisticsMessageId;
+    private long logChannelId;
 
     public GuildSettings() {
     }
@@ -34,7 +35,8 @@ public class GuildSettings {
                          long eventChannelId,
                          String eventEmote,
                          int collectEventId,
-                         long statisticsMessageId) {
+                         long statisticsMessageId,
+                         long logChannelId) {
         this.guildId = guildId;
         this.version = version;
         this.botToken = botToken;
@@ -46,6 +48,7 @@ public class GuildSettings {
         this.eventEmote = eventEmote;
         this.collectEventId = collectEventId;
         this.statisticsMessageId = statisticsMessageId;
+        this.logChannelId = logChannelId;
     }
 
     public Long getGuildId() {
@@ -82,6 +85,10 @@ public class GuildSettings {
 
     public long getBotChannelId() {
         return botChannelId;
+    }
+
+    public long getLogChannelId() {
+        return logChannelId;
     }
 
     public void setBotChannelId(long botChannelId) {

@@ -164,6 +164,11 @@ public class ShopListener extends ListenerAdapter {
                                         .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
                                         .toMessageEmbed()
                         ).queue(delete);
+                        levelbot.getLogChannel().sendMessage(embedCache.getEmbed("buyLog")
+                                .injectValue("user", member.getAsMention())
+                                .injectValue("item", item.getName())
+                                .toMessageEmbed()
+                        ).queue();
                     }
                     activeUsers.remove(member.getIdLong());
                     waiter.stopWaiting(false);

@@ -28,6 +28,10 @@ public class SettingsService {
         return getGuildSettings(guildId).getBotChannelId();
     }
 
+    public long getLogChannelId(long guildId) {
+        return getGuildSettings(guildId).getLogChannelId();
+    }
+
     public String getBotPrefix(long guildId) {
         return getGuildSettings(guildId).getBotPrefix();
     }

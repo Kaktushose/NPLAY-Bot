@@ -499,5 +499,10 @@
     "title": "Folgende Kanäle werden vom Levelsystem ignoriert:",
     "description": "{list}",
     "color": "#86c240"
+  },
+  "buyLog": {
+    "title": "Transaktion",
+    "description": "{user} hat das Item \"{item}\" gekauft.",
+    "color": "#86c240"
   }
 }

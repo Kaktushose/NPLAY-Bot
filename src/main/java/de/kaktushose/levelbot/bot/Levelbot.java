@@ -52,6 +52,7 @@ public class Levelbot {
     private JDA jda;
     private Guild guild;
     private TextChannel botChannel;
+    private TextChannel logChannel;
 
     public Levelbot() {
         userService = null;
@@ -153,6 +154,7 @@ public class Levelbot {
 
         guild = jda.getGuildById(guildId);
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
+        logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
 
         // get offset time until its 0 am, also ensures that this task only runs once every 24 hours
         long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
@@ -430,6 +432,10 @@ public class Levelbot {
 
     public TextChannel getBotChannel() {
         return botChannel;
+    }
+
+    public TextChannel getLogChannel() {
+        return logChannel;
     }
 
     public enum GuildType {
