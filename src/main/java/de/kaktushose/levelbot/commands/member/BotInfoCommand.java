@@ -25,7 +25,7 @@ public class BotInfoCommand {
         long guildId = event.getGuild().getIdLong();
         event.reply(embedCache.getEmbed("botInfo")
                 .injectValue("prefix", settingsService.getBotPrefix(guildId))
-                .injectValue("version", settingsService.getVersion(guildId))
+                .injectValue("version", "I hope this works")
         );
     }
 }
