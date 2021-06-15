@@ -162,10 +162,10 @@ public class Levelbot {
         taskScheduler.addRepetitiveTask(() -> {
             log.info("Starting daily tasks!");
             try {
-                log.info("Checking for expired items...");
-                checkForExpiredItems();
                 log.info("Sending dm rank infos...");
                 dmRankInfo();
+                log.info("Checking for expired items...");
+                checkForExpiredItems();
                 log.info("Checking for boosters...");
                 checkForNitroBoostersRewards();
                 log.info("Done!");
