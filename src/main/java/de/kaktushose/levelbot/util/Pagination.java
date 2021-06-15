@@ -37,8 +37,8 @@ public class Pagination {
     }
 
     public List<String> getPage() {
-        int fromIndex = index == 0 ? 0 : index * pageSize + 1;
-        int toIndex = index == 0 ? pageSize : index * pageSize + pageSize + 1;
+        int fromIndex = index == 0 ? 0 : index * pageSize;
+        int toIndex = index == 0 ? pageSize : index * pageSize + pageSize;
 
         // end of list reached, set toIndex to list size
         if (toIndex > leaderboard.size()) {
