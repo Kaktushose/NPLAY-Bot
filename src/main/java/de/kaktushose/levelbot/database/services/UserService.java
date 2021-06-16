@@ -2,9 +2,13 @@ package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.FrozenItem;
 import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.model.Transaction;
-import de.kaktushose.levelbot.database.repositories.*;
+import de.kaktushose.levelbot.database.repositories.FrozenItemRepository;
+import de.kaktushose.levelbot.database.repositories.ItemRepository;
+import de.kaktushose.levelbot.database.repositories.TransactionRepository;
+import de.kaktushose.levelbot.database.repositories.UserRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -18,16 +22,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final ItemRepository itemRepository;
-    private final NitroBoosterRepository nitroBoosterRepository;
-    private final SettingsRepository settingsRepository;
+    private final FrozenItemRepository frozenItemRepository;
 
     public UserService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         transactionRepository = context.getBean(TransactionRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
-        nitroBoosterRepository = context.getBean(NitroBoosterRepository.class);
-        settingsRepository = context.getBean(SettingsRepository.class);
+        frozenItemRepository = context.getBean(FrozenItemRepository.class);
     }
 
     public List<BotUser> getAllUsers() {
@@ -89,10 +91,29 @@ public class UserService {
     }
 
     public void addUpItem(long userId, int itemId, Levelbot levelbot) {
-        BotUser botUser = getUserById(userId);
         Item itemToAdd = itemRepository.findById(itemId).orElseThrow();
+
         List<Item> items = getItems(userId);
         Optional<Item> optional = items.stream().filter(item -> item.getCategoryId() == itemToAdd.getCategoryId()).findFirst();
+
+        // premium unlimited
+        if (itemId == 3) {
+            // if user has premium: freeze current premium, else go ahead
+            if (optional.isPresent()) {
+                Transaction transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
+
+                FrozenItem frozenItem = new FrozenItem(userId, System.currentTimeMillis(), transaction.getBuyTime(), transaction.getItem());
+                frozenItemRepository.save(frozenItem);
+
+                // remove normal premium for now
+                removeItem(userId, optional.get().getItemId(), levelbot);
+
+                // make sure that premium unlimited is added as a new item
+                optional = Optional.empty();
+            }
+        }
+
+        BotUser botUser = getUserById(userId);
         Transaction transaction;
         if (optional.isPresent()) {
             transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
@@ -103,6 +124,7 @@ public class UserService {
             transaction.setItem(itemToAdd);
             levelbot.addItemRole(userId, itemToAdd.getItemId());
         }
+
         botUser.getTransactions().add(transaction);
         transactionRepository.save(transaction);
         userRepository.save(botUser);
@@ -120,6 +142,26 @@ public class UserService {
 
     public void removeItem(long userId, int itemId, Levelbot levelbot) {
         Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
+
+        // premium unlimited
+        if (itemId == 3) {
+            // unfreeze item
+            frozenItemRepository.findById(userId).ifPresent(frozenItem -> {
+                optional.ifPresent(transactionRepository::delete);
+
+                Transaction transaction = new Transaction();
+                BotUser botUser = getUserById(userId);
+                transaction.setBuyTime(frozenItem.getBuyTime() + (System.currentTimeMillis() - frozenItem.getStartTime()));
+                transaction.setItem(frozenItem.getItem());
+                botUser.getTransactions().add(transaction);
+
+                frozenItemRepository.delete(frozenItem);
+                transactionRepository.save(transaction);
+                userRepository.save(botUser);
+            });
+            return;
+        }
+
         optional.ifPresent(transactionRepository::delete);
         levelbot.removeItemRole(userId, itemId);
     }
