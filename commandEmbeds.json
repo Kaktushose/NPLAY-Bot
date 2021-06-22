@@ -477,7 +477,7 @@
   },
   "rewardAlreadyClaimed": {
     "title": "Fehler!",
-    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nDie nächste Belohnung ist in {nextReward} verfügbar!",
+    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nSchau gerne morgen wieder vorbei!",
     "color": "#f4cd53"
   },
   "shopCommandDeprecated": {

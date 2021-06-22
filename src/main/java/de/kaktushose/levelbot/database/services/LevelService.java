@@ -11,6 +11,13 @@ import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.context.ApplicationContext;
 
+import javax.xml.crypto.Data;
+import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -169,15 +176,20 @@ public class LevelService {
 
     public Optional<String> getDailyReward(long userId) {
         BotUser botUser = userService.getUserById(userId);
-        if (System.currentTimeMillis() - botUser.getLastReward() <= TimeUnit.DAYS.toMillis(1)) {
+        int rewardLevel;
+
+        ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        ZonedDateTime lastReward = ZonedDateTime.ofInstant(Instant.ofEpochMilli(botUser.getLastReward()), ZoneId.of(ZoneId.systemDefault().getId())).truncatedTo(ChronoUnit.DAYS);
+        if (now.equals(lastReward)) {
             return Optional.empty();
         }
-        int rewardLevel;
-        if (System.currentTimeMillis() - botUser.getLastReward() >= TimeUnit.DAYS.toMillis(2)) {
+        now = now.minus(1, ChronoUnit.DAYS);
+        if (!now.equals(lastReward)) {
             rewardLevel = userService.resetRewardLevel(userId);
         } else {
             rewardLevel = userService.increaseRewardLevel(userId);
         }
+
         Reward reward = settingsService.getReward(rewardLevel);
         userService.addCoins(userId, reward.getCoins());
         userService.addXp(userId, reward.getXp());
@@ -186,17 +198,8 @@ public class LevelService {
         if (reward.getItem() != null) {
             userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
         }
-        return Optional.of(reward.getMessage());
-    }
 
-    public String getNextRewardTime(long userId) {
-        BotUser botUser = userService.getUserById(userId);
-        long millis = TimeUnit.DAYS.toMillis(1) - (System.currentTimeMillis() - botUser.getLastReward());
-        long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
-        String hoursPattern = hours != 1 ? "%d Stunden" : "einer Stunde";
-        String minutesPattern = minutes != 1 ? "%d Minuten" : "einer Minute";
-        return String.format(hoursPattern, hours) + " und " + String.format(minutesPattern, minutes);
+        return Optional.of(reward.getMessage());
     }
 
     public String applyRewards(long userId, int rankId) {

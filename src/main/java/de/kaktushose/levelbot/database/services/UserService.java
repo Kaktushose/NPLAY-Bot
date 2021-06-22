@@ -260,7 +260,7 @@ public class UserService {
 
     public int resetRewardLevel(long userId) {
         BotUser botUser = getUserById(userId);
-        botUser.setRewardLevel(1);
+        botUser.setRewardLevel(0);
         userRepository.save(botUser);
         return 1;
     }
