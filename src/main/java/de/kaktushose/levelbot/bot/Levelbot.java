@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -380,7 +381,11 @@ public class Levelbot {
         statistics.queryStatistics();
         TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
         channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
-                message.editMessage(embedCache.getEmbed("statistics").injectFields(statistics).toMessageEmbed())
+                message.editMessage(embedCache.getEmbed("statistics")
+                        .injectFields(statistics)
+                        .toEmbedBuilder()
+                        .setTimestamp(Instant.now())
+                        .build())
         ).queue();
     }
 
