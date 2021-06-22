@@ -146,7 +146,9 @@ public class UserService {
         // premium unlimited
         if (itemId == 3) {
             // unfreeze item
-            frozenItemRepository.findById(userId).ifPresent(frozenItem -> {
+            Optional<FrozenItem> frozenItemOptional = frozenItemRepository.findById(userId);
+            if (frozenItemOptional.isPresent()) {
+                FrozenItem frozenItem = frozenItemOptional.get();
                 optional.ifPresent(transactionRepository::delete);
 
                 Transaction transaction = new Transaction();
@@ -158,8 +160,8 @@ public class UserService {
                 frozenItemRepository.delete(frozenItem);
                 transactionRepository.save(transaction);
                 userRepository.save(botUser);
-            });
-            return;
+                return;
+            }
         }
 
         optional.ifPresent(transactionRepository::delete);

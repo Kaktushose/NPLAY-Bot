@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ConstantConditions")
 public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
@@ -114,7 +115,6 @@ public class Levelbot {
                 new JoinLeaveListener(this),
                 new LevelListener(this),
                 new VoiceTextLink(jda.getTextChannelById(839226183409467442L)),
-                new NitroBoosterListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
                 new ContestEventListener(settingsService, eventService)
@@ -166,7 +166,9 @@ public class Levelbot {
                 dmRankInfo();
                 log.info("Checking for expired items...");
                 checkForExpiredItems();
-                log.info("Checking for boosters...");
+                log.info("Checking for new nitro boosters...");
+                boosterService.updateBoosterStatus(guild, botChannel, embedCache);
+                log.info("Checking for booster rewards...");
                 checkForNitroBoostersRewards();
                 log.info("Done!");
             } catch (Throwable t) {
