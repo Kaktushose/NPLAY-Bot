@@ -69,8 +69,7 @@ public class BoosterService {
                 Long userId = nitroBooster.getUserId();
                 Member member = guild.getMemberById(userId);
 
-                if (!boosterList.stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
-                    System.out.println("removing the shit out of him");
+                if (boosterList.stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
                     changeNitroBoosterStatus(userId, false);
                     userService.removeItem(userId, 3, levelbot);
                     botChannel.sendMessage(member.getAsMention())
