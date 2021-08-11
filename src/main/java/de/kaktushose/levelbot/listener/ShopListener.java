@@ -149,7 +149,9 @@ public class ShopListener extends ListenerAdapter {
                     ).build()
             ).queue(confirmMessage -> { // wait for reactions
                 confirmMessage.delete().queueAfter( // delete confirm message after 30 secs if nothing happens
-                        30, TimeUnit.SECONDS, null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
+                        30, TimeUnit.SECONDS,
+                        success -> activeUsers.remove(member.getIdLong()),
+                        new ErrorHandler().ignore(UNKNOWN_MESSAGE)
                 );
                 confirmMessage.addReaction(CONFIRM).and(confirmMessage.addReaction(CANCEL)).queue();
                 ReactionWaiter waiter = new ReactionWaiter(confirmMessage, event.getMember(), CONFIRM, CANCEL);
