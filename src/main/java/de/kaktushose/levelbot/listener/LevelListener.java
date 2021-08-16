@@ -63,7 +63,7 @@ public class LevelListener extends ListenerAdapter {
                                 .toMessageEmbed())
                         ).queue();
 
-            } else if (eventPoints == collectEvent.getRoleId()) {
+            } else if (eventPoints == collectEvent.getRoleBound()) {
                 levelbot.addCollectEventRole(userId);
 
                 channel.sendMessage(author.getAsMention())
