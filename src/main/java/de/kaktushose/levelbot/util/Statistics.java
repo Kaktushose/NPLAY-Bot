@@ -50,7 +50,7 @@ public class Statistics {
         List<Member> members = guild.getMembers();
         // general member count
         totalMemberCount = guild.getMemberCount();
-        onlineMemberCount = (int) members.stream().filter(member -> member.getOnlineStatus().equals(OnlineStatus.ONLINE)).count();
+        onlineMemberCount = (int) members.stream().filter(member -> !member.getOnlineStatus().equals(OnlineStatus.OFFLINE)).count();
         // game count
         lsMemberCount = getGameCount(members, "Farming Simulator");
         etsMemberCount = getGameCount(members, "Euro Truck Simulator");

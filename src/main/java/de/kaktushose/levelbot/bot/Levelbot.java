@@ -349,15 +349,16 @@ public class Levelbot {
 
         if (eventService.isCollectEventActive(guildId)) {
             CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
+            Role collectEventRole = guild.getRoleById(collectEvent.getRoleId());
             long eventPoints = botUser.getEventPoints();
             embedDTO.injectValue("eventName", collectEvent.getName())
                     .injectValue("currencyName", collectEvent.getCurrencyName())
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
             if (eventPoints >= collectEvent.getItemBound()) {
-                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\nEvent Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\n:blue_circle: Eventrolle " + collectEventRole.getName());
             } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", "Event Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", ":blue_circle: Eventrolle " + collectEventRole.getName());
             } else {
                 embedDTO.injectValue("eventRewards", ":x: noch keine");
             }
