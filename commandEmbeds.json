@@ -472,7 +472,7 @@
   },
   "collectEventRoleReward": {
     "title": "Danke für deine Hilfe, {user}",
-    "description": "role reward",
+    "description": "Du hast nun bereits 10 Muscheln :shell: am Strand :beach: gefunden.\nGenieße das Meer :man_surfing:  und freu dich über die exklusive Eventrolle SOMMER 2021 :blue_circle: als Geschenk!\nUnd weiterhin viel Spaß mit unseren Sommer-Events :palm_tree:.",
     "color": "#86c240"
   },
   "rewardAlreadyClaimed": {
