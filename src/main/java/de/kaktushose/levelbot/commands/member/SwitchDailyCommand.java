@@ -29,7 +29,7 @@ public class SwitchDailyCommand {
         } else {
             event.getAuthor().openPrivateChannel()
                     .flatMap(privateChannel ->
-                            privateChannel.sendMessage(embedCache.getEmbed("switchDailySuccess")
+                            privateChannel.sendMessageEmbeds(embedCache.getEmbed("switchDailySuccess")
                                     .injectValue("action", "aktiviert")
                                     .toMessageEmbed()
                             )

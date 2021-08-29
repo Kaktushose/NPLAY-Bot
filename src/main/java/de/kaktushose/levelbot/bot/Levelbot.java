@@ -189,7 +189,7 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing(version));
 
-        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
+        getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStart")
                 .injectValue("version", version)
                 .toMessageEmbed()
         ).queue();
@@ -200,7 +200,7 @@ public class Levelbot {
     }
 
     public Levelbot stop() {
-        getBotChannel().sendMessage(embedCache.getEmbed("botStop").toMessageEmbed()).complete();
+        getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStop").toMessageEmbed()).complete();
         jdaCommands.shutdown();
         jda.shutdown();
         return this;
@@ -290,7 +290,7 @@ public class Levelbot {
         userService.getUsersByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
             user.openPrivateChannel().flatMap(privateChannel ->
-                    privateChannel.sendMessage(generateRankInfo(user, true).build())
+                    privateChannel.sendMessageEmbeds(generateRankInfo(user, true).build())
             ).queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
         });
     }
@@ -310,10 +310,10 @@ public class Levelbot {
                 .injectValue("item", item.getName())
                 .injectValue("date", new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(buyTime)))
                 .toEmbedBuilder();
-        user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(embed.build()))
+        user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed.build()))
                 .queue(null, new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, exception -> {
                     TextChannel channel = getBotChannel();
-                    channel.sendMessage(user.getAsMention()).and(channel.sendMessage(embed.build())).queue();
+                    channel.sendMessage(user.getAsMention()).and(channel.sendMessageEmbeds(embed.build())).queue();
                 }));
     }
 

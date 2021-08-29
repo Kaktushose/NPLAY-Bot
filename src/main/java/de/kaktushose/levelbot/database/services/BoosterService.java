@@ -47,7 +47,7 @@ public class BoosterService {
                     addMonthlyReward(userId);
                     userService.addUpItem(userId, 3, levelbot);
                     botChannel.sendMessage(member.getAsMention())
-                            .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostResume")
+                            .and(botChannel.sendMessageEmbeds(embedCache.getEmbed("nitroBoostResume")
                                     .injectValue("user", member.getEffectiveName())
                                     .toMessageEmbed()
                             )).queue();
@@ -58,7 +58,7 @@ public class BoosterService {
                 addOneTimeReward(userId);
                 userService.addUpItem(userId, 3, levelbot);
                 botChannel.sendMessage(member.getAsMention())
-                        .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostStart")
+                        .and(botChannel.sendMessageEmbeds(embedCache.getEmbed("nitroBoostStart")
                                 .injectValue("user", member.getEffectiveName())
                                 .toMessageEmbed()
                         )).queue();
@@ -73,7 +73,7 @@ public class BoosterService {
                     changeNitroBoosterStatus(userId, false);
                     userService.removeItem(userId, 3, levelbot);
                     botChannel.sendMessage(member.getAsMention())
-                            .and(botChannel.sendMessage(embedCache.getEmbed("nitroBoostStop")
+                            .and(botChannel.sendMessageEmbeds(embedCache.getEmbed("nitroBoostStop")
                                     .injectValue("user", member.getAsMention())
                                     .toMessageEmbed()
                             )).queue();

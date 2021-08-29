@@ -30,7 +30,7 @@ public class WelcomeEmbedsCommand {
     public void sendEmbeds(CommandEvent event) {
         welcomeEmbedCache.loadEmbedsToCache();
         welcomeEmbedCache.values().forEach(embedDTO -> {
-            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(embedDTO.toMessageEmbed()).queue();
+            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessageEmbeds(embedDTO.toMessageEmbed()).queue();
         });
     }
 }

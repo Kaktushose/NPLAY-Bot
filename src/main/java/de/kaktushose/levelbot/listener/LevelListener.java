@@ -58,7 +58,7 @@ public class LevelListener extends ListenerAdapter {
                 userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
 
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessage(embedCache.getEmbed("collectEventItemReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
@@ -67,7 +67,7 @@ public class LevelListener extends ListenerAdapter {
                 levelbot.addCollectEventRole(userId);
 
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessage(embedCache.getEmbed("collectEventRoleReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventRoleReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
@@ -91,7 +91,7 @@ public class LevelListener extends ListenerAdapter {
         String xp = currentRank.equals(nextRank) ? "0" : String.valueOf(nextRank.getBound());
 
         channel.sendMessage(author.getAsMention())
-                .and(channel.sendMessage(embedCache.getEmbed("levelUp")
+                .and(channel.sendMessageEmbeds(embedCache.getEmbed("levelUp")
                         .injectValue("user", author.getAsMention())
                         .injectValue("color", currentRank.getColor())
                         .injectValue("currentRank", guild.getRoleById(currentRank.getRoleId()).getAsMention())

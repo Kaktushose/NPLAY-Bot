@@ -134,7 +134,7 @@ public class ShopListener extends ListenerAdapter {
 
         if (fail != null) {
             channel.sendMessage( // transaction failed
-                    builder.setEmbed(embedCache.getEmbed("shopError")
+                    builder.setEmbeds(embedCache.getEmbed("shopError")
                             .injectValue("message", fail)
                             .toMessageEmbed()
                     ).build()
@@ -142,7 +142,7 @@ public class ShopListener extends ListenerAdapter {
         } else {
             activeUsers.add(member.getIdLong());
             channel.sendMessage( // confirm transaction
-                    builder.setEmbed(embedCache.getEmbed("shopConfirm")
+                    builder.setEmbeds(embedCache.getEmbed("shopConfirm")
                             .injectValue("item", item.getName())
                             .injectValue("price", item.getPrice())
                             .toMessageEmbed()
@@ -160,13 +160,13 @@ public class ShopListener extends ListenerAdapter {
                     if (reactionEvent.getEmote().equals(CONFIRM)) {
                         userService.buyItem(botUser.getUserId(), item.getItemId());
                         levelbot.addItemRole(botUser.getUserId(), item.getItemId());
-                        channel.sendMessage( // successful transaction
+                        channel.sendMessageEmbeds( // successful transaction
                                 embedCache.getEmbed("shopSuccess")
                                         .injectValue("item", item.getName())
                                         .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
                                         .toMessageEmbed()
                         ).queue(delete);
-                        levelbot.getLogChannel().sendMessage(embedCache.getEmbed("buyLog")
+                        levelbot.getLogChannel().sendMessageEmbeds(embedCache.getEmbed("buyLog")
                                 .injectValue("user", member.getAsMention())
                                 .injectValue("item", item.getName())
                                 .toMessageEmbed()

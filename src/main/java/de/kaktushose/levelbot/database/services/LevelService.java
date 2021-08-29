@@ -176,18 +176,14 @@ public class LevelService {
 
     public Optional<String> getDailyReward(long userId) {
         BotUser botUser = userService.getUserById(userId);
-        int rewardLevel;
 
-        ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
-        ZonedDateTime lastReward = ZonedDateTime.ofInstant(Instant.ofEpochMilli(botUser.getLastReward()), ZoneId.of(ZoneId.systemDefault().getId())).truncatedTo(ChronoUnit.DAYS);
-        if (now.equals(lastReward)) {
-            return Optional.empty();
-        }
-        now = now.minus(1, ChronoUnit.DAYS);
-        if (!now.equals(lastReward)) {
+        int rewardLevel;
+        if (System.currentTimeMillis() - botUser.getLastReward() >= 172800000L) {
             rewardLevel = userService.resetRewardLevel(userId);
-        } else {
+        } else if (System.currentTimeMillis() - botUser.getLastReward() >= 86400000L) {
             rewardLevel = userService.increaseRewardLevel(userId);
+        } else {
+            return Optional.empty();
         }
 
         Reward reward = settingsService.getReward(rewardLevel);

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DailyRewardListener extends ListenerAdapter {
 
-    // this should find it's way into the database one day as well
+    // this should find its way into the database one day as well
     public static final long DAILY_REWARD_MESSAGE_ID = 851454384893067274L;
     private final Levelbot levelbot;
 
@@ -24,10 +24,6 @@ public class DailyRewardListener extends ListenerAdapter {
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         // bots should just be ignored
         if (event.getUser().isBot()) {
-            return;
-        }
-        // must be in channel #levelsystem
-        if (event.getChannel().getIdLong() != 851388807239827466L) {
             return;
         }
         // must be right message
@@ -43,7 +39,7 @@ public class DailyRewardListener extends ListenerAdapter {
 
         MessageBuilder builder = new MessageBuilder().append(user.getAsMention());
         if (reward.isPresent()) {
-            builder.setEmbed(levelbot.getEmbedCache()
+            builder.setEmbeds(levelbot.getEmbedCache()
                     .getEmbed("dailyReward")
                     .injectValue("user", user.getName())
                     .injectValue("reward", reward.get())
@@ -51,7 +47,7 @@ public class DailyRewardListener extends ListenerAdapter {
             );
             event.getChannel().sendMessage(builder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
         } else {
-            builder.setEmbed(levelbot.getEmbedCache()
+            builder.setEmbeds(levelbot.getEmbedCache()
                     .getEmbed("rewardAlreadyClaimed")
                     .toMessageEmbed()
             );
