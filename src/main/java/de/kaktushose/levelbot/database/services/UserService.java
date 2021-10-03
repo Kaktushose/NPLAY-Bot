@@ -100,7 +100,7 @@ public class UserService {
         if (itemId == 3) {
             // if user has premium: freeze current premium, else go ahead
             if (optional.isPresent()) {
-                Transaction transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
+                Transaction transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).stream().findFirst().orElseThrow();
 
                 FrozenItem frozenItem = new FrozenItem(userId, System.currentTimeMillis(), transaction.getBuyTime(), transaction.getItem());
                 frozenItemRepository.save(frozenItem);
@@ -116,7 +116,7 @@ public class UserService {
         BotUser botUser = getUserById(userId);
         Transaction transaction;
         if (optional.isPresent()) {
-            transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
+            transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).stream().findFirst().orElseThrow();
             transaction.setBuyTime(transaction.getBuyTime() + itemToAdd.getDuration());
         } else {
             transaction = new Transaction();
@@ -141,7 +141,7 @@ public class UserService {
     }
 
     public void removeItem(long userId, int itemId, Levelbot levelbot) {
-        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
+        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId).stream().findFirst();
 
         // premium unlimited
         if (itemId == 3) {
