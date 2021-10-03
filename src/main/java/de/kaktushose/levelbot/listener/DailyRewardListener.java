@@ -36,7 +36,7 @@ public class DailyRewardListener extends ListenerAdapter {
         }
         User user = event.getUser();
         Optional<String> reward = levelbot.getLevelService().getDailyReward(user.getIdLong());
-System.currentTimeMillis() - botUser.getLastReward()
+        long millis = System.currentTimeMillis() - levelbot.getUserService().getUserById(user.getIdLong()).getLastReward();
         MessageBuilder builder = new MessageBuilder().append(user.getAsMention());
         if (reward.isPresent()) {
             builder.setEmbeds(levelbot.getEmbedCache()
@@ -50,7 +50,7 @@ System.currentTimeMillis() - botUser.getLastReward()
             long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
             builder.setEmbeds(levelbot.getEmbedCache()
                     .getEmbed("rewardAlreadyClaimed")
-                    .injectValue("hours", user.get)
+                    .injectValue("hours", hours)
                     .toMessageEmbed()
             );
             event.getChannel().sendMessage(builder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
