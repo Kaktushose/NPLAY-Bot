@@ -466,14 +466,14 @@
     "color": "#aa0c14"
   },
   "collectEventItemReward": {
-    "title": "Danke für deine Hilfe, {user}",
-    "description": "item reward",
-    "color": "#86c240"
+    "title": "Fröhliches Halloween, {user} :skull:",
+    "description": "Du hast nun monströse **33 Kürbisse** :jack_o_lantern: auf dem Server gefunden.\nWir schenken dir dafür **PREMIUM light** :star: mit tollen Vorteilen auf dem Server - 15 Tage lang!\nKürbisse :jack_o_lantern: finden sich noch bis zum 01.11.2021 auf dem Server. \nDu bist ein echter Profi - sammele doch gerne noch etwas weiter!",
+    "color": "#EC5C0F"
   },
   "collectEventRoleReward": {
-    "title": "Danke für deine Hilfe, {user}",
-    "description": "Du hast nun bereits 10 Muscheln :shell: am Strand :beach: gefunden.\nGenieße das Meer :man_surfing:  und freu dich über die exklusive Eventrolle SOMMER 2021 :blue_circle: als Geschenk!\nUnd weiterhin viel Spaß mit unseren Sommer-Events :palm_tree:.",
-    "color": "#86c240"
+    "title": "Fröhliches Halloween, {user} :skull:",
+    "description": "Du hast nun bereits **3 Kürbisse** :jack_o_lantern: auf dem Server gefunden.\nWir schenken dir dafür die schaurig-exklusive Eventrolle **HERBST 2021** :orange_circle:!\nDie nächste Belohnung erwartet Dich, wenn du insgesamt **33 Kürbisse** :jack_o_lantern: gefunden hast.\nDoch nimm dich in Acht - überall lauern Gefahren!",
+    "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
     "title": "Fehler!",
