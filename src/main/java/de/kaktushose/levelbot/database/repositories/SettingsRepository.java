@@ -18,10 +18,18 @@ public interface SettingsRepository extends CrudRepository<GuildSettings, Long> 
     @Query(value = "SELECT * FROM ignored_channels", nativeQuery = true)
     List<Long> getIgnoredChannels();
 
+    @Query(value = "SELECT * FROM rewarded_users", nativeQuery = true)
+    List<Long> getRewardedUsers();
+
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO ignored_channels VALUES (:channelId)", nativeQuery = true)
     void addIgnoredChannel(@Param("channelId") long channelId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO rewarded_users VALUES (:userId)", nativeQuery = true)
+    void addRewardedUser(@Param("userId") long userId);
 
     @Modifying
     @Transactional

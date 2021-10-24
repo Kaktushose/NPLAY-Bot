@@ -86,6 +86,14 @@ public class SettingsService {
         return rewardRepository.findById(11).orElseThrow();
     }
 
+    public List<Long> getRewardedUsers() {
+        return settingsRepository.getRewardedUsers();
+    }
+
+    public void addRewardedUser(long userId) {
+        settingsRepository.addRewardedUser(userId);
+    }
+
     public void setEventChannelId(long guildId, long channelId) {
         GuildSettings settings = getGuildSettings(guildId);
         settings.setEventChannelId(channelId);
