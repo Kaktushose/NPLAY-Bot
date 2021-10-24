@@ -33,7 +33,7 @@ public class GiftCommand {
         settingsService.addRewardedUser(event.getAuthor().getIdLong());
         event.reply(new EmbedBuilder()
                 .setTitle("Mut zahlt sich aus, " + event.getMember().getEffectiveName())
-                .setDescription("Bei einem nächtlichen Spaziergang über den Geisterfriedhof :ghost hast du **66 Münzen** :moneybag: gefunden. Zwar sind sie etwas vermodert, doch als Zahlungsmittel werden sie wohl noch angenommen. Probiere es doch gleich mal aus!")
+                .setDescription("Bei einem nächtlichen Spaziergang über den Geisterfriedhof :ghost: hast du **66 Münzen** :moneybag: gefunden. Zwar sind sie etwas vermodert, doch als Zahlungsmittel werden sie wohl noch angenommen. Probiere es doch gleich mal aus!")
                 .setColor(Color.ORANGE)
         );
     }
