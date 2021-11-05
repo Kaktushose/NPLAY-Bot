@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-@CommandController("geschenk")
+//@CommandController("geschenk")
 public class GiftCommand {
 
     @Inject
