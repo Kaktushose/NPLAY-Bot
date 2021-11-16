@@ -1,6 +1,7 @@
 package de.kaktushose.levelbot.listener;
 
 import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.database.model.BotUser;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -16,7 +17,8 @@ public class JoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        levelbot.getUserService().createUserIfAbsent(event.getMember().getIdLong());
+        BotUser botUser = levelbot.getUserService().createUserIfAbsent(event.getMember().getIdLong());
+        levelbot.getUserService().addCoins(botUser.getUserId(), 100);
         levelbot.addRankRole(event.getMember().getIdLong(), 1);
     }
 

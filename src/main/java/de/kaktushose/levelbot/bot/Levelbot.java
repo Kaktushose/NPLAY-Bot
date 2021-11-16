@@ -157,7 +157,7 @@ public class Levelbot {
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
         logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
 
-        // get offset time until its 0 am, also ensures that this task only runs once every 24 hours
+        // get offset time until it#s 0 am, also ensures that this task only runs once every 24 hours
         long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
         long delay = TimeUnit.HOURS.toMinutes(24) - current;
         taskScheduler.addRepetitiveTask(() -> {
