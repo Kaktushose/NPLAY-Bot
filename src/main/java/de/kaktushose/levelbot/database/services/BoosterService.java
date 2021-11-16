@@ -67,7 +67,7 @@ public class BoosterService {
             // iterate through all active boosters and compare with actual boosters
             getActiveNitroBoosters().forEach(nitroBooster -> {
                 Long userId = nitroBooster.getUserId();
-                Member member = guild.getMemberById(userId);
+                Member member = guild.retrieveMemberById(userId).complete();
 
                 if (boosterList.stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
                     changeNitroBoosterStatus(userId, false);

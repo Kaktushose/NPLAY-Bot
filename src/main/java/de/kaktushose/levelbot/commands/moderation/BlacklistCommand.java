@@ -73,7 +73,7 @@ public class BlacklistCommand {
     public void onBlacklistShow(CommandEvent event) {
         List<BotUser> blacklist = userService.getUsersByPermission(0);
         StringBuilder members = new StringBuilder();
-        blacklist.forEach(botUser -> members.append(event.getGuild().getMemberById(botUser.getUserId()).getEffectiveName()).append(", "));
+        blacklist.forEach(botUser -> members.append(event.getGuild().retrieveMemberById(botUser.getUserId()).complete().getEffectiveName()).append(", "));
         event.reply(embedCache.getEmbed("memberBlacklistShow")
                 .injectValue("blacklist", members.substring(0, members.length() - 2))
         );

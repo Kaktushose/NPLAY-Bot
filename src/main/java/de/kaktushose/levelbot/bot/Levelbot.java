@@ -104,7 +104,7 @@ public class Levelbot {
         ).setChunkingFilter(
                 ChunkingFilter.ALL
         ).setMemberCachePolicy(
-                MemberCachePolicy.ALL
+                MemberCachePolicy.NONE
         ).setActivity(
                 Activity.playing("starting...")
         ).setStatus(
@@ -379,15 +379,16 @@ public class Levelbot {
     }
 
     public void updateStatistics() {
-        statistics.queryStatistics();
-        TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
-                message.editMessage(embedCache.getEmbed("statistics")
-                        .injectFields(statistics)
-                        .toEmbedBuilder()
-                        .setTimestamp(Instant.now())
-                        .build())
-        ).queue();
+        statistics.queryStatistics().onSuccess(stats -> {
+            TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
+            channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
+                    message.editMessageEmbeds(embedCache.getEmbed("statistics")
+                            .injectFields(statistics)
+                            .toEmbedBuilder()
+                            .setTimestamp(Instant.now())
+                            .build())
+            ).queue();
+        });
     }
 
     @Produces
