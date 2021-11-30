@@ -25,5 +25,6 @@ public class JoinLeaveListener extends ListenerAdapter {
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
         levelbot.getUserService().deleteUser(event.getUser().getIdLong());
+        levelbot.getBoosterService().changeNitroBoosterStatus(event.getUser().getIdLong(), false);
     }
 }
