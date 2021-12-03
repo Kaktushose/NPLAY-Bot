@@ -107,6 +107,9 @@ public class BoosterService {
     }
 
     public void changeNitroBoosterStatus(long userId, boolean active) {
+        if (!isNitroBooster(userId)) {
+            return;
+        }
         NitroBooster nitroBooster = nitroBoosterRepository.findById(userId).orElseThrow();
         nitroBooster.setActive(active);
         nitroBoosterRepository.save(nitroBooster);
