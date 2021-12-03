@@ -79,12 +79,6 @@ public class BoosterServiceTest {
     }
 
     @Test
-    public void changeNitroBoosterStatus_WithoutPresentUsers_ShouldThrow() {
-        assertThrows(NoSuchElementException.class, () -> boosterService.changeNitroBoosterStatus(0, true));
-        assertThrows(NoSuchElementException.class, () -> boosterService.changeNitroBoosterStatus(0, false));
-    }
-
-    @Test
     public void addMonthlyReward_ShouldAddCurrencies() {
         userService.createUser(0);
         String rewardText = boosterService.addMonthlyReward(0);
