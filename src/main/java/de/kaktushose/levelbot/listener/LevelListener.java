@@ -55,8 +55,8 @@ public class LevelListener extends ListenerAdapter {
             long eventPoints = userService.increaseEventPoints(userId);
 
             if (eventPoints == collectEvent.getItemBound()) {
-                userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
-
+                //userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
+                userService.addDiamonds(userId, 5);
                 channel.sendMessage(author.getAsMention())
                         .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())

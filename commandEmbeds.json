@@ -466,13 +466,13 @@
     "color": "#aa0c14"
   },
   "collectEventItemReward": {
-    "title": "Fröhliches Halloween, {user} :skull:",
-    "description": "Du hast nun monströse **33 Kürbisse** :jack_o_lantern: auf dem Server gefunden.\nWir schenken dir dafür **PREMIUM light** :star: mit tollen Vorteilen auf dem Server - 15 Tage lang!\nKürbisse :jack_o_lantern: finden sich noch bis zum 01.11.2021 auf dem Server. \nDu bist ein echter Profi - sammele doch gerne noch etwas weiter!",
+    "title": "Frohe Weihnachtstage, {user} :christmas_tree:!",
+    "description": "Wow, du hast nun fabelhafte **24 Schneemänner** :snowman2: auf dem Server gebaut.\nAls Dankeschön für diesen schönen Anblick haben wir dir zusätzlich **5 Diamanten** :gem: auf deinem Konto gutgeschrieben.\nViel Spaß damit und weiterhin eine gute Zeit!\n:point_right: Übrigens: Nimm doch ebenfalls an unserem großen **CHRISTMAS-CONTEST** :santa: teil und gewinne einen von drei Keys für tolle Spiele.\n:point_right: Und vom 24.12- 26.12 kannst du dir mit dem Befehl **!geschenk** im Kanal <#665625766444138537> ein tolles Geschenk :gift: abholen!",
     "color": "#EC5C0F"
   },
   "collectEventRoleReward": {
-    "title": "Fröhliches Halloween, {user} :skull:",
-    "description": "Du hast nun bereits **3 Kürbisse** :jack_o_lantern: auf dem Server gefunden.\nWir schenken dir dafür die schaurig-exklusive Eventrolle **HERBST 2021** :orange_circle:!\nDie nächste Belohnung erwartet Dich, wenn du insgesamt **33 Kürbisse** :jack_o_lantern: gefunden hast.\nDoch nimm dich in Acht - überall lauern Gefahren!",
+    "title": "Frohe Weihnachtstage, {user} :christmas_tree:!",
+    "description": "du hast nun schon **3 Schneemänner** :snowman2: auf dem Server gebaut.\nDafür zeichnen wir Dich mit unserer exklusiven Eventrolle **CHRISTMAS 2021** :red_circle: aus!\nGenieße die freie Zeit und baue insgesamt **24 Schneemänner** :snowman2: für eine weitere Belohnung.\n:point_right: Übrigens: Nimm doch ebenfalls an unserem großen **CHRISTMAS-CONTEST** :santa: teil und gewinne einen von drei Keys für tolle Spiele.\n:point_right: Und vom 24.12- 26.12 kannst du dir mit dem Befehl **!geschenk** im Kanal <#665625766444138537> ein tolles Geschenk :gift: abholen!",
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
