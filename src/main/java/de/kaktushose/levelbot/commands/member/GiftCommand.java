@@ -35,7 +35,7 @@ public class GiftCommand {
         userService.addUpItem(event.getAuthor().getIdLong(), 0, levelbot);
         settingsService.addRewardedUser(event.getAuthor().getIdLong());
         event.reply(new EmbedBuilder()
-                .setTitle("Ein Geschenk für Dich, " + event.getMember().getEffectiveName() + ":chirstmas_tree::santa::snowflake:")
+                .setTitle("Ein Geschenk für Dich, " + event.getMember().getEffectiveName() + ":christmas_tree::santa::snowflake:")
                 .setDescription("Das ganze Serverteam wünscht Dir **frohe Festtage** und einen **guten Rutsch.**\n\n" +
                         "Wir bedanken uns für Deine Treue und schenken Dir das Item:\n**:gift: PREMIUM light :star:!**\n\n" +
                         "Freue dich über **15 Tage kostenfreies PREMIUM** auf dem Server mit **vielen Vorteilen!**\n\n" +
