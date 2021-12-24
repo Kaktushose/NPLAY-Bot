@@ -4,24 +4,27 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.SettingsService;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-//@CommandController("geschenk")
+@CommandController("geschenk")
 public class GiftCommand {
 
     @Inject
     private SettingsService settingsService;
     @Inject
     private UserService userService;
+    @Inject
+    private Levelbot levelbot;
 
     @Command(
             name = "Geschenke",
             usage = "{prefix}geschenk",
-            desc = "Fröhliches Halloween!",
+            desc = "Fröhliche Weihnachten!",
             category = "Levelsystem"
     )
     public void onCommand(CommandEvent event) {
@@ -29,11 +32,14 @@ public class GiftCommand {
             event.reply("Du hast dein Geschenk bereits erhalten!");
             return;
         }
-        userService.addCoins(event.getAuthor().getIdLong(), 66);
+        userService.addUpItem(event.getAuthor().getIdLong(), 0, levelbot);
         settingsService.addRewardedUser(event.getAuthor().getIdLong());
         event.reply(new EmbedBuilder()
-                .setTitle("Mut zahlt sich aus, " + event.getMember().getEffectiveName())
-                .setDescription("Bei einem nächtlichen Spaziergang über den Geisterfriedhof :ghost: hast du **66 Münzen** :moneybag: gefunden. Zwar sind sie etwas vermodert, doch als Zahlungsmittel werden sie wohl noch angenommen. Probiere es doch gleich mal aus!")
+                .setTitle("Ein Geschenk für Dich, " + event.getMember().getEffectiveName() + ":chirstmas_tree::santa::snowflake:")
+                .setDescription("Das ganze Serverteam wünscht Dir **frohe Festtage** und einen **guten Rutsch.**\n\n" +
+                        "Wir bedanken uns für Deine Treue und schenken Dir das Item:\n**:gift: PREMIUM light :star:!**\n\n" +
+                        "Freue dich über **15 Tage kostenfreies PREMIUM** auf dem Server mit **vielen Vorteilen!**\n\n" +
+                        ":point_right: Übrigens: Schau gleich mal im Kanal <#539517056543096843> vorbei - dort läuft gerade ein **weiteres Gewinnspiel** :tada: exklusiv für PREMIUM-User.")
                 .setColor(Color.ORANGE)
         );
     }
