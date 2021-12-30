@@ -136,8 +136,8 @@ public class UserService {
     }
 
     public boolean ownsItemOfCategory(long userId, int categoryId) {
-        List<Item> userItems = getItems(userId);
-        return itemRepository.findByCategoryId(categoryId).stream().anyMatch(userItems::contains);
+        List<Integer> userItems = getItems(userId).stream().map(Item::getItemId).collect(Collectors.toList());
+        return itemRepository.findByCategoryId(categoryId).stream().anyMatch(item -> userItems.contains(item.getItemId()));
     }
 
     public void removeItem(long userId, int itemId, Levelbot levelbot) {
