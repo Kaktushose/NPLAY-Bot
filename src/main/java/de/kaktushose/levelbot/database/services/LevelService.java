@@ -154,7 +154,7 @@ public class LevelService {
         }
         long xp = randomXp();
         if (userService.ownsItemOfCategory(userId, 4)) {
-            coins += 2;
+            xp += 2;
         }
 
         userService.addDiamonds(userId, diamonds);
