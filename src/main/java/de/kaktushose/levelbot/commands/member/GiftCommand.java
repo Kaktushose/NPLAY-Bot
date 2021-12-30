@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-@CommandController("geschenk")
+@CommandController(value = "geschenk", isActive = false)
 public class GiftCommand {
 
     @Inject
