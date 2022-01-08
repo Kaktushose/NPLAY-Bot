@@ -86,12 +86,7 @@
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>d65ef83f5a</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Kaktushose</groupId>
-            <artifactId>reactionwaiter</artifactId>
-            <version>71c2dd9ba2</version>
+            <version>d8ee79d599</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
