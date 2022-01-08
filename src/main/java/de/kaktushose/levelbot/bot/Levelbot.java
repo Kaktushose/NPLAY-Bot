@@ -447,6 +447,10 @@ public class Levelbot {
         return logChannel;
     }
 
+    public TaskScheduler getTaskScheduler() {
+        return taskScheduler;
+    }
+
     public enum GuildType {
 
         TESTING(496614159254028289L),
@@ -457,9 +461,5 @@ public class Levelbot {
         GuildType(long id) {
             this.id = id;
         }
-    }
-
-    public TaskScheduler getTaskScheduler() {
-        return taskScheduler;
     }
 }
