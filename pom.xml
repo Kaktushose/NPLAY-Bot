@@ -89,6 +89,11 @@
             <version>d8ee79d599</version>
         </dependency>
         <dependency>
+            <groupId>com.github.Kaktushose</groupId>
+            <artifactId>reactionwaiter</artifactId>
+            <version>71c2dd9ba2</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-youtube</artifactId>
             <version>v3-rev125-1.19.1</version>
