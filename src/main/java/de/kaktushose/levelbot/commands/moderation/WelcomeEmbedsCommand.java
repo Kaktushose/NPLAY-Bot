@@ -7,6 +7,8 @@ import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 
+import java.io.File;
+
 @CommandController("embeds")
 @Permission("moderator")
 public class WelcomeEmbedsCommand {
@@ -17,7 +19,7 @@ public class WelcomeEmbedsCommand {
     private EmbedCache embedCache;
 
     public WelcomeEmbedsCommand() {
-        welcomeEmbedCache = new EmbedCache("welcomeEmbeds.json");
+        welcomeEmbedCache = new EmbedCache(new File("welcomeEmbeds.json"));
     }
 
     @Command(
