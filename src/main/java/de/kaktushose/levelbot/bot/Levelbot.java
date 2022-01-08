@@ -458,4 +458,8 @@ public class Levelbot {
             this.id = id;
         }
     }
+
+    public TaskScheduler getTaskScheduler() {
+        return taskScheduler;
+    }
 }
