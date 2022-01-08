@@ -132,7 +132,11 @@ public class Levelbot {
                 .addProvider(this)
                 .setCommandPackage("de.kaktushose.levelbot.commands")
                 .build();
-        jdaCommands.getDefaultSettings().setPrefix(settingsService.getBotPrefix(guildId)).getHelpLabels().add("hilfe");
+        jdaCommands.getDefaultSettings()
+                .setPrefix(settingsService.getBotPrefix(guildId))
+                .getHelpLabels().add("hilfe");
+
+        jdaCommands.getDefaultSettings().setBotMentionPrefix(false);
 
         log.debug("Applying permissions...");
         userService.getUsersByPermission(0).forEach(botUser ->
