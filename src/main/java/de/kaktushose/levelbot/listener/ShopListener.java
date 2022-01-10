@@ -32,6 +32,7 @@ public class ShopListener extends ListenerAdapter {
     public static final String NICKNAME_MESSAGE_ID = "851454813623681024";
     public static final String COINS_BOOSTER_MESSAGE_ID = "851454959224225813";
     public static final String XP_BOOSTER_MESSAGE_ID = "851454895788654625";
+    private static final Long LEVEL_SYSTEM_CHANNEL_ID = 851388807239827466L;
     private static final String CONFIRM = "✅";
     private static final String CANCEL = "❌";
     private final Set<Long> activeUsers;
@@ -56,7 +57,14 @@ public class ShopListener extends ListenerAdapter {
         }
 
         // must be in channel #levelsystem
-        if (event.getChannel().getIdLong() != 851388807239827466L) {
+        if (event.getChannel().getIdLong() != LEVEL_SYSTEM_CHANNEL_ID) {
+            return;
+        }
+
+        if (levelbot.getJdaCommands().getDefaultSettings().getMutedUsers().contains(event.getUser().getIdLong())) {
+            event.getReaction().removeReaction(event.getUser()).queue(
+                    null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
+            );
             return;
         }
 

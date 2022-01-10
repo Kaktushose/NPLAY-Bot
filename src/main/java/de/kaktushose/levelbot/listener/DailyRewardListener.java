@@ -30,6 +30,11 @@ public class DailyRewardListener extends ListenerAdapter {
         if (event.getMessageIdLong() != DAILY_REWARD_MESSAGE_ID) {
             return;
         }
+
+        if (levelbot.getJdaCommands().getDefaultSettings().getMutedUsers().contains(event.getUser().getIdLong())) {
+            return;
+        }
+
         // must be :gift: emote
         if (!event.getReactionEmote().getName().equals("\uD83C\uDF81")) {
             return;
