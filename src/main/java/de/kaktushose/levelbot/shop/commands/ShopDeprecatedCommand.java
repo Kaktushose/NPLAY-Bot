@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.commands.member;
+package de.kaktushose.levelbot.shop.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
@@ -7,7 +7,7 @@ import com.github.kaktushose.jda.commands.api.EmbedCache;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 
 @CommandController("kaufen")
-public class ShopCommandDeprecatedCommand {
+public class ShopDeprecatedCommand {
 
     @Inject
     private EmbedCache embedCache;

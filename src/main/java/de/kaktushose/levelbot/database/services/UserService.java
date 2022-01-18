@@ -2,13 +2,13 @@ package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.FrozenItem;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Transaction;
-import de.kaktushose.levelbot.database.repositories.FrozenItemRepository;
-import de.kaktushose.levelbot.database.repositories.ItemRepository;
-import de.kaktushose.levelbot.database.repositories.TransactionRepository;
 import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.shop.data.items.FrozenItem;
+import de.kaktushose.levelbot.shop.data.items.FrozenItemRepository;
+import de.kaktushose.levelbot.shop.data.items.Item;
+import de.kaktushose.levelbot.shop.data.items.ItemRepository;
+import de.kaktushose.levelbot.shop.data.transactions.Transaction;
+import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -232,11 +232,13 @@ public class UserService {
     }
 
     public void updateStatistics(long userId) {
+        System.out.println("digga was");
         BotUser botUser = getUserById(userId);
         botUser.setStartCoins(botUser.getCoins());
         botUser.setStartXp(botUser.getXp());
         botUser.setStartDiamonds(botUser.getDiamonds());
         userRepository.save(botUser);
+        System.out.println("ey");
     }
 
     public int setRank(long userId, int rank) {

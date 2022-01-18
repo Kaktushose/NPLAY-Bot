@@ -27,8 +27,8 @@ public class StopCommand {
     )
     public void onStop(CommandEvent event) {
         event.reply(embedCache.getEmbed("confirmAction").injectValue(
-                "action",
-                "du den Bot herunterfahren möchtest?\nNur <@393843637437464588> kann den Bot wieder starten!"
+                        "action",
+                        "du den Bot herunterfahren möchtest?\nNur <@393843637437464588> kann den Bot wieder starten!"
                 ),
                 confirmMessage -> {
                     confirmMessage.addReaction(EmoteType.THUMBSUP.unicode)

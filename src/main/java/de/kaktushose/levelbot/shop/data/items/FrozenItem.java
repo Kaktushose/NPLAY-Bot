@@ -1,11 +1,10 @@
-package de.kaktushose.levelbot.database.model;
+package de.kaktushose.levelbot.shop.data.items;
 
 import javax.persistence.*;
 
 /**
  * This class covers the edge case where a user has normal premium but receives unlimited as well. Unlimited will become
  * the active item and the normal premium will be moved to this table until unlimited gets removed again.
- *
  */
 @Entity
 @Table(name = "frozen_items")

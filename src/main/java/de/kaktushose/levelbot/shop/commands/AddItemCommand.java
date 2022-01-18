@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.commands.moderation;
+package de.kaktushose.levelbot.shop.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
@@ -10,9 +10,9 @@ import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 
 @CommandController("additem")
 @Permission("moderator")
-public class ShopCommand {
+public class AddItemCommand {
 
     private static final String BACK = "◀️";
     private static final String CANCEL = "❌";
@@ -47,7 +47,7 @@ public class ShopCommand {
     private Levelbot levelbot;
     private EmbedBuilder shopOverview;
 
-    public ShopCommand() {
+    public AddItemCommand() {
         specificShops = new HashMap<>();
     }
 
@@ -57,7 +57,7 @@ public class ShopCommand {
             desc = "Fügt ein Item einem anderen Nutzer hinzu",
             category = "Moderation"
     )
-    public void onShop(CommandEvent event, Member member) {
+    public void onAddItem(CommandEvent event, Member member) {
         generateEmbeds(member.getAsMention());
         sendDefaultShop(event, null, member);
     }

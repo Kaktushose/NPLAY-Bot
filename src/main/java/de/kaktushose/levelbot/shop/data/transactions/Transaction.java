@@ -1,4 +1,6 @@
-package de.kaktushose.levelbot.database.model;
+package de.kaktushose.levelbot.shop.data.transactions;
+
+import de.kaktushose.levelbot.shop.data.items.Item;
 
 import javax.persistence.*;
 

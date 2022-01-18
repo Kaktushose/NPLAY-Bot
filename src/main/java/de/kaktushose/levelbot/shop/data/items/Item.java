@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.database.model;
+package de.kaktushose.levelbot.shop.data.items;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

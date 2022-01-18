@@ -8,9 +8,14 @@ import com.github.kaktushose.jda.commands.entities.JDACommands;
 import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
-import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.CollectEvent;
+import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.services.*;
 import de.kaktushose.levelbot.listener.*;
+import de.kaktushose.levelbot.shop.ShopListener;
+import de.kaktushose.levelbot.shop.data.items.Item;
+import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.util.Statistics;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -161,7 +166,10 @@ public class Levelbot {
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
         logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
 
-        // get offset time until it#s 0 am, also ensures that this task only runs once every 24 hours
+        // first start of bot, check for expired items immediately
+        checkForExpiredItems();
+
+        // get offset time until it's 0 am, also ensures that this task only runs once every 24 hours
         long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
         long delay = TimeUnit.HOURS.toMinutes(24) - current;
         taskScheduler.addRepetitiveTask(() -> {
@@ -262,8 +270,11 @@ public class Levelbot {
     }
 
     public void checkForExpiredItems() {
+        System.out.println("checking");
         userService.getAllUsers().forEach(botUser -> {
+            System.out.println("ha");
             userService.updateStatistics(botUser.getUserId());
+            System.out.println("ay");
             for (Transaction transaction : botUser.getTransactions()) {
                 Item item = transaction.getItem();
                 long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
@@ -288,6 +299,7 @@ public class Levelbot {
                 }
             }
         });
+        System.out.println("dunno man");
     }
 
     public void dmRankInfo() {
@@ -308,6 +320,7 @@ public class Levelbot {
     }
 
     public void sendItemExpiredInformation(long userId, int itemId, long buyTime) {
+        System.out.println("sending");
         User user = jda.getUserById(userId);
         Item item = levelService.getItem(itemId);
         EmbedBuilder embed = embedCache.getEmbed("itemExpired")

@@ -1,6 +1,5 @@
-package de.kaktushose.levelbot.database.repositories;
+package de.kaktushose.levelbot.shop.data.items;
 
-import de.kaktushose.levelbot.database.model.Item;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
