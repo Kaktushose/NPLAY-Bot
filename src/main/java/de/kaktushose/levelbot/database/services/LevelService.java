@@ -8,6 +8,8 @@ import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.RankRepository;
 import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.shop.data.items.ItemCategory;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.shop.data.items.ItemRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
@@ -27,6 +29,7 @@ public class LevelService {
     private final ChancesRepository chancesRepository;
     private final UserService userService;
     private final SettingsService settingsService;
+    private final ShopService shopService;
     private final Levelbot levelbot;
 
     public LevelService(Levelbot levelbot) {
@@ -37,6 +40,7 @@ public class LevelService {
         chancesRepository = context.getBean(ChancesRepository.class);
         this.userService = levelbot.getUserService();
         this.settingsService = levelbot.getSettingsService();
+        shopService = levelbot.getShopService();
         this.levelbot = levelbot;
     }
 
@@ -145,11 +149,11 @@ public class LevelService {
 
         long diamonds = randomDiamonds();
         long coins = randomCoins();
-        if (userService.ownsItemOfCategory(userId, 3)) {
+        if (shopService.hasItemOfCategory(userId, ItemCategory.COIN_BOOSTER)) {
             coins += 2;
         }
         long xp = randomXp();
-        if (userService.ownsItemOfCategory(userId, 4)) {
+        if (shopService.hasItemOfCategory(userId, ItemCategory.XP_BOOSTER)) {
             xp += 2;
         }
 
@@ -188,7 +192,7 @@ public class LevelService {
         userService.addDiamonds(userId, reward.getDiamonds());
         userService.updateLastReward(userId);
         if (reward.getItem() != null) {
-            userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
+            shopService.addItem(userId, reward.getItem().getItemId());
         }
 
         return Optional.of(reward.getMessage());
@@ -202,7 +206,7 @@ public class LevelService {
             userService.addDiamonds(userId, rankReward.getDiamonds());
             userService.addXp(userId, rankReward.getXp());
             if (rankReward.getItem() != null) {
-                userService.addUpItem(userId, rankReward.getItem().getItemId(), levelbot);
+                shopService.addItem(userId, rankReward.getItem().getItemId());
             }
             rewardText.append(rankReward.getMessage()).append("\n");
         });

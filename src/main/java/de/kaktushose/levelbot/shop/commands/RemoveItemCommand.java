@@ -10,6 +10,7 @@ import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RemoveItemCommand {
 
     @Inject
-    private UserService userService;
+    private ShopService shopService;
     @Inject
     private EmbedCache embedCache;
     @Inject
@@ -37,7 +38,7 @@ public class RemoveItemCommand {
             category = "Moderation"
     )
     public void onRemoveItem(CommandEvent event, Member member) {
-        List<Item> items = userService.getItems(member.getIdLong());
+        List<Item> items = shopService.getItems(member.getIdLong());
         AtomicInteger counter = new AtomicInteger(1);
         List<String> emotes = new ArrayList<>();
         EmbedBuilder builder = embedCache.getEmbed("removeItem")
@@ -75,7 +76,7 @@ public class RemoveItemCommand {
                     default:
                         return;
                 }
-                userService.removeItem(member.getIdLong(), forRemoval.getItemId(), levelbot);
+                shopService.removeItem(member.getIdLong(), forRemoval.getItemId());
                 reactionWaiter.stopWaiting(false);
                 chooseMessage.delete().queue();
                 event.reply(embedCache.getEmbed("removeItemSuccess").injectValue("user", member.getAsMention()));

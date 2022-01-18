@@ -6,6 +6,7 @@ import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -37,12 +38,14 @@ public class ShopListener extends ListenerAdapter {
     private static final String CANCEL = "❌";
     private final Set<Long> activeUsers;
     private final UserService userService;
+    private final ShopService shopService;
     private final LevelService levelService;
     private final EmbedCache embedCache;
     private final Levelbot levelbot;
 
     public ShopListener(Levelbot levelbot) {
         this.userService = levelbot.getUserService();
+        this.shopService = levelbot.getShopService();
         this.levelService = levelbot.getLevelService();
         this.embedCache = levelbot.getEmbedCache();
         this.levelbot = levelbot;
@@ -125,7 +128,7 @@ public class ShopListener extends ListenerAdapter {
         Item item = levelService.getItemsByCategoryId(itemCategory.id).get(variant);
         BotUser botUser = userService.getUserById(member.getIdLong());
         String fail = null;
-        if (userService.hasItem(member.getIdLong(), item.getItemId())) {
+        if (shopService.hasItem(member.getIdLong(), item.getItemId())) {
             fail = "Du besitzt dieses Item bereits!";
         }
         if (botUser.getCoins() < item.getPrice()) {
@@ -166,8 +169,7 @@ public class ShopListener extends ListenerAdapter {
                 waiter.onEvent(reactionEvent -> { // on reaction confirm or cancel emoji
                     confirmMessage.delete().queue();
                     if (reactionEvent.getEmote().equals(CONFIRM)) {
-                        userService.buyItem(botUser.getUserId(), item.getItemId());
-                        levelbot.addItemRole(botUser.getUserId(), item.getItemId());
+                        shopService.buyItem(botUser.getUserId(), item.getItemId());
                         channel.sendMessageEmbeds( // successful transaction
                                 embedCache.getEmbed("shopSuccess")
                                         .injectValue("item", item.getName())

@@ -6,7 +6,9 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.entities.CommandEvent;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.SettingsService;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.items.ItemCategory;
+import de.kaktushose.levelbot.shop.data.items.ItemVariant;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
@@ -17,7 +19,7 @@ public class GiftCommand {
     @Inject
     private SettingsService settingsService;
     @Inject
-    private UserService userService;
+    private ShopService shopService;
     @Inject
     private Levelbot levelbot;
 
@@ -32,7 +34,7 @@ public class GiftCommand {
             event.reply("Du hast dein Geschenk bereits erhalten!");
             return;
         }
-        userService.addUpItem(event.getAuthor().getIdLong(), 0, levelbot);
+        shopService.addItem(event.getAuthor().getIdLong(), ItemCategory.PREMIUM, ItemVariant.LIGHT);
         settingsService.addRewardedUser(event.getAuthor().getIdLong());
         event.reply(new EmbedBuilder()
                 .setTitle("Ein Geschenk für Dich, " + event.getMember().getEffectiveName() + ":christmas_tree::santa::snowflake:")

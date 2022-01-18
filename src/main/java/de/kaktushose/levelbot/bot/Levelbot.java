@@ -14,8 +14,8 @@ import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.services.*;
 import de.kaktushose.levelbot.listener.*;
 import de.kaktushose.levelbot.shop.ShopListener;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
-import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.util.Statistics;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -46,6 +46,7 @@ public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
     private final UserService userService;
+    private final ShopService shopService;
     private final SettingsService settingsService;
     private final LevelService levelService;
     private final EventService eventService;
@@ -63,6 +64,7 @@ public class Levelbot {
 
     public Levelbot() {
         userService = null;
+        shopService = null;
         settingsService = null;
         levelService = null;
         eventService = null;
@@ -76,6 +78,7 @@ public class Levelbot {
 
     public Levelbot(GuildType guildType) {
         userService = new UserService();
+        shopService = new ShopService(this);
         settingsService = new SettingsService();
         eventService = new EventService(settingsService, userService);
         boosterService = new BoosterService(this);
@@ -135,7 +138,7 @@ public class Levelbot {
         jdaCommands = new JDACommandsBuilder(jda)
                 .setEmbedFactory(new JsonEmbedFactory(new File("jdacEmbeds.json")))
                 .addProvider(this)
-                .setCommandPackage("de.kaktushose.levelbot.commands")
+                .setCommandPackage("de.kaktushose.levelbot")
                 .build();
         jdaCommands.getDefaultSettings()
                 .setPrefix(settingsService.getBotPrefix(guildId))
@@ -166,8 +169,9 @@ public class Levelbot {
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
         logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
 
+
         // first start of bot, check for expired items immediately
-        checkForExpiredItems();
+        shopService.checkForExpiredItems();
 
         // get offset time until it's 0 am, also ensures that this task only runs once every 24 hours
         long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
@@ -178,7 +182,7 @@ public class Levelbot {
                 log.info("Sending dm rank infos...");
                 dmRankInfo();
                 log.info("Checking for expired items...");
-                checkForExpiredItems();
+                shopService.checkForExpiredItems();
                 log.info("Checking for new nitro boosters...");
                 boosterService.updateBoosterStatus(guild, botChannel, embedCache);
                 log.info("Checking for booster rewards...");
@@ -270,36 +274,7 @@ public class Levelbot {
     }
 
     public void checkForExpiredItems() {
-        System.out.println("checking");
-        userService.getAllUsers().forEach(botUser -> {
-            System.out.println("ha");
-            userService.updateStatistics(botUser.getUserId());
-            System.out.println("ay");
-            for (Transaction transaction : botUser.getTransactions()) {
-                Item item = transaction.getItem();
-                long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
-                long userId = botUser.getUserId();
-                int itemId = item.getItemId();
-                // premium unlimited, skip this one
-                if (itemId == 3) {
-                    continue;
-                }
-                if (remaining < 0) {
-                    userService.removeItem(userId, itemId, this);
-                    sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
-                } else if (remaining < 86400000) {
-                    taskScheduler.addSingleTask(() -> {
-                        try {
-                            userService.removeItem(userId, itemId, this);
-                            sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
-                        } catch (Throwable t) {
-                            log.error("An exception has occurred while removing an item!", t);
-                        }
-                    }, remaining, TimeUnit.MILLISECONDS);
-                }
-            }
-        });
-        System.out.println("dunno man");
+
     }
 
     public void dmRankInfo() {
@@ -320,7 +295,6 @@ public class Levelbot {
     }
 
     public void sendItemExpiredInformation(long userId, int itemId, long buyTime) {
-        System.out.println("sending");
         User user = jda.getUserById(userId);
         Item item = levelService.getItem(itemId);
         EmbedBuilder embed = embedCache.getEmbed("itemExpired")
@@ -411,6 +385,11 @@ public class Levelbot {
     @Produces
     public UserService getUserService() {
         return userService;
+    }
+
+    @Produces
+    public ShopService getShopService() {
+        return shopService;
     }
 
     @Produces

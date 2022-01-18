@@ -1,5 +1,7 @@
 package de.kaktushose.levelbot.shop.data.items;
 
+import de.kaktushose.levelbot.shop.data.transactions.Transaction;
+
 import javax.persistence.*;
 
 /**
@@ -26,6 +28,10 @@ public class FrozenItem {
         this.startTime = startTime;
         this.buyTime = buyTime;
         this.item = item;
+    }
+
+    public static FrozenItem fromTransaction(long userId, Transaction transaction) {
+        return new FrozenItem(userId, System.currentTimeMillis(), transaction.getBuyTime(), transaction.getItem());
     }
 
     public long getUserId() {

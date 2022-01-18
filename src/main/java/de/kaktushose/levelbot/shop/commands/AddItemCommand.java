@@ -12,6 +12,7 @@ import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -39,6 +40,8 @@ public class AddItemCommand {
     private final Map<ItemCategory, EmbedBuilder> specificShops;
     @Inject
     private UserService userService;
+    @Inject
+    private ShopService shopService;
     @Inject
     private LevelService levelService;
     @Inject
@@ -155,7 +158,7 @@ public class AddItemCommand {
                 }
 
                 Item item = items.get(variant - 1);
-                Optional<String> buyResult = buy(target, item);
+                Optional<String> buyResult = addItem(target, item);
 
                 if (buyResult.isEmpty()) {
                     message.editMessage(embedCache.getEmbed("addItemSuccess")
@@ -193,18 +196,14 @@ public class AddItemCommand {
         }
     }
 
-    private Optional<String> buy(Member member, Item item) {
+    private Optional<String> addItem(Member member, Item item) {
         BotUser botUser = userService.getUserById(member.getIdLong());
 
-        if (userService.hasItem(member.getIdLong(), item.getItemId())) {
+        if (shopService.hasItem(member.getIdLong(), item.getItemId())) {
             return Optional.of(member.getAsMention() + " besitzt dieses Item bereits!");
         }
 
-        // add coins because buy message will remove them
-        userService.addCoins(member.getIdLong(), item.getPrice());
-
-        userService.buyItem(botUser.getUserId(), item.getItemId());
-        levelbot.addItemRole(botUser.getUserId(), item.getItemId());
+        shopService.addItem(botUser.getUserId(), item.getItemId());
 
         return Optional.empty();
     }
