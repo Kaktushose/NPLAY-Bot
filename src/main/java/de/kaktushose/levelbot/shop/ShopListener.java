@@ -128,7 +128,7 @@ public class ShopListener extends ListenerAdapter {
         Item item = levelService.getItemsByCategoryId(itemCategory.id).get(variant);
         BotUser botUser = userService.getUserById(member.getIdLong());
         String fail = null;
-        if (shopService.hasItem(member.getIdLong(), item.getItemId())) {
+        if (shopService.hasItemOfCategory(member.getIdLong(), item.getCategoryId())) {
             fail = "Du besitzt dieses Item bereits!";
         }
         if (botUser.getCoins() < item.getPrice()) {

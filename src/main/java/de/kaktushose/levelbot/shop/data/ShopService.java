@@ -40,7 +40,11 @@ public class ShopService {
     }
 
     public boolean hasItemOfCategory(long userId, ItemCategory category) {
-        return transactionRepository.existsByUserIdAndCategoryId(userId, category.getCategoryId());
+        return hasItemOfCategory(userId, category.getCategoryId());
+    }
+
+    public boolean hasItemOfCategory(long userId, int category) {
+        return transactionRepository.existsByUserIdAndCategoryId(userId, category);
     }
 
     public List<Item> getItems(long userId) {
@@ -51,6 +55,7 @@ public class ShopService {
         BotUser botUser = userService.getUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow();
         transactionRepository.save(addItemToUser(botUser, item));
+        botUser.setCoins(botUser.getCoins() - item.getPrice());
         userRepository.save(botUser);
         levelbot.addItemRole(botUser.getUserId(), item.getItemId());
     }
