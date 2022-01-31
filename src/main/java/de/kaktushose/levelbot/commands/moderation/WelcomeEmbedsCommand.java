@@ -9,7 +9,7 @@ import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 
 import java.io.File;
 
-@CommandController("embeds")
+@CommandController(value = "sendembeds", category = "Moderation")
 @Permission("moderator")
 public class WelcomeEmbedsCommand {
 
@@ -23,11 +23,9 @@ public class WelcomeEmbedsCommand {
     }
 
     @Command(
-            value = "send",
             name = "Willkommen Embeds senden",
-            usage = "{prefix}embeds send",
-            desc = "Sendet die Embeds in <#551483788337872927>",
-            category = "Moderation"
+            usage = "{prefix}sendembeds",
+            desc = "Sendet die Embeds in <#551483788337872927>"
     )
     public void sendEmbeds(CommandEvent event) {
         welcomeEmbedCache.loadEmbedsToCache();

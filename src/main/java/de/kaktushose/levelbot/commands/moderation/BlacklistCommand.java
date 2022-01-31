@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;
 
-@CommandController({"blacklist", "banlist", "bl"})
+@CommandController(value = {"blacklist", "banlist", "bl"}, category = "Moderation")
 @Permission("moderator")
 public class BlacklistCommand {
 
@@ -22,11 +22,20 @@ public class BlacklistCommand {
     private EmbedCache embedCache;
 
     @Command(
+            name = "Blacklist",
+            usage = "{prefix}blacklist <add|remove> <member> | {prefix}blacklist list",
+            desc = "Benutzer, die auf der Blacklist stehen, können keine Commands ausführen",
+            isSuper = true
+    )
+    public void onBlacklist(CommandEvent event) {
+        event.sendSpecificHelpMessage();
+    }
+
+    @Command(
             value = "add",
             name = "Benutzer sperren",
             usage = "{prefix}blacklist add <member>",
-            desc = "Fügt einen Benutzer zur Blacklist hinzu",
-            category = "Moderation"
+            desc = "Fügt einen Benutzer zur Blacklist hinzu"
     )
     public void onBlacklistAdd(CommandEvent event, Member member) {
         BotUser executor = userService.getUserById(event.getAuthor().getIdLong());
@@ -44,8 +53,7 @@ public class BlacklistCommand {
             value = {"remove", "rm"},
             name = "Benutzer entsperren",
             usage = "{prefix}blacklist remove <member>",
-            desc = "Entfernt einen Benutzer von der Blacklist",
-            category = "Moderation"
+            desc = "Entfernt einen Benutzer von der Blacklist"
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
         BotUser target = userService.getUserById(member.getIdLong());
@@ -59,8 +67,7 @@ public class BlacklistCommand {
             value = {"show", "list", "view"},
             name = "Gesperrte Benutzer",
             usage = "{prefix}blacklist show",
-            desc = "Zeigt alle Nutzer, die auf der Blacklist stehen",
-            category = "Moderation"
+            desc = "Zeigt alle Nutzer, die auf der Blacklist stehen"
     )
     public void onBlacklistShow(CommandEvent event) {
         List<Long> blacklist = userService.getUsersByPermission(0);

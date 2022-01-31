@@ -22,7 +22,7 @@ public class StopCommand {
     @Command(
             name = "Bot herunterfahren",
             usage = "{prefix}stop",
-            desc = "Fährt den Bot herunter.",
+            desc = "Fährt den Bot herunter",
             category = "Owner"
     )
     public void onStop(CommandEvent event) {

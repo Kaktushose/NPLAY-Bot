@@ -8,7 +8,7 @@ import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import de.kaktushose.levelbot.bot.Levelbot;
 import net.dv8tion.jda.api.entities.Member;
 
-@CommandController({"info", "rank", "konto"})
+@CommandController(value = {"info", "rank", "konto"}, category = "Levelsystem")
 public class RankInfoCommand {
 
     @Inject
@@ -17,8 +17,7 @@ public class RankInfoCommand {
     @Command(
             name = "Kontoinformation abrufen",
             usage = "{prefix}info <member>",
-            desc = "Zeigt die Kontoinformationen zu einem User an",
-            category = "Levelsystem"
+            desc = "Zeigt die Kontoinformationen zu einem User an"
     )
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         Member target = member == null ? event.getMember() : member;

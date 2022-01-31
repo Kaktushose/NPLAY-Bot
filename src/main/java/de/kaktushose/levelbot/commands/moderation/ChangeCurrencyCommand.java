@@ -9,7 +9,7 @@ import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
-@CommandController("add")
+@CommandController(value = "add", category = "Moderation")
 @Permission("moderator")
 public class ChangeCurrencyCommand {
 
@@ -19,11 +19,20 @@ public class ChangeCurrencyCommand {
     private EmbedCache embedCache;
 
     @Command(
+            name = "Add",
+            usage = "{prefix}add <coins|xp|diamonds> <member> <amount>",
+            desc = "Ändert die Währungen eines Nutzers um den angegebenen Wert",
+            isSuper = true
+    )
+    public void onChangeCurrency(CommandEvent event) {
+        event.sendSpecificHelpMessage();
+    }
+
+    @Command(
             value = "coins",
             name = "Münzen ändern",
             usage = "{prefix}add coins <member> <amount>",
-            desc = "Ändert die Anzahl der Münzen eines Benutzers um den angegbenen Wert.",
-            category = "Moderation"
+            desc = "Ändert die Anzahl der Münzen eines Benutzers um den angegebenen Wert"
     )
     public void onAddCoins(CommandEvent event, Member member, Integer amount) {
         userService.addCoins(member.getIdLong(), amount);
@@ -39,8 +48,7 @@ public class ChangeCurrencyCommand {
             value = "xp",
             name = "XP ändern",
             usage = "{prefix}add xp <member> <amount>",
-            desc = "Ändert die Anzahl der XP eines Benutzers um den angegbenen Wert.",
-            category = "Moderation"
+            desc = "Ändert die Anzahl der XP eines Benutzers um den angegebenen Wert"
     )
     public void onAddXp(CommandEvent event, Member member, Integer amount) {
         userService.addXp(member.getIdLong(), amount);
@@ -56,8 +64,7 @@ public class ChangeCurrencyCommand {
             value = "diamonds",
             name = "Diamanten ändern",
             usage = "{prefix}add diamonds <member> <amount>",
-            desc = "Ändert die Anzahl der Diamanten eines Benutzers um den angegbenen Wert.",
-            category = "Moderation"
+            desc = "Ändert die Anzahl der Diamanten eines Benutzers um den angegebenen Wert"
     )
     public void onAddDiamonds(CommandEvent event, Member member, Integer amount) {
         userService.addDiamonds(member.getIdLong(), amount);

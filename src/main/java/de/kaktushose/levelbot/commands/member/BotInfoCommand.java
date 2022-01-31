@@ -7,7 +7,7 @@ import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.services.SettingsService;
 
-@CommandController({"botinfo", "credits"})
+@CommandController(value = {"botinfo", "credits"}, category = "Sonstiges")
 public class BotInfoCommand {
 
     @Inject
@@ -18,8 +18,7 @@ public class BotInfoCommand {
     @Command(
             name = "Bot Information",
             usage = "{prefix}botinfo",
-            desc = "Zeigt allgemeine Informationen über den Bot an",
-            category = "Sonstiges"
+            desc = "Zeigt allgemeine Informationen über den Bot an"
     )
     public void onBotInfo(CommandEvent event) {
         long guildId = event.getGuild().getIdLong();

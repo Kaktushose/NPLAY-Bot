@@ -17,4 +17,9 @@ public class ShopDeprecatedCommand {
         event.reply(embedCache.getEmbed("shopCommandDeprecated"));
     }
 
+    @Command("dummy")
+    public void onDummy(CommandEvent event) {
+        onBuy(event);
+    }
+
 }

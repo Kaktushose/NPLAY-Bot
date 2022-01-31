@@ -2,14 +2,14 @@
   "specificHelp": {
     "title": "Ausführliche Hilfe",
     "description": "Command Details für `{prefix}{label}`",
-    "color": "#00ff00",
+    "color": "#86c240",
     "fields": [
       {
         "name": "Name",
         "value": "`{name}`"
       },
       {
-        "name": "Beispiel",
+        "name": "Benutzung",
         "value": "`{usage}`"
       },
       {
@@ -33,12 +33,12 @@
   "genericHelp": {
     "title": "Generelle Hilfe",
     "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` für eine ausführliche Hilfe",
-    "color": "#00ff00"
+    "color": "#86c240"
   },
   "commandNotFound": {
     "title": "Command nicht gefunden!",
     "description": "```Siehe {prefix}{helpLabel} um eine Liste aller verfügbaren Commands zu erhalten```",
-    "color": "#ffc800"
+    "color": "#f4cd53"
   },
   "insufficientPermissions": {
     "title": "Unzureichende Berechtigungen",

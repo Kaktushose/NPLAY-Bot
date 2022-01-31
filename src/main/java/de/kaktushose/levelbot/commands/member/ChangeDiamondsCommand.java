@@ -11,7 +11,7 @@ import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.UserService;
 
-@CommandController({"tauschen", "wechseln"})
+@CommandController(value = {"tauschen", "wechseln"}, category = "Levelsystem")
 public class ChangeDiamondsCommand {
 
     @Inject
@@ -22,8 +22,7 @@ public class ChangeDiamondsCommand {
     @Command(
             name = "Diamanten tauschen",
             usage = "{prefix}tauschen <anzahl>",
-            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert",
-            category = "Levelsystem"
+            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert"
     )
     public void onChangeDiamonds(CommandEvent event, @Optional("1") long amount) {
         BotUser botUser = userService.getUserById(event.getAuthor().getIdLong());
@@ -54,7 +53,7 @@ public class ChangeDiamondsCommand {
                     reactionWaiter.onEvent(reactionEvent -> {
                         if (reactionEvent.getEmote().equals(EmoteType.THUMBSUP.unicode)) {
                             userService.exchangeDiamonds(botUser.getUserId(), amount);
-                            confirmMessage.editMessage(embedCache.getEmbed("diamondChangeSuccess")
+                            confirmMessage.editMessageEmbeds(embedCache.getEmbed("diamondChangeSuccess")
                                     .injectValue("diamonds", amount)
                                     .injectValue("coins", coins)
                                     .toMessageEmbed()

@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.List;
 
-@CommandController("mute")
+@CommandController(value = "ignore", category = "Moderation")
 @Permission("moderator")
 public class IgnoreChannelCommand {
 
@@ -22,7 +22,7 @@ public class IgnoreChannelCommand {
 
     @Command(
             name = "Textkanal muten",
-            usage = "{prefix}mute <channel>",
+            usage = "{prefix}ignore <channel>",
             desc = "Mutet einen Textkanal",
             category = "Moderation"
     )
@@ -37,7 +37,7 @@ public class IgnoreChannelCommand {
     @Command(
             value = {"remove", "rm"},
             name = "Textkanal unmuten",
-            usage = "{prefix}mute remove <channel>",
+            usage = "{prefix}ignore remove <channel>",
             desc = "Unmutet einen Textkanal",
             category = "Moderation"
     )
@@ -49,7 +49,7 @@ public class IgnoreChannelCommand {
     @Command(
             value = "list",
             name = "Gemutete Textkanäle",
-            usage = "{prefix}mute list",
+            usage = "{prefix}ignore list",
             desc = "Zeigt alle Channel, die vom Levelsystem ignoriert werden",
             category = "Moderation"
     )

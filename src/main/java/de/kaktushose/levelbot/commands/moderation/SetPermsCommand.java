@@ -4,13 +4,14 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
+import com.github.kaktushose.jda.commands.annotations.constraints.NotPerm;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
-@CommandController("setperms")
+@CommandController(value = "setperms", category = "Moderation")
 @Permission("moderator")
 public class SetPermsCommand {
 
@@ -22,8 +23,7 @@ public class SetPermsCommand {
     @Command(
             name = "Berechtigung ändern",
             usage = "{prefix}setperms <member> <level>",
-            desc = "Setzt das Berechtigungslevel eines Benutzers auf den angegebenen Wert",
-            category = "Moderation"
+            desc = "Setzt das Berechtigungslevel eines Benutzers auf den angegebenen Wert"
     )
     public void onSetPerms(CommandEvent event, Member member, int level) {
         if (level < 1 || level > 4) {

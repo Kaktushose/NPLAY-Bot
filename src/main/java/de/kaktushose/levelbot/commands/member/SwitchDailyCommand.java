@@ -9,7 +9,7 @@ import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 
-@CommandController("täglich")
+@CommandController(value = {"täglich", "daily"}, category = "Levelsystem")
 public class SwitchDailyCommand {
 
     @Inject
@@ -20,8 +20,7 @@ public class SwitchDailyCommand {
     @Command(
             name = "Täglich Command",
             usage = "{prefix}täglich",
-            desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen",
-            category = "Levelsystem"
+            desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen"
     )
     public void onSwitchDaily(CommandEvent event) {
         if (!userService.switchDaily(event.getAuthor().getIdLong())) {

@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-@CommandController(value = "geschenk", isActive = false)
+@CommandController(value = "geschenk", category = "Levelsystem", isActive = false)
 public class GiftCommand {
 
     @Inject
@@ -26,10 +26,9 @@ public class GiftCommand {
     @Command(
             name = "Geschenke",
             usage = "{prefix}geschenk",
-            desc = "Fröhliche Weihnachten!",
-            category = "Levelsystem"
+            desc = "Fröhliche Weihnachten!"
     )
-    public void onCommand(CommandEvent event) {
+    public void onGift(CommandEvent event) {
         if (settingsService.getRewardedUsers().contains(event.getAuthor().getIdLong())) {
             event.reply("Du hast dein Geschenk bereits erhalten!");
             return;
@@ -44,6 +43,12 @@ public class GiftCommand {
                         ":point_right: Übrigens: Schau gleich mal im Kanal <#539517056543096843> vorbei - dort läuft gerade ein **weiteres Gewinnspiel** :tada: exklusiv für PREMIUM-User.")
                 .setColor(Color.ORANGE)
         );
+    }
+
+    // needed to hide the command
+    @Command("dummy")
+    public void onDummyCommand(CommandEvent event) {
+        onGift(event);
     }
 
 }
