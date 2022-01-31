@@ -31,7 +31,7 @@ public class DailyRewardListener extends ListenerAdapter {
             return;
         }
 
-        if (levelbot.getJdaCommands().getDefaultSettings().getMutedUsers().contains(event.getUser().getIdLong())) {
+        if (levelbot.getUserService().getMutedUsers().contains(event.getUser().getIdLong())) {
             return;
         }
 

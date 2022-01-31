@@ -42,7 +42,11 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow();
     }
 
-    public List<BotUser> getUsersByPermission(int permissionLevel) {
+    public List<Long> getMutedUsers() {
+        return userRepository.findMutedUsers();
+    }
+
+    public List<Long> getUsersByPermission(int permissionLevel) {
         return userRepository.findByPermissionLevel(permissionLevel);
     }
 

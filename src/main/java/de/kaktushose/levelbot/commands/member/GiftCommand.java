@@ -3,12 +3,12 @@ package de.kaktushose.levelbot.commands.member;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.SettingsService;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.ItemCategory;
 import de.kaktushose.levelbot.shop.data.items.ItemVariant;
-import de.kaktushose.levelbot.shop.data.ShopService;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;

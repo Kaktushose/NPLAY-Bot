@@ -1,8 +1,8 @@
 package de.kaktushose.levelbot.commands.owner;
 
 import com.github.kaktushose.jda.commands.annotations.*;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.NitroBooster;
 import de.kaktushose.levelbot.database.model.Reward;

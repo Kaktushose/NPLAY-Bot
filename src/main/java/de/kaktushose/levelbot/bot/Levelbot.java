@@ -1,12 +1,13 @@
 package de.kaktushose.levelbot.bot;
 
+import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
-import com.github.kaktushose.jda.commands.entities.EmbedDTO;
-import com.github.kaktushose.jda.commands.entities.JDACommands;
-import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedDTO;
+import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
+import com.github.kaktushose.jda.commands.embeds.help.JsonHelpMessageFactory;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
+import de.kaktushose.levelbot.Bootstrapper;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.model.CollectEvent;
@@ -135,40 +136,18 @@ public class Levelbot {
         ReactionListener.startListening(jda);
 
         log.debug("Starting jda-commands...");
-        jdaCommands = new JDACommandsBuilder(jda)
-                .setEmbedFactory(new JsonEmbedFactory(new File("jdacEmbeds.json")))
-                .addProvider(this)
-                .setCommandPackage("de.kaktushose.levelbot")
-                .build();
-        jdaCommands.getDefaultSettings()
-                .setPrefix(settingsService.getBotPrefix(guildId))
-                .getHelpLabels().add("hilfe");
-
-        jdaCommands.getDefaultSettings().setBotMentionPrefix(false);
-
-        log.debug("Applying permissions...");
-        userService.getUsersByPermission(0).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getMutedUsers().add(botUser.getUserId())
+        jdaCommands = JDACommands.start(jda, Bootstrapper.class, "de.kaktushose.levelbot");
+        EmbedCache embeds = new EmbedCache("jdacEmbeds.json");
+        embeds.loadEmbedsToCache();
+        jdaCommands.getImplementationRegistry().setHelpMessageFactory(
+                new JsonHelpMessageFactory(embeds)
         );
-        userService.getUsersByPermission(2).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId())
+        jdaCommands.getImplementationRegistry().setErrorMessageFactory(
+                new JsonErrorMessageFactory(embeds)
         );
-        userService.getUsersByPermission(3).forEach(botUser -> {
-                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
-                }
-        );
-        userService.getUsersByPermission(4).forEach(botUser -> {
-                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId());
-                }
-        );
-
         guild = jda.getGuildById(guildId);
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
         logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
-
 
         // first start of bot, check for expired items immediately
         shopService.checkForExpiredItems();
@@ -382,47 +361,38 @@ public class Levelbot {
         });
     }
 
-    @Produces
     public UserService getUserService() {
         return userService;
     }
 
-    @Produces
     public ShopService getShopService() {
         return shopService;
     }
 
-    @Produces
     public LevelService getLevelService() {
         return levelService;
     }
 
-    @Produces
     public SettingsService getSettingsService() {
         return settingsService;
     }
 
-    @Produces
     public BoosterService getBoosterService() {
         return boosterService;
     }
 
-    @Produces
     public EventService getEventService() {
         return eventService;
     }
 
-    @Produces
     public JDA getJda() {
         return jda;
     }
 
-    @Produces
     public EmbedCache getEmbedCache() {
         return embedCache;
     }
 
-    @Produces
     public Levelbot getLevelbot() {
         return this;
     }

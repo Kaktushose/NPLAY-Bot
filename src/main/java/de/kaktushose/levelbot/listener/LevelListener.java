@@ -1,6 +1,6 @@
 package de.kaktushose.levelbot.listener;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.Rank;

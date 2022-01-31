@@ -1,6 +1,6 @@
 package de.kaktushose.levelbot.shop;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
@@ -27,7 +27,7 @@ import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class ShopListener extends ListenerAdapter {
 
-    // this should find it's way into the database one day
+    // this should find its way into the database one day
     public static final String PREMIUM_MESSAGE_ID = "851454666591698965";
     public static final String DJ_MESSAGE_ID = "851454738904907827";
     public static final String NICKNAME_MESSAGE_ID = "851454813623681024";
@@ -64,7 +64,7 @@ public class ShopListener extends ListenerAdapter {
             return;
         }
 
-        if (levelbot.getJdaCommands().getDefaultSettings().getMutedUsers().contains(event.getUser().getIdLong())) {
+        if (levelbot.getUserService().getMutedUsers().contains(event.getUser().getIdLong())) {
             event.getReaction().removeReaction(event.getUser()).queue(
                     null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
             );

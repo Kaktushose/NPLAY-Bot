@@ -4,8 +4,8 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Member;
@@ -36,11 +36,7 @@ public class BlacklistCommand {
             event.reply(embedCache.getEmbed("memberBlacklistInvalidTarget").injectValue("user", member.getAsMention()));
             return;
         }
-        // update in db
         userService.setPermission(member.getIdLong(), 0);
-        // update in jda-commands
-        event.getJdaCommands().getDefaultSettings().getMutedUsers().add(member.getIdLong());
-        // reply
         event.reply(embedCache.getEmbed("memberBlacklistAdd").injectValue("user", member.getAsMention()));
     }
 
@@ -53,11 +49,7 @@ public class BlacklistCommand {
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
         BotUser target = userService.getUserById(member.getIdLong());
-        // update in db
         userService.setPermission(member.getIdLong(), 1);
-        // update in jda-commands
-        event.getJdaCommands().getDefaultSettings().getMutedUsers().remove(member.getIdLong());
-        // reply
         event.reply(embedCache.getEmbed("memberBlacklistRemove")
                 .injectValue("user", member.getAsMention())
         );
@@ -71,9 +63,9 @@ public class BlacklistCommand {
             category = "Moderation"
     )
     public void onBlacklistShow(CommandEvent event) {
-        List<BotUser> blacklist = userService.getUsersByPermission(0);
+        List<Long> blacklist = userService.getUsersByPermission(0);
         StringBuilder members = new StringBuilder();
-        blacklist.forEach(botUser -> members.append(event.getGuild().retrieveMemberById(botUser.getUserId()).complete().getEffectiveName()).append(", "));
+        blacklist.forEach(id -> members.append(event.getGuild().retrieveMemberById(id).complete().getEffectiveName()).append(", "));
         event.reply(embedCache.getEmbed("memberBlacklistShow")
                 .injectValue("blacklist", members.substring(0, members.length() - 2))
         );
