@@ -38,6 +38,12 @@
   "commandNotFound": {
     "title": "Command nicht gefunden!",
     "description": "```Siehe {prefix}{helpLabel} um eine Liste aller verfügbaren Commands zu erhalten```",
+    "fields": [
+      {
+        "name": "Ähnliche Commands",
+        "value": "{commands}"
+      }
+    ],
     "color": "#f4cd53"
   },
   "insufficientPermissions": {
@@ -90,5 +96,10 @@
     "title": "Falscher Kanal",
     "description": "Dieser Command kann in Direktnachrichten nicht ausgeführt werden!",
     "color": "#ff0000"
+  },
+  "constraintFailed": {
+    "title": "Parameter Fehler",
+    "description": "```{message}```",
+    "color": "#ffc800"
   }
 }
