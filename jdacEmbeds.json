@@ -101,5 +101,13 @@
     "title": "Parameter Fehler",
     "description": "```{message}```",
     "color": "#ffc800"
+  },
+  "executionFailed": {
+    "title": "Command Ausführung fehlgeschlagen",
+    "description": "```exception```",
+    "color": "#ff0000",
+    "footer": {
+      "text": "Bitte kontaktiere Kaktushose"
+    }
   }
 }
