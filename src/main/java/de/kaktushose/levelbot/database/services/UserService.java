@@ -38,6 +38,10 @@ public class UserService {
         return result;
     }
 
+    public List<Long> getAllUserIds() {
+        return userRepository.findAllIds();
+    }
+
     public BotUser getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow();
     }
@@ -140,7 +144,7 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public void updateStatistics(long userId) {
+    public void updateUserStatistics(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setStartCoins(botUser.getCoins());
         botUser.setStartXp(botUser.getXp());

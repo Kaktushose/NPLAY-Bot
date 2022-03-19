@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface UserRepository extends CrudRepository<BotUser, Long> {
 
+    @Query(value = "SELECT user_id FROM users", nativeQuery = true)
+    List<Long> findAllIds();
+
     @Query(value = "SELECT user_id FROM users where permission_level <= 0", nativeQuery = true)
     List<Long> findMutedUsers();
 

@@ -1,7 +1,6 @@
 package de.kaktushose.levelbot.bot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
-import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.EmbedDTO;
 import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
@@ -166,6 +165,8 @@ public class Levelbot {
                 boosterService.updateBoosterStatus(guild, botChannel, embedCache);
                 log.info("Checking for booster rewards...");
                 checkForNitroBoostersRewards();
+                log.info("Update user statistics...");
+                updateUserStatistics();
                 log.info("Done!");
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
@@ -252,8 +253,8 @@ public class Levelbot {
         guild.addRoleToMember(userId, guild.getRoleById(event.getRoleId())).queue();
     }
 
-    public void checkForExpiredItems() {
-
+    public void updateUserStatistics() {
+        userService.getAllUserIds().forEach(userService::updateUserStatistics);
     }
 
     public void dmRankInfo() {
