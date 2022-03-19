@@ -51,7 +51,7 @@ Make sure to set `ddl-auto` to `none` once you are in production environment.
 
 There are also some hardcoded values (e.g. channel ids) inside the codebase, make sure to change them.
 
-Go to [this](https://github.com/Kaktushose/Levelbot/blob/master/src/main/java/de/kaktushose/levelbot/bot/Levelbot.java#L74) line and provide your own bot token.
+Go to [this](https://github.com/Kaktushose/Levelbot/blob/master/src/main/java/de/kaktushose/levelbot/bot/Levelbot.java#L91) line and provide your own bot token.
 
 ### 3. Setting up the database
 

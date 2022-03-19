@@ -7,6 +7,8 @@ import de.kaktushose.levelbot.database.repositories.SettingsRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
+
 public class SettingsService {
 
     private final SettingsRepository settingsRepository;
@@ -24,6 +26,10 @@ public class SettingsService {
 
     public long getBotChannelId(long guildId) {
         return getGuildSettings(guildId).getBotChannelId();
+    }
+
+    public long getLogChannelId(long guildId) {
+        return getGuildSettings(guildId).getLogChannelId();
     }
 
     public String getBotPrefix(long guildId) {
@@ -56,6 +62,18 @@ public class SettingsService {
         return settingsRepository.getIgnoredChannels().contains(channelId);
     }
 
+    public List<Long> getIgnoredChannels() {
+        return settingsRepository.getIgnoredChannels();
+    }
+
+    public void addIgnoredChannel(long channelId) {
+        settingsRepository.addIgnoredChannel(channelId);
+    }
+
+    public void removeIgnoredChannel(long channelId) {
+        settingsRepository.removeIgnoredChannel(channelId);
+    }
+
     public Reward getReward(int rewardLevel) {
         return rewardRepository.findById(15 + rewardLevel).orElseThrow();
     }
@@ -66,6 +84,14 @@ public class SettingsService {
 
     public Reward getOneTimeNitroBoosterReward() {
         return rewardRepository.findById(11).orElseThrow();
+    }
+
+    public List<Long> getRewardedUsers() {
+        return settingsRepository.getRewardedUsers();
+    }
+
+    public void addRewardedUser(long userId) {
+        settingsRepository.addRewardedUser(userId);
     }
 
     public void setEventChannelId(long guildId, long channelId) {
@@ -99,4 +125,9 @@ public class SettingsService {
     public int getActiveCollectEventId(long guildId) {
         return getGuildSettings(guildId).getCollectEventId();
     }
+
+    public long getStatisticsMessageId(long guildId) {
+        return getGuildSettings(guildId).getStatisticsMessageId();
+    }
+
 }

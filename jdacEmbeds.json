@@ -5,7 +5,7 @@
     "color": "#86c240"
   },
   "specificHelp": {
-    "title": "Spezifische Hilfe",
+    "title": "Ausführliche Hilfe",
     "description": "Command Details für `{prefix}{label}`",
     "color": "#86c240",
     "fields": [
@@ -18,7 +18,7 @@
         "value": "`{usage}`"
       },
       {
-        "name": "Aliases",
+        "name": "Aliase",
         "value": "`{aliases}`"
       },
       {
@@ -26,7 +26,7 @@
         "value": "`{description}`"
       },
       {
-        "name": "Berechtigung",
+        "name": "Berechtigungen",
         "value": "`{permissions}`"
       },
       {
@@ -35,14 +35,25 @@
       }
     ]
   },
+  "genericHelp": {
+    "title": "Generelle Hilfe",
+    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` für eine ausführliche Hilfe",
+    "color": "#86c240"
+  },
   "commandNotFound": {
-    "title": "Command Nicht Gefunden!",
-    "description": "Siehe {prefix}{helpLabel} um eine Liste der verfügbaren Commands zu erhalten.",
+    "title": "Command nicht gefunden!",
+    "description": "```Siehe {prefix}{helpLabel} um eine Liste aller verfügbaren Commands zu erhalten```",
+    "fields": [
+      {
+        "name": "Ähnliche Commands",
+        "value": "{commands}"
+      }
+    ],
     "color": "#f4cd53"
   },
   "insufficientPermissions": {
-    "title": "Unzureichende Berechtigungen!",
-    "description": "`{prefix}{label}` benötigt spezielle Berechtigungen um ausgeführt zu werden.",
+    "title": "Unzureichende Berechtigungen",
+    "description": "`{prefix}{label}` benötigt bestimmte Berechtigungen um ausgeführt zu werden",
     "color": "#ff0000",
     "fields": [
       {
@@ -51,8 +62,23 @@
       }
     ]
   },
+  "guildMuted": {
+    "title": "Unzureichende Berechtigungen",
+    "description": "Dieser Server wurde gemuted!",
+    "color": "#ff0000"
+  },
+  "channelMuted": {
+    "title": "Unzureichende Berechtigungen",
+    "description": "Dieser Kanal wurde gemuted!",
+    "color": "#ff0000"
+  },
+  "userMuted": {
+    "title": "Unzureichende Berechtigungen",
+    "description": "Du wurdest gemuted!",
+    "color": "#ff0000"
+  },
   "syntaxError": {
-    "title": "Syntax Fehler!",
+    "title": "Syntax Fehler",
     "description": "`{usage}`",
     "color": "#ffc800",
     "fields": [
@@ -61,14 +87,32 @@
         "value": "`{expected}`"
       },
       {
-        "name": "Erhaltene Parameter",
+        "name": "Übergebene Parameter",
         "value": "`{actual}`"
       }
     ]
   },
-  "userMuted": {
-    "title": "Unzureichende Berechtigungen!",
-    "description": "Du bist gemuted.",
+  "cooldown": {
+    "title": "Cooldown",
+    "description": "Du kannst diesen Command wieder nutzen in: {cooldown}",
+    "color": "#ff0000"
+  },
+  "wrongChannel": {
+    "title": "Falscher Kanal",
+    "description": "Dieser Command kann in Direktnachrichten nicht ausgeführt werden!",
+    "color": "#ff0000"
+  },
+  "constraintFailed": {
+    "title": "Parameter Fehler",
+    "description": "```{message}```",
     "color": "#ffc800"
+  },
+  "executionFailed": {
+    "title": "Command Ausführung fehlgeschlagen",
+    "description": "```exception```",
+    "color": "#ff0000",
+    "footer": {
+      "text": "Bitte kontaktiere Kaktushose"
+    }
   }
 }

@@ -4,12 +4,12 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
-@CommandController("set")
+@CommandController(value = "set", category = "Moderation")
 @Permission("moderator")
 public class SetCurrencyCommand {
 
@@ -17,6 +17,15 @@ public class SetCurrencyCommand {
     private UserService userService;
     @Inject
     private EmbedCache embedCache;
+
+    @Command(
+            name = "Set",
+            usage = "{prefix}set <coins|xp|diamonds> <member> <amount>",
+            desc = "Setzt die Währungen eines Nutzers auf den angegebenen Wert",
+            isSuper = true)
+    public void onSetCurrency(CommandEvent event) {
+        event.sendSpecificHelpMessage();
+    }
 
     @Command(
             value = "coins",

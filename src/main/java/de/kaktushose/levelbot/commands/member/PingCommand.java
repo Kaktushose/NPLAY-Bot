@@ -3,10 +3,10 @@ package de.kaktushose.levelbot.commands.member;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 
-@CommandController("ping")
+@CommandController(value = "ping", category = "Sonstiges")
 public class PingCommand {
 
     @Inject
@@ -15,9 +15,7 @@ public class PingCommand {
     @Command(
             name = "Ping Command",
             usage = "{prefix}ping",
-            desc = "Zeigt den Ping zur Discord-API an",
-            category = "Sonstiges"
-    )
+            desc = "Zeigt den Ping zur Discord-API an")
     public void onPing(CommandEvent event) {
         long gatewayPing = event.getJDA().getGatewayPing();
         long restPing = event.getJDA().getRestPing().complete();

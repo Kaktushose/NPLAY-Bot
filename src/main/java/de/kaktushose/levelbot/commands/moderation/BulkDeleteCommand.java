@@ -4,14 +4,18 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.annotations.constraints.Max;
+import com.github.kaktushose.jda.commands.annotations.constraints.Min;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@CommandController({"delete", "purge", "clear"})
+@CommandController(value = {"delete", "purge", "clear"}, category = "Moderation")
 @Permission("moderator")
 public class BulkDeleteCommand {
 
@@ -21,16 +25,13 @@ public class BulkDeleteCommand {
     @Command(
             name = "Nachrichten löschen",
             usage = "{prefix}delete <amount>",
-            desc = "Löscht die angegebene Zahl von Nachrichten aus einem Channel",
-            category = "Moderation"
+            desc = "Löscht die angegebene Zahl von Nachrichten aus einem Channel"
     )
-    public void onBulkDeleteMessages(CommandEvent event, int amount) {
-        // discord api only allows amount between 2 and 100
-        if (amount < 2 || amount > 100) {
-            event.reply(embedCache.getEmbed("invalidValue").injectValue("min", 2).injectValue("max", 100));
-            return;
-        }
-
+    public void onBulkDeleteMessages(
+            CommandEvent event,
+            @Min(value = 1, message = "Muss mindestens eine Nachricht löschen")
+            @Max(value = 100, message = "Kann maximal 100 Nachrichten gleichzeitig löschen") int amount
+    ) {
         // amount + 1 so we delete the command message as well
         // complete aka blocking to make sure that the success message is sent correctly
         List<Message> messageHistory = event.getChannel().getHistory().retrievePast(amount + 1).complete();
@@ -38,7 +39,8 @@ public class BulkDeleteCommand {
 
         event.reply(embedCache.getEmbed("bulkDeleteSuccess")
                         .injectValue("amount", amount),
-                message -> message.delete().queueAfter(10, TimeUnit.SECONDS) // delete success message after 10 secs
-        );
+                message -> message.delete().queueAfter(10, TimeUnit.SECONDS,
+                        null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+                )); // delete success message after 10 secs
     }
 }

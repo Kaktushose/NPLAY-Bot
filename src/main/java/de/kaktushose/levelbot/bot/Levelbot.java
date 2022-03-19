@@ -1,16 +1,22 @@
 package de.kaktushose.levelbot.bot;
 
+import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.api.JsonEmbedFactory;
-import com.github.kaktushose.jda.commands.entities.EmbedDTO;
-import com.github.kaktushose.jda.commands.entities.JDACommands;
-import com.github.kaktushose.jda.commands.entities.JDACommandsBuilder;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedDTO;
+import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
+import com.github.kaktushose.jda.commands.embeds.help.JsonHelpMessageFactory;
 import de.kaktushose.discord.reactionwaiter.ReactionListener;
+import de.kaktushose.levelbot.Bootstrapper;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
-import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.CollectEvent;
+import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.services.*;
 import de.kaktushose.levelbot.listener.*;
+import de.kaktushose.levelbot.shop.ShopListener;
+import de.kaktushose.levelbot.shop.data.ShopService;
+import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.Statistics;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -29,15 +35,19 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ConstantConditions")
 public class Levelbot {
 
     private static final Logger log = LoggerFactory.getLogger(Levelbot.class);
     private final UserService userService;
+    private final ShopService shopService;
     private final SettingsService settingsService;
     private final LevelService levelService;
     private final EventService eventService;
@@ -51,9 +61,11 @@ public class Levelbot {
     private JDA jda;
     private Guild guild;
     private TextChannel botChannel;
+    private TextChannel logChannel;
 
     public Levelbot() {
         userService = null;
+        shopService = null;
         settingsService = null;
         levelService = null;
         eventService = null;
@@ -67,6 +79,7 @@ public class Levelbot {
 
     public Levelbot(GuildType guildType) {
         userService = new UserService();
+        shopService = new ShopService(this);
         settingsService = new SettingsService();
         eventService = new EventService(settingsService, userService);
         boosterService = new BoosterService(this);
@@ -100,7 +113,7 @@ public class Levelbot {
         ).setChunkingFilter(
                 ChunkingFilter.ALL
         ).setMemberCachePolicy(
-                MemberCachePolicy.ALL
+                MemberCachePolicy.NONE
         ).setActivity(
                 Activity.playing("starting...")
         ).setStatus(
@@ -112,7 +125,6 @@ public class Levelbot {
                 new JoinLeaveListener(this),
                 new LevelListener(this),
                 new VoiceTextLink(jda.getTextChannelById(839226183409467442L)),
-                new NitroBoosterListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
                 new ContestEventListener(settingsService, eventService)
@@ -124,49 +136,41 @@ public class Levelbot {
         ReactionListener.startListening(jda);
 
         log.debug("Starting jda-commands...");
-        jdaCommands = new JDACommandsBuilder(jda)
-                .setEmbedFactory(new JsonEmbedFactory(new File("jdacEmbeds.json")))
-                .addProvider(this)
-                .setCommandPackage("de.kaktushose.levelbot.commands")
-                .build();
-        jdaCommands.getDefaultSettings().setPrefix(settingsService.getBotPrefix(guildId)).getHelpLabels().add("hilfe");
-
-        log.debug("Applying permissions...");
-        userService.getUsersByPermission(0).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getMutedUsers().add(botUser.getUserId())
+        jdaCommands = JDACommands.start(jda, Bootstrapper.class, "de.kaktushose.levelbot");
+        EmbedCache embeds = new EmbedCache("jdacEmbeds.json");
+        embeds.loadEmbedsToCache();
+        jdaCommands.getImplementationRegistry().setHelpMessageFactory(
+                new JsonHelpMessageFactory(embeds)
         );
-        userService.getUsersByPermission(2).forEach(botUser ->
-                jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId())
+        jdaCommands.getImplementationRegistry().setErrorMessageFactory(
+                new JsonErrorMessageFactory(embeds)
         );
-        userService.getUsersByPermission(3).forEach(botUser -> {
-                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
-                }
-        );
-        userService.getUsersByPermission(4).forEach(botUser -> {
-                    jdaCommands.getDefaultSettings().getPermissionHolders("moderator").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("admin").add(botUser.getUserId());
-                    jdaCommands.getDefaultSettings().getPermissionHolders("owner").add(botUser.getUserId());
-                }
-        );
-
         guild = jda.getGuildById(guildId);
         botChannel = guild.getTextChannelById(settingsService.getBotChannelId(guildId));
+        logChannel = guild.getTextChannelById(settingsService.getLogChannelId(guildId));
 
+        // first start of bot, check for expired items immediately
+        shopService.checkForExpiredItems();
+
+        // get offset time until it's 0 am, also ensures that this task only runs once every 24 hours
+        long current = TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + Calendar.getInstance().get(Calendar.MINUTE);
+        long delay = TimeUnit.HOURS.toMinutes(24) - current;
         taskScheduler.addRepetitiveTask(() -> {
             log.info("Starting daily tasks!");
             try {
-                log.info("Checking for expired items...");
-                checkForExpiredItems();
                 log.info("Sending dm rank infos...");
                 dmRankInfo();
-                log.info("Checking for boosters...");
+                log.info("Checking for expired items...");
+                shopService.checkForExpiredItems();
+                log.info("Checking for new nitro boosters...");
+                boosterService.updateBoosterStatus(guild, botChannel, embedCache);
+                log.info("Checking for booster rewards...");
                 checkForNitroBoostersRewards();
                 log.info("Done!");
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
             }
-        }, 0, 1, TimeUnit.DAYS);
+        }, delay, TimeUnit.HOURS.toMinutes(24), TimeUnit.MINUTES);
 
         taskScheduler.addRepetitiveTask(() -> {
             try {
@@ -180,7 +184,7 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing(version));
 
-        getBotChannel().sendMessage(embedCache.getEmbed("botStart")
+        getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStart")
                 .injectValue("version", version)
                 .toMessageEmbed()
         ).queue();
@@ -191,7 +195,7 @@ public class Levelbot {
     }
 
     public Levelbot stop() {
-        getBotChannel().sendMessage(embedCache.getEmbed("botStop").toMessageEmbed()).complete();
+        getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStop").toMessageEmbed()).complete();
         jdaCommands.shutdown();
         jda.shutdown();
         return this;
@@ -202,14 +206,17 @@ public class Levelbot {
     }
 
     public Levelbot indexMembers() {
-        List<Member> guildMembers = guild.getMembers();
-        guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
+        log.info("Indexing members...");
+        guild.loadMembers().onSuccess(guildMembers -> {
+            guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
 
-        List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
-        userService.getAllUsers().forEach(botUser -> {
-            if (!guildMemberIds.contains(botUser.getUserId())) {
-                userService.deleteUser(botUser.getUserId());
-            }
+            List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
+            userService.getAllUsers().forEach(botUser -> {
+                if (!guildMemberIds.contains(botUser.getUserId())) {
+                    log.info("Removing " + botUser.getUserId());
+                    userService.deleteUser(botUser.getUserId());
+                }
+            });
         });
         return this;
     }
@@ -234,6 +241,9 @@ public class Levelbot {
 
     public void removeItemRole(long userId, int itemId) {
         Item item = levelService.getItem(itemId);
+        if (item.getRoleId() == -1) {
+            return;
+        }
         guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
     }
 
@@ -243,38 +253,14 @@ public class Levelbot {
     }
 
     public void checkForExpiredItems() {
-        userService.getAllUsers().forEach(botUser -> {
-            for (Transaction transaction : botUser.getTransactions()) {
-                Item item = transaction.getItem();
-                long remaining = item.getRemainingTimeAsLong(transaction.getBuyTime());
-                long userId = botUser.getUserId();
-                int itemId = item.getItemId();
-                // premium unlimited, skip this one
-                if (itemId == 3) {
-                    continue;
-                }
-                if (remaining < 0) {
-                    userService.removeItem(userId, itemId, this);
-                    sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
-                } else if (remaining < 86400000) {
-                    taskScheduler.addSingleTask(() -> {
-                        try {
-                            userService.removeItem(userId, itemId, this);
-                            sendItemExpiredInformation(userId, itemId, transaction.getBuyTime());
-                        } catch (Throwable t) {
-                            log.error("An exception has occurred while removing an item!", t);
-                        }
-                    }, remaining, TimeUnit.MILLISECONDS);
-                }
-            }
-        });
+
     }
 
     public void dmRankInfo() {
         userService.getUsersByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
             user.openPrivateChannel().flatMap(privateChannel ->
-                    privateChannel.sendMessage(generateRankInfo(user, true).build())
+                    privateChannel.sendMessageEmbeds(generateRankInfo(user, true).build())
             ).queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
         });
     }
@@ -294,10 +280,10 @@ public class Levelbot {
                 .injectValue("item", item.getName())
                 .injectValue("date", new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(buyTime)))
                 .toEmbedBuilder();
-        user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(embed.build()))
+        user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed.build()))
                 .queue(null, new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, exception -> {
                     TextChannel channel = getBotChannel();
-                    channel.sendMessage(user.getAsMention()).and(channel.sendMessage(embed.build())).queue();
+                    channel.sendMessage(user.getAsMention()).and(channel.sendMessageEmbeds(embed.build())).queue();
                 }));
     }
 
@@ -333,15 +319,16 @@ public class Levelbot {
 
         if (eventService.isCollectEventActive(guildId)) {
             CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
+            Role collectEventRole = guild.getRoleById(collectEvent.getRoleId());
             long eventPoints = botUser.getEventPoints();
             embedDTO.injectValue("eventName", collectEvent.getName())
                     .injectValue("currencyName", collectEvent.getCurrencyName())
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
             if (eventPoints >= collectEvent.getItemBound()) {
-                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\nEvent Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\n:blue_circle: Eventrolle " + collectEventRole.getName());
             } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", "Event Rolle " + collectEvent.getName());
+                embedDTO.injectValue("eventRewards", ":blue_circle: Eventrolle " + collectEventRole.getName());
             } else {
                 embedDTO.injectValue("eventRewards", ":x: noch keine");
             }
@@ -362,49 +349,50 @@ public class Levelbot {
     }
 
     public void updateStatistics() {
-        statistics.queryStatistics();
-        TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(851788766036361227L).flatMap(message ->
-                message.editMessage(embedCache.getEmbed("statistics").injectFields(statistics).toMessageEmbed())
-        ).queue();
+        statistics.queryStatistics().onSuccess(stats -> {
+            TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
+            channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
+                    message.editMessageEmbeds(embedCache.getEmbed("statistics")
+                            .injectFields(statistics)
+                            .toEmbedBuilder()
+                            .setTimestamp(Instant.now())
+                            .build())
+            ).queue();
+        });
     }
 
-    @Produces
     public UserService getUserService() {
         return userService;
     }
 
-    @Produces
+    public ShopService getShopService() {
+        return shopService;
+    }
+
     public LevelService getLevelService() {
         return levelService;
     }
 
-    @Produces
     public SettingsService getSettingsService() {
         return settingsService;
     }
 
-    @Produces
     public BoosterService getBoosterService() {
         return boosterService;
     }
 
-    @Produces
     public EventService getEventService() {
         return eventService;
     }
 
-    @Produces
     public JDA getJda() {
         return jda;
     }
 
-    @Produces
     public EmbedCache getEmbedCache() {
         return embedCache;
     }
 
-    @Produces
     public Levelbot getLevelbot() {
         return this;
     }
@@ -419,6 +407,14 @@ public class Levelbot {
 
     public TextChannel getBotChannel() {
         return botChannel;
+    }
+
+    public TextChannel getLogChannel() {
+        return logChannel;
+    }
+
+    public TaskScheduler getTaskScheduler() {
+        return taskScheduler;
     }
 
     public enum GuildType {

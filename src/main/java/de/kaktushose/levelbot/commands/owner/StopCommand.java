@@ -4,8 +4,8 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
@@ -22,13 +22,13 @@ public class StopCommand {
     @Command(
             name = "Bot herunterfahren",
             usage = "{prefix}stop",
-            desc = "Fährt den Bot herunter.",
+            desc = "Fährt den Bot herunter",
             category = "Owner"
     )
     public void onStop(CommandEvent event) {
         event.reply(embedCache.getEmbed("confirmAction").injectValue(
-                "action",
-                "du den Bot herunterfahren möchtest?\nNur <@393843637437464588> kann den Bot wieder starten!"
+                        "action",
+                        "du den Bot herunterfahren möchtest?\nNur <@393843637437464588> kann den Bot wieder starten!"
                 ),
                 confirmMessage -> {
                     confirmMessage.addReaction(EmoteType.THUMBSUP.unicode)

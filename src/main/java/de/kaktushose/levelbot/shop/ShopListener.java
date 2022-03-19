@@ -1,12 +1,13 @@
-package de.kaktushose.levelbot.listener;
+package de.kaktushose.levelbot.shop;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
+import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,22 +27,25 @@ import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class ShopListener extends ListenerAdapter {
 
-    // this should find it's way into the database one day
+    // this should find its way into the database one day
     public static final String PREMIUM_MESSAGE_ID = "851454666591698965";
     public static final String DJ_MESSAGE_ID = "851454738904907827";
     public static final String NICKNAME_MESSAGE_ID = "851454813623681024";
     public static final String COINS_BOOSTER_MESSAGE_ID = "851454959224225813";
     public static final String XP_BOOSTER_MESSAGE_ID = "851454895788654625";
+    private static final Long LEVEL_SYSTEM_CHANNEL_ID = 851388807239827466L;
     private static final String CONFIRM = "✅";
     private static final String CANCEL = "❌";
     private final Set<Long> activeUsers;
     private final UserService userService;
+    private final ShopService shopService;
     private final LevelService levelService;
     private final EmbedCache embedCache;
     private final Levelbot levelbot;
 
     public ShopListener(Levelbot levelbot) {
         this.userService = levelbot.getUserService();
+        this.shopService = levelbot.getShopService();
         this.levelService = levelbot.getLevelService();
         this.embedCache = levelbot.getEmbedCache();
         this.levelbot = levelbot;
@@ -56,7 +60,14 @@ public class ShopListener extends ListenerAdapter {
         }
 
         // must be in channel #levelsystem
-        if (event.getChannel().getIdLong() != 851388807239827466L) {
+        if (event.getChannel().getIdLong() != LEVEL_SYSTEM_CHANNEL_ID) {
+            return;
+        }
+
+        if (levelbot.getUserService().getMutedUsers().contains(event.getUser().getIdLong())) {
+            event.getReaction().removeReaction(event.getUser()).queue(
+                    null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
+            );
             return;
         }
 
@@ -117,7 +128,7 @@ public class ShopListener extends ListenerAdapter {
         Item item = levelService.getItemsByCategoryId(itemCategory.id).get(variant);
         BotUser botUser = userService.getUserById(member.getIdLong());
         String fail = null;
-        if (userService.hasItem(member.getIdLong(), item.getItemId())) {
+        if (shopService.hasItemOfCategory(member.getIdLong(), item.getCategoryId())) {
             fail = "Du besitzt dieses Item bereits!";
         }
         if (botUser.getCoins() < item.getPrice()) {
@@ -134,7 +145,7 @@ public class ShopListener extends ListenerAdapter {
 
         if (fail != null) {
             channel.sendMessage( // transaction failed
-                    builder.setEmbed(embedCache.getEmbed("shopError")
+                    builder.setEmbeds(embedCache.getEmbed("shopError")
                             .injectValue("message", fail)
                             .toMessageEmbed()
                     ).build()
@@ -142,28 +153,34 @@ public class ShopListener extends ListenerAdapter {
         } else {
             activeUsers.add(member.getIdLong());
             channel.sendMessage( // confirm transaction
-                    builder.setEmbed(embedCache.getEmbed("shopConfirm")
+                    builder.setEmbeds(embedCache.getEmbed("shopConfirm")
                             .injectValue("item", item.getName())
                             .injectValue("price", item.getPrice())
                             .toMessageEmbed()
                     ).build()
             ).queue(confirmMessage -> { // wait for reactions
                 confirmMessage.delete().queueAfter( // delete confirm message after 30 secs if nothing happens
-                        30, TimeUnit.SECONDS, null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
+                        30, TimeUnit.SECONDS,
+                        success -> activeUsers.remove(member.getIdLong()),
+                        new ErrorHandler().ignore(UNKNOWN_MESSAGE)
                 );
                 confirmMessage.addReaction(CONFIRM).and(confirmMessage.addReaction(CANCEL)).queue();
                 ReactionWaiter waiter = new ReactionWaiter(confirmMessage, event.getMember(), CONFIRM, CANCEL);
                 waiter.onEvent(reactionEvent -> { // on reaction confirm or cancel emoji
                     confirmMessage.delete().queue();
                     if (reactionEvent.getEmote().equals(CONFIRM)) {
-                        userService.buyItem(botUser.getUserId(), item.getItemId());
-                        levelbot.addItemRole(botUser.getUserId(), item.getItemId());
-                        channel.sendMessage( // successful transaction
+                        shopService.buyItem(botUser.getUserId(), item.getItemId());
+                        channel.sendMessageEmbeds( // successful transaction
                                 embedCache.getEmbed("shopSuccess")
                                         .injectValue("item", item.getName())
                                         .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
                                         .toMessageEmbed()
                         ).queue(delete);
+                        levelbot.getLogChannel().sendMessageEmbeds(embedCache.getEmbed("buyLog")
+                                .injectValue("user", member.getAsMention())
+                                .injectValue("item", item.getName())
+                                .toMessageEmbed()
+                        ).queue();
                     }
                     activeUsers.remove(member.getIdLong());
                     waiter.stopWaiting(false);

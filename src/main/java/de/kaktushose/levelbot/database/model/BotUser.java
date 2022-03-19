@@ -1,5 +1,6 @@
 package de.kaktushose.levelbot.database.model;
 
+import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.util.Pageable;
 import de.kaktushose.levelbot.util.Pagination;
 

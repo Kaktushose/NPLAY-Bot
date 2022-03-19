@@ -1,5 +1,7 @@
 package de.kaktushose.levelbot.database.model;
 
+import de.kaktushose.levelbot.shop.data.items.Item;
+
 import javax.persistence.*;
 
 @Entity

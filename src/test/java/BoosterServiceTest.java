@@ -61,16 +61,21 @@ public class BoosterServiceTest {
     }
 
     @Test
+    public void isActiveNitroBooster_WithoutUsers_ShouldReturnFalse() {
+        assertFalse(boosterService.isActiveNitroBooster(0));
+    }
+
+    @Test
+    public void isActiveNitroBooster_WithUsers_ShouldReturnTrue() {
+        boosterService.createNewNitroBooster(0);
+        assertTrue(boosterService.isActiveNitroBooster(0));
+    }
+
+    @Test
     public void changeNitroBoosterStatus_WithTrue_ShouldBeActiveBooster() {
         boosterService.createNewNitroBooster(0);
         boosterService.changeNitroBoosterStatus(0, true);
         assertTrue(boosterService.isNitroBooster(0));
-    }
-
-    @Test
-    public void changeNitroBoosterStatus_WithoutPresentUsers_ShouldThrow() {
-        assertThrows(NoSuchElementException.class, () -> boosterService.changeNitroBoosterStatus(0, true));
-        assertThrows(NoSuchElementException.class, () -> boosterService.changeNitroBoosterStatus(0, false));
     }
 
     @Test

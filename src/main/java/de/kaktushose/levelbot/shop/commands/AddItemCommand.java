@@ -1,18 +1,19 @@
-package de.kaktushose.levelbot.commands.moderation;
+package de.kaktushose.levelbot.shop.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.discord.reactionwaiter.EmoteType;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
+import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,9 +26,9 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@CommandController({"kaufen", "shop"})
+@CommandController("additem")
 @Permission("moderator")
-public class ShopCommand {
+public class AddItemCommand {
 
     private static final String BACK = "◀️";
     private static final String CANCEL = "❌";
@@ -40,6 +41,8 @@ public class ShopCommand {
     @Inject
     private UserService userService;
     @Inject
+    private ShopService shopService;
+    @Inject
     private LevelService levelService;
     @Inject
     private EmbedCache embedCache;
@@ -47,18 +50,18 @@ public class ShopCommand {
     private Levelbot levelbot;
     private EmbedBuilder shopOverview;
 
-    public ShopCommand() {
+    public AddItemCommand() {
         specificShops = new HashMap<>();
     }
 
     @Command(
             name = "Level-Shop",
-            usage = "{prefix}kaufen <member>",
+            usage = "{prefix}additem <member>",
             desc = "Fügt ein Item einem anderen Nutzer hinzu",
             category = "Moderation"
     )
-    public void onShop(CommandEvent event, Member member) {
-        generateEmbeds();
+    public void onAddItem(CommandEvent event, Member member) {
+        generateEmbeds(member.getAsMention());
         sendDefaultShop(event, null, member);
     }
 
@@ -155,11 +158,11 @@ public class ShopCommand {
                 }
 
                 Item item = items.get(variant - 1);
-                boolean selfBuy = target == event.getMember();
-                Optional<String> buyResult = buy(target, item, selfBuy);
+                Optional<String> buyResult = addItem(target, item);
 
                 if (buyResult.isEmpty()) {
-                    message.editMessage(embedCache.getEmbed("shopSuccess")
+                    message.editMessage(embedCache.getEmbed("addItemSuccess")
+                            .injectValue("user", target.getAsMention())
                             .injectValue("item", item.getName())
                             .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
                             .toMessageEmbed()
@@ -193,29 +196,20 @@ public class ShopCommand {
         }
     }
 
-    private Optional<String> buy(Member member, Item item, boolean selfBuy) {
+    private Optional<String> addItem(Member member, Item item) {
         BotUser botUser = userService.getUserById(member.getIdLong());
 
-        if (userService.hasItem(member.getIdLong(), item.getItemId())) {
-            return Optional.of("Du besitzt dieses Item bereits!");
+        if (shopService.hasItem(member.getIdLong(), item.getItemId())) {
+            return Optional.of(member.getAsMention() + " besitzt dieses Item bereits!");
         }
 
-        if (selfBuy) {
-            if (botUser.getCoins() < item.getPrice()) {
-                return Optional.of("Du hast nicht genug Münzen!");
-            }
-        } else {
-            userService.addCoins(member.getIdLong(), item.getPrice());
-        }
-
-        userService.buyItem(botUser.getUserId(), item.getItemId());
-        levelbot.addItemRole(botUser.getUserId(), item.getItemId());
+        shopService.addItem(botUser.getUserId(), item.getItemId());
 
         return Optional.empty();
     }
 
-    private void generateEmbeds() {
-        shopOverview = embedCache.getEmbed("shopOverview").toEmbedBuilder();
+    private void generateEmbeds(String mention) {
+        shopOverview = embedCache.getEmbed("shopOverview").injectValue("user", mention).toEmbedBuilder();
 
         for (ItemCategory itemCategory : ItemCategory.values()) {
             EmbedBuilder specificShop = embedCache.getEmbed("specificShop").toEmbedBuilder();

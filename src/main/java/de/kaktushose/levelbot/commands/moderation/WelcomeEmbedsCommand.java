@@ -4,14 +4,12 @@ import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 
-@CommandController("embeds")
+import java.io.File;
+
+@CommandController(value = "sendembeds", category = "Moderation")
 @Permission("moderator")
 public class WelcomeEmbedsCommand {
 
@@ -21,41 +19,19 @@ public class WelcomeEmbedsCommand {
     private EmbedCache embedCache;
 
     public WelcomeEmbedsCommand() {
-        welcomeEmbedCache = new EmbedCache("welcomeEmbeds.json");
+        welcomeEmbedCache = new EmbedCache(new File("welcomeEmbeds.json"));
     }
 
     @Command(
-            value = "init",
             name = "Willkommen Embeds senden",
-            usage = "{prefix}embeds send",
-            desc = "Sendet die Embeds in <#551483788337872927>",
-            category = "Moderation"
+            usage = "{prefix}sendembeds",
+            desc = "Sendet die Embeds in <#551483788337872927>"
     )
     public void sendEmbeds(CommandEvent event) {
-        for (int i = 0; i < 12; i++) {
-            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(
-                    new EmbedBuilder().setTitle(String.valueOf(i)).build()
-            ).queue(message -> message.editMessage(new EmbedBuilder().setTitle(message.getId()).build()).queue());
-        }
-    }
-
-    @Command(
-            value = "resend",
-            name = "Willkommen Embeds senden",
-            usage = "{prefix}embeds resend <messageId>",
-            desc = "Sendet die Embeds in <#551483788337872927>",
-            category = "Moderation"
-    )
-    public void reloadEmbeds(CommandEvent event, long messageId) {
         welcomeEmbedCache.loadEmbedsToCache();
-        TextChannel channel = event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID);
-        channel.retrieveMessageById(messageId).flatMap(message ->
-                message.editMessage(welcomeEmbedCache.getEmbed(String.valueOf(messageId)).toMessageEmbed())
-        ).queue(success -> {
-            event.reply(embedCache.getEmbed("messageReloadSuccess"));
-        }, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, e -> {
-            event.reply(embedCache.getEmbed("messageReloadError"));
-        }));
+        welcomeEmbedCache.values().forEach(embedDTO -> {
+            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessageEmbeds(embedDTO.toMessageEmbed()).queue();
+        });
     }
 }
 

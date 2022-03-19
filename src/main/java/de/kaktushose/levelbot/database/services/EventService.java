@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -157,13 +156,6 @@ public class EventService {
     public String startCollectEvent(int id, Guild guild) {
         settingsService.setActiveCollectEvent(guild.getIdLong(), id);
         userService.getAllUsers().forEach(botUser -> userService.resetEventPoints(botUser.getUserId()));
-        CollectEvent collectEvent = getCollectEvent(id);
-        guild.createRole()
-                .setName(collectEvent.getName() + " " + Calendar.getInstance().get(Calendar.YEAR))
-                .queue(role -> {
-                    collectEvent.setRoleId(role.getIdLong());
-                    collectEventRepository.save(collectEvent);
-                });
         return getCollectEvent(id).getName();
     }
 
@@ -171,7 +163,6 @@ public class EventService {
         if (!isCollectEventActive(guildId)) {
             return false;
         }
-        CollectEvent collectEvent = getCollectEvent(settingsService.getActiveCollectEventId(guildId));
         settingsService.setActiveCollectEvent(guildId, -1);
         return true;
     }

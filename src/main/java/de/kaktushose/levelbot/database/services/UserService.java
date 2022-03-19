@@ -2,9 +2,13 @@ package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.model.Item;
-import de.kaktushose.levelbot.database.model.Transaction;
-import de.kaktushose.levelbot.database.repositories.*;
+import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.shop.data.items.FrozenItem;
+import de.kaktushose.levelbot.shop.data.items.FrozenItemRepository;
+import de.kaktushose.levelbot.shop.data.items.Item;
+import de.kaktushose.levelbot.shop.data.items.ItemRepository;
+import de.kaktushose.levelbot.shop.data.transactions.Transaction;
+import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -18,16 +22,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final ItemRepository itemRepository;
-    private final NitroBoosterRepository nitroBoosterRepository;
-    private final SettingsRepository settingsRepository;
+    private final FrozenItemRepository frozenItemRepository;
 
     public UserService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
         transactionRepository = context.getBean(TransactionRepository.class);
         itemRepository = context.getBean(ItemRepository.class);
-        nitroBoosterRepository = context.getBean(NitroBoosterRepository.class);
-        settingsRepository = context.getBean(SettingsRepository.class);
+        frozenItemRepository = context.getBean(FrozenItemRepository.class);
     }
 
     public List<BotUser> getAllUsers() {
@@ -40,7 +42,11 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow();
     }
 
-    public List<BotUser> getUsersByPermission(int permissionLevel) {
+    public List<Long> getMutedUsers() {
+        return userRepository.findMutedUsers();
+    }
+
+    public List<Long> getUsersByPermission(int permissionLevel) {
         return userRepository.findByPermissionLevel(permissionLevel);
     }
 
@@ -69,59 +75,6 @@ public class UserService {
         botUser.setDiamonds(botUser.getDiamonds() - diamonds);
         botUser.setCoins(botUser.getCoins() + diamonds * 20);
         userRepository.save(botUser);
-    }
-
-    public boolean hasItem(long userId, int itemId) {
-        int categoryId = itemRepository.findById(itemId).orElseThrow().getCategoryId();
-        return getItems(userId).stream().anyMatch(item -> item.getCategoryId() == categoryId);
-    }
-
-    public void buyItem(long userId, int itemId) {
-        BotUser botUser = getUserById(userId);
-        Item item = itemRepository.findById(itemId).orElseThrow();
-        Transaction transaction = new Transaction();
-        transaction.setBuyTime(System.currentTimeMillis());
-        transaction.setItem(item);
-        botUser.getTransactions().add(transaction);
-        botUser.setCoins(botUser.getCoins() - item.getPrice());
-        transactionRepository.save(transaction);
-        userRepository.save(botUser);
-    }
-
-    public void addUpItem(long userId, int itemId, Levelbot levelbot) {
-        BotUser botUser = getUserById(userId);
-        Item itemToAdd = itemRepository.findById(itemId).orElseThrow();
-        List<Item> items = getItems(userId);
-        Optional<Item> optional = items.stream().filter(item -> item.getCategoryId() == itemToAdd.getCategoryId()).findFirst();
-        Transaction transaction;
-        if (optional.isPresent()) {
-            transaction = transactionRepository.findByUserIdAndItemId(userId, optional.get().getItemId()).orElseThrow();
-            transaction.setBuyTime(transaction.getBuyTime() + itemToAdd.getDuration());
-        } else {
-            transaction = new Transaction();
-            transaction.setBuyTime(System.currentTimeMillis());
-            transaction.setItem(itemToAdd);
-            levelbot.addItemRole(userId, itemToAdd.getItemId());
-        }
-        botUser.getTransactions().add(transaction);
-        transactionRepository.save(transaction);
-        userRepository.save(botUser);
-    }
-
-    public List<Item> getItems(long userId) {
-        BotUser botUser = getUserById(userId);
-        return botUser.getTransactions().stream().map(Transaction::getItem).collect(Collectors.toList());
-    }
-
-    public boolean ownsItemOfCategory(long userId, int categoryId) {
-        List<Item> userItems = getItems(userId);
-        return itemRepository.findByCategoryId(categoryId).stream().anyMatch(userItems::contains);
-    }
-
-    public void removeItem(long userId, int itemId, Levelbot levelbot) {
-        Optional<Transaction> optional = transactionRepository.findByUserIdAndItemId(userId, itemId);
-        optional.ifPresent(transactionRepository::delete);
-        levelbot.removeItemRole(userId, itemId);
     }
 
     public boolean switchDaily(long userId) {
@@ -187,12 +140,20 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public int increaseRank(long userId) {
+    public void updateStatistics(long userId) {
+        BotUser botUser = getUserById(userId);
+        botUser.setStartCoins(botUser.getCoins());
+        botUser.setStartXp(botUser.getXp());
+        botUser.setStartDiamonds(botUser.getDiamonds());
+        userRepository.save(botUser);
+    }
+
+    public int setRank(long userId, int rank) {
         BotUser botUser = getUserById(userId);
         if (botUser.getLevel() == 13) {
-            return 10;
+            return 13;
         }
-        botUser.setLevel(botUser.getLevel() + 1);
+        botUser.setLevel(rank);
         userRepository.save(botUser);
         return botUser.getLevel();
     }

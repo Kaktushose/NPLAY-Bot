@@ -1,6 +1,6 @@
 package de.kaktushose.levelbot.listener;
 
-import com.github.kaktushose.jda.commands.api.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.Rank;
@@ -55,19 +55,19 @@ public class LevelListener extends ListenerAdapter {
             long eventPoints = userService.increaseEventPoints(userId);
 
             if (eventPoints == collectEvent.getItemBound()) {
-                userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
-
+                //userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
+                userService.addDiamonds(userId, 5);
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessage(embedCache.getEmbed("collectEventItemReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
 
-            } else if (eventPoints == collectEvent.getRoleId()) {
+            } else if (eventPoints == collectEvent.getRoleBound()) {
                 levelbot.addCollectEventRole(userId);
 
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessage(embedCache.getEmbed("collectEventRoleReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventRoleReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
@@ -91,7 +91,7 @@ public class LevelListener extends ListenerAdapter {
         String xp = currentRank.equals(nextRank) ? "0" : String.valueOf(nextRank.getBound());
 
         channel.sendMessage(author.getAsMention())
-                .and(channel.sendMessage(embedCache.getEmbed("levelUp")
+                .and(channel.sendMessageEmbeds(embedCache.getEmbed("levelUp")
                         .injectValue("user", author.getAsMention())
                         .injectValue("color", currentRank.getColor())
                         .injectValue("currentRank", guild.getRoleById(currentRank.getRoleId()).getAsMention())

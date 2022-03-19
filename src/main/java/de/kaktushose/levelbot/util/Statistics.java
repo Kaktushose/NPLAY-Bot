@@ -10,6 +10,8 @@ import de.kaktushose.levelbot.bot.Levelbot;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.utils.concurrent.Task;
+import net.dv8tion.jda.internal.utils.concurrent.task.GatewayTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,8 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class Statistics {
 
@@ -45,41 +49,50 @@ public class Statistics {
         youtubeApiKey = levelbot.getSettingsService().getYoutubeApiKey(guildId);
     }
 
-    public void queryStatistics() {
+    public Task<Statistics> queryStatistics() {
         Guild guild = levelbot.getGuild();
-        List<Member> members = guild.getMembers();
-        // general member count
-        totalMemberCount = guild.getMemberCount();
-        onlineMemberCount = (int) members.stream().filter(member -> member.getOnlineStatus().equals(OnlineStatus.ONLINE)).count();
-        // game count
-        lsMemberCount = getGameCount(members, "Farming Simulator");
-        etsMemberCount = getGameCount(members, "Euro Truck Simulator");
-        notrufMemberCount = getGameCount(members, "Notruf 112");
-        omsiMemberCount = getGameCount(members, "OMSI");
-        wrsMemberCount = getGameCount(members, "Winter Resort Simulator");
-        gtaMemberCount = getGameCount(members, "Grand Theft Auto");
-        // booster
-        boosterMemberCount = guild.getBoosters().size();
-        StringBuilder boosters = new StringBuilder();
-        guild.getBoosters().forEach(member -> boosters.append(member.getAsMention()).append(", "));
-        boosterMemberList = boosters.length() > 1 ? boosters.substring(0, boosters.length() - 2) : "";
-        boosterCount = guild.getBoostCount();
-        // premium
-        List<Member> premiumMembers = guild.getMembersWithRoles(guild.getRolesByName("premium", true));
-        premiumMemberCount = premiumMembers.size();
-        StringBuilder premium = new StringBuilder();
-        premiumMembers.forEach(member -> premium.append(member.getAsMention()).append(", "));
-        premiumMemberList = premium.length() > 1 ? premium.substring(0, premium.length() - 2) : "";
-        // yt
-        try {
-            NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY);
-            ChannelStatistics channelStatistics = getYoutubeStatistics();
-            ytFollowerCount = numberFormat.format(channelStatistics.getSubscriberCount().intValue());
-            ytVideoCount = numberFormat.format(channelStatistics.getVideoCount().intValue());
-            ytViewCount = numberFormat.format(channelStatistics.getViewCount().intValue());
-        } catch (IOException e) {
-            log.error("Unable to query youtube follower count!", e);
-        }
+        CompletableFuture<Statistics> future = new CompletableFuture<>();
+        Task<List<Member>> reference = guild.loadMembers()
+                .onSuccess(members -> {
+                    // general member count
+                    totalMemberCount = members.size();
+                    onlineMemberCount = (int) members.stream().filter(member -> !member.getOnlineStatus().equals(OnlineStatus.OFFLINE)).count();
+                    // game count
+                    lsMemberCount = getGameCount(members, "Farming Simulator");
+                    etsMemberCount = getGameCount(members, "Euro Truck Simulator");
+                    notrufMemberCount = getGameCount(members, "Notruf 112");
+                    omsiMemberCount = getGameCount(members, "OMSI");
+                    wrsMemberCount = getGameCount(members, "Winter Resort Simulator");
+                    gtaMemberCount = getGameCount(members, "Grand Theft Auto");
+                    // booster
+                    List<Member> boosterList = members.stream().filter(member -> member.getTimeBoosted() != null).collect(Collectors.toList());
+                    boosterMemberCount = boosterList.size();
+                    StringBuilder boosters = new StringBuilder();
+                    boosterList.forEach(member -> boosters.append(member.getAsMention()).append(", "));
+                    boosterMemberList = boosters.length() > 1 ? boosters.substring(0, boosters.length() - 2) : "";
+                    boosterCount = guild.getBoostCount();
+                    // premium
+                    List<Member> premiumMembers = members.stream()
+                            .filter(member -> member.getRoles().contains(guild.getRolesByName("premium", true).get(0)))
+                            .collect(Collectors.toList());
+                    premiumMemberCount = premiumMembers.size();
+                    StringBuilder premium = new StringBuilder();
+                    premiumMembers.forEach(member -> premium.append(member.getAsMention()).append(", "));
+                    premiumMemberList = premium.length() > 1 ? premium.substring(0, premium.length() - 2) : "";
+                    // yt
+                    try {
+                        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY);
+                        ChannelStatistics channelStatistics = getYoutubeStatistics();
+                        ytFollowerCount = numberFormat.format(channelStatistics.getSubscriberCount().intValue());
+                        ytVideoCount = numberFormat.format(channelStatistics.getVideoCount().intValue());
+                        ytViewCount = numberFormat.format(channelStatistics.getViewCount().intValue());
+                    } catch (IOException e) {
+                        log.error("Unable to query youtube follower count!", e);
+                    }
+                    future.complete(this);
+                })
+                .onError(future::completeExceptionally);
+        return new GatewayTask<>(future, reference::cancel);
     }
 
     private int getGameCount(List<Member> members, String name) {

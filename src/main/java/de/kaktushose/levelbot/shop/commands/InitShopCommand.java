@@ -1,14 +1,14 @@
-package de.kaktushose.levelbot.commands.moderation;
+package de.kaktushose.levelbot.shop.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.services.SettingsService;
 import de.kaktushose.levelbot.listener.DailyRewardListener;
-import de.kaktushose.levelbot.listener.ShopListener;
+import de.kaktushose.levelbot.shop.ShopListener;
 import de.kaktushose.levelbot.util.NumberEmojis;
 import net.dv8tion.jda.api.entities.TextChannel;
 

@@ -3,8 +3,8 @@ package de.kaktushose.levelbot.commands.member;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.util.Pagination;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 import static de.kaktushose.levelbot.util.Pagination.CurrencyType;
 
-@CommandController({"rangliste", "leaderboard", "lb"})
+@CommandController(value = {"rangliste", "leaderboard", "lb"}, category = "Levelsystem")
 public class LeaderboardCommand {
 
     private static final String BACK = "◀️";
@@ -39,8 +39,7 @@ public class LeaderboardCommand {
     @Command(
             name = "Rangliste",
             usage = "{prefix}rangliste",
-            desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten",
-            category = "Levelsystem"
+            desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten"
     )
     public void onLeaderboard(CommandEvent event) {
         this.guild = event.getGuild();

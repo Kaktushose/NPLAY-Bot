@@ -108,12 +108,12 @@
         "value": "[GNU General Public License 3](https://www.gnu.org/licenses/gpl-3.0)"
       },
       {
-        "name": "Github Organisation",
-        "value": "https://github.com/Level-System/"
+        "name": "Website",
+        "value": "[GitHub](https://github.com/Kaktushose/Levelbot)"
       },
       {
         "name": "Credits",
-        "value": "Konzept und Idee: <@307973135746072578> \nProgrammierung: <@393843637437464588> \nLogo und Testing: <@487320784759685130> "
+        "value": "Konzept und Idee: <@307973135746072578> \nProgrammierung: <@393843637437464588> \nLogo und Testing: <@487320784759685130>"
       }
     ]
   },
@@ -258,7 +258,7 @@
       }
     ],
     "footer": {
-      "text": "Hole dir Items direkt im Kanal #levelsystem#"
+      "text": "Hole dir Items direkt im Kanal #levelsystem"
     }
   },
   "leaderboard": {
@@ -267,7 +267,7 @@
   },
   "shopOverview": {
     "title": ":shopping_cart: Shop",
-    "description": "Eine genaue Übersicht über alle Items findest du in <#829101385173041213> ",
+    "description": "Item hinzufügen für {user}",
     "color": "#86c240",
     "fields": [
       {
@@ -306,6 +306,17 @@
   "shopSuccess": {
     "title": ":shopping_bags: Erfolgreicher Kauf!",
     "description": "Du besitzt jetzt das Item \"{item}\"",
+    "color": "#86c240",
+    "fields": [
+      {
+        "name": "Dauer:",
+        "value": ":timer_clock: {days} Tage"
+      }
+    ]
+  },
+  "addItemSuccess": {
+    "title": "Erfolg!",
+    "description": "{user} besitzt jetzt das Item \"{item}\"",
     "color": "#86c240",
     "fields": [
       {
@@ -376,12 +387,12 @@
   },
   "nitroBoostStart": {
     "title": "Vielen Dank für Deine Unterstützung {user}!",
-    "description": "Danke, dass Du den nordrheintvplay Discord mit Deinem Nitro-Boost unterstützt.\nAls kleine Aufmerksamkeit hast Du einige coole einmalige Belohnung erhalten:\n> **EINMALIG:**\n\n> :icon_confirmation2: 250 XP :star2: geschenkt\n> :icon_confirmation2: 250 Münzen :moneybag: geschenkt\n> :icon_confirmation2: 25 Diamanten :gem: geschenkt\n>+ PREMIUM unlimited, gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n\n**FORTLAUFEND:**\n> :icon_confirmation2: 50 XP :star2: jeden Monat zusätzlich!\n> :icon_confirmation2: 50 Münzen :moneybag:\n> :icon_confirmation2: 5 Diamanten :gem:\n> :icon_confirmation2: Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
+    "description": "Danke, dass Du den nordrheintvplay Discord mit Deinem Nitro-Boost unterstützt.\nAls kleine Aufmerksamkeit hast Du einige coole einmalige Belohnung erhalten:\n> **EINMALIG:**\n\n> <:icon_confirmation2:693837343580356618> 250 XP :star2: geschenkt\n> <:icon_confirmation2:693837343580356618> 250 Münzen :moneybag: geschenkt\n> <:icon_confirmation2:693837343580356618> 25 Diamanten :gem: geschenkt\n> + PREMIUM unlimited, gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n\n**FORTLAUFEND:**\n> <:icon_confirmation2:693837343580356618> 50 XP :star2: jeden Monat zusätzlich!\n> <:icon_confirmation2:693837343580356618> 50 Münzen :moneybag:\n> <:icon_confirmation2:693837343580356618> 5 Diamanten :gem:\n> <:icon_confirmation2:693837343580356618> Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
     "color": "#f47fff"
   },
   "nitroBoostResume": {
     "title": "Vielen Dank für Deine Unterstützung {user}!",
-    "description": "Danke, dass Du den nordrheintvplay Discord erneut mit Deinem Nitro-Boost unterstützt. \nAls kleine Aufmerksamkeit hast Du PREMIUM unlimited :star: erhalten. Die Rolle gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n> :icon_confirmation2: 50 XP :star2: jeden Monat zusätzlich!\n> :icon_confirmation2: 50 Münzen :moneybag:\n> :icon_confirmation2: 5 Diamanten :gem:\n> :icon_confirmation2: Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
+    "description": "Danke, dass Du den nordrheintvplay Discord erneut mit Deinem Nitro-Boost unterstützt. \nAls kleine Aufmerksamkeit hast Du PREMIUM unlimited :star: erhalten. Die Rolle gilt dauerhaft bis zur Beendigung des Boosts!\n\nAußerdem schenken wir Dir alle 30 Tage zusätzlich:\n> <:icon_confirmation2:693837343580356618> 50 XP :star2: jeden Monat zusätzlich!\n> <:icon_confirmation2:693837343580356618> 50 Münzen :moneybag:\n> <:icon_confirmation2:693837343580356618> 5 Diamanten :gem:\n> <:icon_confirmation2:693837343580356618> Nitro Booster Rolle :icon_boost: als cooles Abzeichen!\n\nWir wünschen Dir weiterhin viel Spaß auf dem Server.",
     "color": "#f47fff"
   },
   "nitroBoostStop": {
@@ -393,16 +404,6 @@
     "title": "Erfolg!",
     "description": "Der Reaction Shop wurde erfolgreich eingerichtet!",
     "color": "#86c240"
-  },
-  "messageReloadSuccess": {
-    "title": "Erfolg!",
-    "description": "Die Nachricht wurde erfolgreich neu gesendet!",
-    "color": "#86c240"
-  },
-  "messageReloadError": {
-    "title": "Fehler!",
-    "description": "Nachricht nicht gefunden!",
-    "color": "#aa0c14"
   },
   "statistics": {
     "title": "Ein paar Zahlen",
@@ -465,18 +466,43 @@
     "color": "#aa0c14"
   },
   "collectEventItemReward": {
-    "title": "Danke für deine Hilfe, {user}",
-    "description": "item reward",
-    "color": "#86c240"
+    "title": "Frohe Weihnachtstage, {user} :christmas_tree:!",
+    "description": "Wow, du hast nun fabelhafte **24 Schneemänner** :snowman2: auf dem Server gebaut.\nAls Dankeschön für diesen schönen Anblick haben wir dir zusätzlich **5 Diamanten** :gem: auf deinem Konto gutgeschrieben.\nViel Spaß damit und weiterhin eine gute Zeit!\n:point_right: Übrigens: Nimm doch ebenfalls an unserem großen **CHRISTMAS-CONTEST** :santa: teil und gewinne einen von drei Keys für tolle Spiele.\n:point_right: Und vom 24.12- 26.12 kannst du dir mit dem Befehl **!geschenk** im Kanal <#665625766444138537> ein tolles Geschenk :gift: abholen!",
+    "color": "#EC5C0F"
   },
   "collectEventRoleReward": {
-    "title": "Danke für deine Hilfe, {user}",
-    "description": "role reward",
-    "color": "#86c240"
+    "title": "Frohe Weihnachtstage, {user} :christmas_tree:!",
+    "description": "du hast nun schon **3 Schneemänner** :snowman2: auf dem Server gebaut.\nDafür zeichnen wir Dich mit unserer exklusiven Eventrolle **CHRISTMAS 2021** :red_circle: aus!\nGenieße die freie Zeit und baue insgesamt **24 Schneemänner** :snowman2: für eine weitere Belohnung.\n:point_right: Übrigens: Nimm doch ebenfalls an unserem großen **CHRISTMAS-CONTEST** :santa: teil und gewinne einen von drei Keys für tolle Spiele.\n:point_right: Und vom 24.12- 26.12 kannst du dir mit dem Befehl **!geschenk** im Kanal <#665625766444138537> ein tolles Geschenk :gift: abholen!",
+    "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
     "title": "Fehler!",
-    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nDie nächste Belohnung ist in {nextReward} verfügbar!",
+    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nSchau gerne in {hours} Stunden wieder vorbei!",
     "color": "#f4cd53"
+  },
+  "shopCommandDeprecated": {
+    "title": ":information_source: Hinweis",
+    "description": "Der Shop-Command wurde entfernt.\nItems kannst du ab sofort direkt in <#851388807239827466> kaufen.",
+    "color": "#f4cd53"
+  },
+  "mutedChannelsAdd": {
+    "title": "Erfolg!",
+    "description": "{channel} wird ab sofort vom Levelsystem ignoriert.",
+    "color": "#86c240"
+  },
+  "mutedChannelsRemove": {
+    "title": "Erfolg!",
+    "description": "{channel} wird nicht mehr vom Levelsystem ignoriert.",
+    "color": "#86c240"
+  },
+  "mutedChannelsList": {
+    "title": "Folgende Kanäle werden vom Levelsystem ignoriert:",
+    "description": "{list}",
+    "color": "#86c240"
+  },
+  "buyLog": {
+    "title": "Transaktion",
+    "description": "{user} hat das Item \"{item}\" gekauft.",
+    "color": "#86c240"
   }
 }

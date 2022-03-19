@@ -7,19 +7,14 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/${myTimestamp}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>%d{yyyy.MM.dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>100MB</totalSizeCap>
-        </rollingPolicy>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./levelbot.log</file>
         <encoder>
             <Pattern>%d{HH:mm:ss} [%t] %level %logger - %msg%n</Pattern>
         </encoder>
     </appender>
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>

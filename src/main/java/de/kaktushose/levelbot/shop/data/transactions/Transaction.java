@@ -1,4 +1,6 @@
-package de.kaktushose.levelbot.database.model;
+package de.kaktushose.levelbot.shop.data.transactions;
+
+import de.kaktushose.levelbot.shop.data.items.Item;
 
 import javax.persistence.*;
 
@@ -12,15 +14,17 @@ public class Transaction {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "itemId", referencedColumnName = "itemId")
     private Item item;
+    private long userId;
     private long buyTime;
 
     public Transaction() {
     }
 
-    public Transaction(Long transactionId, Item item, long buyTime) {
+    public Transaction(Long transactionId, Item item, long userId, long buyTime) {
         this.transactionId = transactionId;
         this.item = item;
         this.buyTime = buyTime;
+        this.userId = userId;
     }
 
     public Long getTransactionId() {
@@ -45,5 +49,13 @@ public class Transaction {
 
     public void setBuyTime(long buyTime) {
         this.buyTime = buyTime;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

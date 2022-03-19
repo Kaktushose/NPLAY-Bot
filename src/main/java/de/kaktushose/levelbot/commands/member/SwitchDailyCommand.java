@@ -3,13 +3,13 @@ package de.kaktushose.levelbot.commands.member;
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
-import com.github.kaktushose.jda.commands.api.EmbedCache;
-import com.github.kaktushose.jda.commands.entities.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.database.services.UserService;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 
-@CommandController("täglich")
+@CommandController(value = {"täglich", "daily"}, category = "Levelsystem")
 public class SwitchDailyCommand {
 
     @Inject
@@ -20,8 +20,7 @@ public class SwitchDailyCommand {
     @Command(
             name = "Täglich Command",
             usage = "{prefix}täglich",
-            desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen",
-            category = "Levelsystem"
+            desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen"
     )
     public void onSwitchDaily(CommandEvent event) {
         if (!userService.switchDaily(event.getAuthor().getIdLong())) {
@@ -29,7 +28,7 @@ public class SwitchDailyCommand {
         } else {
             event.getAuthor().openPrivateChannel()
                     .flatMap(privateChannel ->
-                            privateChannel.sendMessage(embedCache.getEmbed("switchDailySuccess")
+                            privateChannel.sendMessageEmbeds(embedCache.getEmbed("switchDailySuccess")
                                     .injectValue("action", "aktiviert")
                                     .toMessageEmbed()
                             )

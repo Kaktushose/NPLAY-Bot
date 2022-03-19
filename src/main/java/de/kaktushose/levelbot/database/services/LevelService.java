@@ -1,11 +1,17 @@
 package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.bot.Levelbot;
-import de.kaktushose.levelbot.database.model.*;
+import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.database.model.CurrencyChance;
+import de.kaktushose.levelbot.database.model.Rank;
+import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
-import de.kaktushose.levelbot.database.repositories.ItemRepository;
 import de.kaktushose.levelbot.database.repositories.RankRepository;
 import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.shop.data.items.ItemCategory;
+import de.kaktushose.levelbot.shop.data.ShopService;
+import de.kaktushose.levelbot.shop.data.items.Item;
+import de.kaktushose.levelbot.shop.data.items.ItemRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
@@ -14,7 +20,6 @@ import org.springframework.context.ApplicationContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 public class LevelService {
 
@@ -24,6 +29,7 @@ public class LevelService {
     private final ChancesRepository chancesRepository;
     private final UserService userService;
     private final SettingsService settingsService;
+    private final ShopService shopService;
     private final Levelbot levelbot;
 
     public LevelService(Levelbot levelbot) {
@@ -34,6 +40,7 @@ public class LevelService {
         chancesRepository = context.getBean(ChancesRepository.class);
         this.userService = levelbot.getUserService();
         this.settingsService = levelbot.getSettingsService();
+        shopService = levelbot.getShopService();
         this.levelbot = levelbot;
     }
 
@@ -142,12 +149,12 @@ public class LevelService {
 
         long diamonds = randomDiamonds();
         long coins = randomCoins();
-        if (userService.ownsItemOfCategory(userId, 3)) {
+        if (shopService.hasItemOfCategory(userId, ItemCategory.COIN_BOOSTER)) {
             coins += 2;
         }
         long xp = randomXp();
-        if (userService.ownsItemOfCategory(userId, 4)) {
-            coins += 2;
+        if (shopService.hasItemOfCategory(userId, ItemCategory.XP_BOOSTER)) {
+            xp += 2;
         }
 
         userService.addDiamonds(userId, diamonds);
@@ -162,39 +169,33 @@ public class LevelService {
             return Optional.empty();
         }
 
-        return Optional.of(getRank(userService.increaseRank(userId)));
+        Rank rank = rankRepository.getRankByXp(newXp);
+
+        return Optional.of(getRank(userService.setRank(userId, rank.getRankId())));
     }
 
     public Optional<String> getDailyReward(long userId) {
         BotUser botUser = userService.getUserById(userId);
-        if (System.currentTimeMillis() - botUser.getLastReward() <= TimeUnit.DAYS.toMillis(1)) {
+
+        int rewardLevel;
+        if (System.currentTimeMillis() - botUser.getLastReward() >= 172800000L) {
+            rewardLevel = userService.resetRewardLevel(userId);
+        } else if (System.currentTimeMillis() - botUser.getLastReward() >= 86400000L) {
+            rewardLevel = userService.increaseRewardLevel(userId);
+        } else {
             return Optional.empty();
         }
-        int rewardLevel;
-        if (System.currentTimeMillis() - botUser.getLastReward() >= TimeUnit.DAYS.toMillis(2)) {
-            rewardLevel = userService.resetRewardLevel(userId);
-        } else {
-            rewardLevel = userService.increaseRewardLevel(userId);
-        }
+
         Reward reward = settingsService.getReward(rewardLevel);
         userService.addCoins(userId, reward.getCoins());
         userService.addXp(userId, reward.getXp());
         userService.addDiamonds(userId, reward.getDiamonds());
         userService.updateLastReward(userId);
         if (reward.getItem() != null) {
-            userService.addUpItem(userId, reward.getItem().getItemId(), levelbot);
+            shopService.addItem(userId, reward.getItem().getItemId());
         }
-        return Optional.of(reward.getMessage());
-    }
 
-    public String getNextRewardTime(long userId) {
-        BotUser botUser = userService.getUserById(userId);
-        long millis = TimeUnit.DAYS.toMillis(1) - (System.currentTimeMillis() - botUser.getLastReward());
-        long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
-        String hoursPattern = hours != 1 ? "%d Stunden" : "einer Stunde";
-        String minutesPattern = minutes != 1 ? "%d Minuten" : "einer Minute";
-        return String.format(hoursPattern, hours) + " und " + String.format(minutesPattern, minutes);
+        return Optional.of(reward.getMessage());
     }
 
     public String applyRewards(long userId, int rankId) {
@@ -205,7 +206,7 @@ public class LevelService {
             userService.addDiamonds(userId, rankReward.getDiamonds());
             userService.addXp(userId, rankReward.getXp());
             if (rankReward.getItem() != null) {
-                userService.addUpItem(userId, rankReward.getItem().getItemId(), levelbot);
+                shopService.addItem(userId, rankReward.getItem().getItemId());
             }
             rewardText.append(rankReward.getMessage()).append("\n");
         });
