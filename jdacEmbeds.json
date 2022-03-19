@@ -1,7 +1,7 @@
 {
   "defaultHelp": {
     "title": "Generelle Hilfe",
-    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um sepzifische Hilfe zu erhalten.",
+    "description": "Die folgenden Commands sind verfügbar. Siehe `{prefix}{helpLabel} <command>` um spezifische Hilfe zu erhalten.",
     "color": "#86c240"
   },
   "specificHelp": {

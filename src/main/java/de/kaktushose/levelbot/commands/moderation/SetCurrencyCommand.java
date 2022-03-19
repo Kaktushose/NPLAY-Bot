@@ -22,7 +22,7 @@ public class SetCurrencyCommand {
             value = "coins",
             name = "Münzen setzen",
             usage = "{prefix}set coins <member> <amount>",
-            desc = "Setzt die Anzahl der Münzen eines Benutzers auf den angegbenen Wert.",
+            desc = "Setzt die Anzahl der Münzen eines Benutzers auf den angegebenen Wert.",
             category = "Moderation"
     )
     public void onSetCoins(CommandEvent event, Member member, Integer amount) {
@@ -38,7 +38,7 @@ public class SetCurrencyCommand {
             value = "xp",
             name = "XP setzen",
             usage = "{prefix}set xp <member> <amount>",
-            desc = "Setzt die Anzahl der XP eines Benutzers auf den angegbenen Wert.",
+            desc = "Setzt die Anzahl der XP eines Benutzers auf den angegebenen Wert.",
             category = "Moderation"
     )
     public void onSetXp(CommandEvent event, Member member, Integer amount) {
@@ -54,7 +54,7 @@ public class SetCurrencyCommand {
             value = "diamonds",
             name = "Diamanten setzen",
             usage = "{prefix}set diamonds <member> <amount>",
-            desc = "Setzt die Anzahl der Diamanten eines Benutzers auf den angegbenen Wert.",
+            desc = "Setzt die Anzahl der Diamanten eines Benutzers auf den angegebenen Wert.",
             category = "Moderation"
     )
     public void onSetDiamonds(CommandEvent event, Member member, Integer amount) {
