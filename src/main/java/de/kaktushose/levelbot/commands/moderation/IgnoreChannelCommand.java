@@ -24,7 +24,8 @@ public class IgnoreChannelCommand {
             name = "Textkanal muten",
             usage = "{prefix}ignore <channel>",
             desc = "Mutet einen Textkanal",
-            category = "Moderation"
+            category = "Moderation",
+            isSuper = true
     )
     public void onMutedChannelsAdd(CommandEvent event, TextChannel channel) {
         if (!settingsService.isIgnoredChannel(channel.getIdLong())) {
