@@ -1,23 +1,26 @@
 {
   "logo": {
     "title": "Offizieller NPLAY Discord",
-    "description": "https://discord.gg/nordrheintvplay",
+    "description": "https://discord.gg/nplay",
     "thumbnail": {
       "url": "https://cdn.discordapp.com/attachments/850466263216947252/970283398063079464/nplay_logo_standard.jpg"
     },
     "image": {
       "url": "https://cdn.discordapp.com/attachments/850466263216947252/970283152163627008/Discord-LogoWordmark-White.png"
     },
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "welcome": {
     "title": "Der Simulatoren Discord",
     "description":"Mit unserem NPLAY Discord-Server wollen wir Dir neue Möglichkeiten bieten: Diskutiere über die Welt der Simulatoren, tausche Dich über die neuesten Videos auf dem Kanal aus, nimm an exklusiven Gewinnspielen teil und finde andere Gamer zum gemeinsamen Zocken!\n\nUnd das alles auf einer modernen Plattform in angenehmer Atmosphäre.\n\nDie folgenden Informationen sollen Dir dabei helfen, dich auf dem Server schnell und unkompliziert zurechtzufinden.\n\nSollten dennoch Fragen offenbleiben, steht Dir unser Serverteam jederzeit zur Verfügung.\n\nWir wünschen Dir viel Spaß beim Chatten und Unterhalten!\nDein NPLAY Team",
     "author": {
-      "name": "nordrheintvplay",
+      "name": "NPLAY",
       "icon_url": "https://media.discordapp.net/attachments/510209791214223380/659861897360703488/regular_picture.png"
     },
-    "color": "#00FFAE"
+    "image":{
+      "url":"https://cdn.discordapp.com/attachments/386959481558401025/960906185215733781/NPLAY_Entwurf.jpg",
+    },
+    "color": "#aeff00"
   },
   "statistics": {
     "title": "Fehler!",
@@ -27,12 +30,12 @@
   "team": {
     "title": "Serverteam",
     "description": "Wir sind jederzeit für Dich da!\n\n<@278591435417059328> | Inhaber\n<@307973135746072578> | Serverleitung\n\n<@393843637437464588> | Moderation, Entwickler des Level-Systems\n<@315877643616649220> | Moderation\n<@522867524484726785> | Moderation\n<@142670727236026368> | Moderation\n<@427782609058398229> | Moderation\n\n*Bei Fragen oder anderen Anliegen freuen wir uns auf Deine Nachricht\nim Support oder via PN.*",
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "categories": {
     "title": "Serverkategorien",
     "description":"Der Server ist in 4 übersichtliche Kategorien aufgeteilt:\n\n**- Informationen:**\nHier findest du alle wichtigen Kanäle zu den organisatorischen Aspekten des Servers sowie den Support.\n\n**- Projekte:**\nTausche Dich hier mit anderen Zuschauern über die Entwicklung des NPLAY YouTube-Kanals und dessen aktuelle Projekte aus.\n\n**- Simulatoren:**\nDiskutiere in den Spiele-Kanälen über Updates, teile deine Bilder und schönste Spielerlebnisse, oder erhalte Support. In <#606645000687583236> finden alle Spiele Platz, für die es keinen eigenen Kanal gibt!\n\n**- Community:**\nDer Bereich des Servers, in welchem alles abseits der Simulatoren diskutiert werden kann: Im <#575918262689333259> können interessante News gepostet und im <#386277336406032385> kann ausgelassen geplaudert werden. Die besten Beiträge des Servers sind jederzeit im <#690664642623701012> zu finden!\n\n*Zudem bieten wir einen Unbegrenzten Talk sowie einen 2 User Talk an.\nBei Bedarf können jederzeit weitere Kanäle eröffnet werden.*",
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "rules": {
     "title": "Serverregeln",
@@ -54,12 +57,12 @@
         "inline":false
       }
     ],
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "rule violations": {
     "title": "Regelverstöße",
     "description":":bangbang: Im Falle eines Verstoßes müssen wir Maßnahmen ergreifen. Diese hängen von vielen individuellen Umständen ab: Wie schwer wiegt der Regelbruch? Ist der User bereits auffällig geworden? Und vor allem: Was muss getan werden, um auf dem Server eine angenehme Diskussionskultur zu bewahren? \n\nHäufig gehen wir dabei wie folgt vor:\n\n__1+ 2. Verstoß:__ **Warnung** über den Carl-Bot mit Hinweis auf das Fehlverhalten, ggf. klärendes Gespräch\n__Ab 3. Verstoß:__ **Mute für bis zu 30 Tage** über den Carl-Bot mit Angabe des Grundes\n__Spätestens ab 5. Verstoß:__ **Temporärer oder dauerhafter Bann** über den Carl-Bot mit Angabe des Grundes\n\nDiese Reihenfolge ist unverbindlich. So erfolgt beispielsweise bei einer schweren Beleidigung eines anderen Servermitglieds selbstverständlich direkt ein dauerhafter Bann, während das fünfmalige Verwenden von Caps höchstens zu einem Mute führt.\n\nBei Fragen dazu wende Dich gerne an das Moderationsteam.",
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "links": {
     "title": "Nützliche Links",
@@ -103,9 +106,14 @@
         "name": "Nitrado:",
         "value": "https://bit.ly/LSServerNitrado",
         "inline": true
+      },
+      {
+        "name": "Discord:",
+        "value": "https://discord.gg/nplay",
+        "inline": true
       }
     ],
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "levelSystem": {
     "title": "Level-System",
@@ -113,11 +121,11 @@
     "image": {
       "url": "https://media.discordapp.net/attachments/487343298910879767/668939091772964904/BannerHQ.png"
     },
-    "color": "#00FFAE"
+    "color": "#aeff00"
   },
   "support": {
     "title": "Support",
     "description":"- In<#386279631189311500> helfen wir Dir bei Problemen und Fragen rund um den Discord-Server. Außerdem freuen wir uns jederzeit über Deine Wünsche - wir behalten die Zukunft im Auge und wollen das User-Erlebnis weiter verbessern.\n\n- Alle Fragen rund um Gaming und den Kanal NPLAY bitte in den entsprechenden Spiele-Kanälen in \"Simulatoren\" bzw. in <#459805064840740864> stellen und dort mit anderen Usern austauschen!",
-    "color": "#00FFAE"
+    "color": "#aeff00"
   }
 }

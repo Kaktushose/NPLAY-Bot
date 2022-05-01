@@ -406,9 +406,12 @@
     "color": "#86c240"
   },
   "statistics": {
+    "thumbnail": {
+      "url": "https://cdn.discordapp.com/attachments/850466263216947252/970283398063079464/nplay_logo_standard.jpg"
+    },
     "title": "Aktuelle Statistiken",
-    "description": "__**NPLAY Discord:**__\n\n**Mitglieder auf dem Server:**\n{totalMemberCount}\n\n**Mitglieder online:**\n{onlineMemberCount}\n\n**Mitglieder in Spielen:**\n:tractor: LS 22: {lsMemberCount}\n:truck: ETS 2: {etsMemberCount}\n:fire: Notruf 112: {notrufMemberCount}\n:bus: OMSI 2: {omsiMemberCount}\n:mountain_cableway: Winter Resort Simulator: {wrsMemberCount}\n:gun: GTA V: {gtaMemberCount}\n\n**Nitro-Booster:**\nDerzeit insgesamt {boosterMemberCount} <@&596780997727617045>, die uns mit {boosterCount} Boosts unterstützen.\n\n{boosterMemberList}\n\n**PREMIUM:**\nDerzeit insgesamt {premiumMemberCount} <@&386302591883018242>- Mitglieder.\n\n{premiumMemberList}\n\n__**Stats zum Kanal:**__\n\n**Abonnenten auf YouTube:** \n{ytFollowerCount}\n\n**Videos auf YouTube:**\n{ytVideoCount}\n\n**Views auf YouTube:**\n{ytViewCount}",
-    "color": "#00FFAE"
+    "description": "__**NPLAY Discord:**__\n\n**Mitglieder auf dem Server:**\n{totalMemberCount}\n\n**Mitglieder online:**\n{onlineMemberCount}\n\n**Mitglieder in Spielen:**\n:tractor: LS 22: {lsMemberCount}\n:truck: ETS 2: {etsMemberCount}\n:fire: Notruf 112: {notrufMemberCount}\n:bus: OMSI 2: {omsiMemberCount}\n:mountain_cableway: Winter Resort Simulator: {wrsMemberCount}\n:gun: GTA V: {gtaMemberCount}\n\n**Nitro-Booster:**\nDerzeit insgesamt {boosterMemberCount} <@&596780997727617045>, die uns mit {boosterCount} Boosts unterstützen.\n\n{boosterMemberList}\n\n**PREMIUM:**\nDerzeit insgesamt {premiumMemberCount} <@&386302591883018242>- Mitglieder.\n\n{premiumMemberList}\n\n__**NPLAY auf Youtube:**__\n\n**Abonnenten auf YouTube:** \n{ytFollowerCount}\n\n**Videos auf YouTube:**\n{ytVideoCount}\n\n**Views auf YouTube:**\n{ytViewCount}",
+    "color": "#aeff00"
   },
   "dailyReward": {
     "title": "Herzlichen Glückwunsch, {user}!",
