@@ -225,7 +225,11 @@ public class Levelbot {
 
     public void addRankRole(long userId, int rankId) {
         Rank rank = levelService.getRank(rankId);
-        guild.addRoleToMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+        Member member = guild.getMemberById(userId);
+        if (member == null) {
+            return;
+        }
+        guild.addRoleToMember(member, guild.getRoleById(rank.getRoleId())).queue();
     }
 
     public void removeRankRole(long userId, int rankId) {
