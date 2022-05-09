@@ -126,6 +126,7 @@ public class Levelbot {
                 new VoiceTextLink(jda.getTextChannelById(839226183409467442L)),
                 new ShopListener(this),
                 new DailyRewardListener(this),
+                new BoosterListener(),
                 new ContestEventListener(settingsService, eventService)
         );
 

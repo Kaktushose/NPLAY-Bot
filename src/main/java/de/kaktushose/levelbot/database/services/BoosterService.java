@@ -10,13 +10,17 @@ import de.kaktushose.levelbot.shop.data.items.ItemVariant;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import net.dv8tion.jda.api.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BoosterService {
 
+    private static final Logger log = LoggerFactory.getLogger("analytics");
     private final NitroBoosterRepository nitroBoosterRepository;
     private final Levelbot levelbot;
     private final ShopService shopService;
@@ -34,12 +38,15 @@ public class BoosterService {
 
     public void updateBoosterStatus(Guild guild, TextChannel botChannel, EmbedCache embedCache) {
         // iterate through all actual nitro boosters
+        log.debug("updateBoosterStatus started:");
         guild.findMembers(member -> member.getTimeBoosted() != null).onSuccess(boosterList -> {
+            log.debug("Queried members: {}", Arrays.toString(boosterList.toArray()));
             boosterList.forEach(member -> {
                 long userId = member.getIdLong();
-
+                log.debug("Checking on {}...", member);
                 // user is already registered as an active booster in db, skip this one
                 if (isActiveNitroBooster(userId)) {
+                    log.debug("Member is active booster!");
                     return;
                 }
 
@@ -53,6 +60,7 @@ public class BoosterService {
                                     .injectValue("user", member.getEffectiveName())
                                     .toMessageEmbed()
                             )).queue();
+                    log.debug("Member is inactive booster!");
                     return;
                 }
                 // else, user is not in db, must be a first time booster
@@ -64,14 +72,17 @@ public class BoosterService {
                                 .injectValue("user", member.getEffectiveName())
                                 .toMessageEmbed()
                         )).queue();
+                log.debug("Member is new booster!");
             });
 
+            log.debug("Comparing with active boosters...");
             // iterate through all active boosters and compare with actual boosters
             getActiveNitroBoosters().forEach(nitroBooster -> {
                 Long userId = nitroBooster.getUserId();
                 Member member = guild.retrieveMemberById(userId).complete();
-
+                log.debug("Checking on {}...", member);
                 if (boosterList.stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
+                    log.debug("Member stopped boosting!");
                     changeNitroBoosterStatus(userId, false);
                     shopService.removeItem(userId, ItemCategory.PREMIUM, ItemVariant.UNLIMITED);
                     botChannel.sendMessage(member.getAsMention())
@@ -79,11 +90,14 @@ public class BoosterService {
                                     .injectValue("user", member.getAsMention())
                                     .toMessageEmbed()
                             )).queue();
+                    log.debug("Member is still boosting!");
                 }
             });
         }).onError(throwable -> {
+            log.debug("Querying members failed!", throwable);
             throw new IllegalStateException("Unable to query boosters!", throwable);
         });
+        log.debug("updateBoosterStatus finished!");
     }
 
     public List<NitroBooster> getAllNitroBoosters() {
