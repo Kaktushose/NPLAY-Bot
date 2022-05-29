@@ -90,8 +90,8 @@ public class BoosterService {
                                     .injectValue("user", member.getAsMention())
                                     .toMessageEmbed()
                             )).queue();
-                    log.debug("Member is still boosting!");
                 }
+                log.debug("Member is still boosting!");
             });
         }).onError(throwable -> {
             log.debug("Querying members failed!", throwable);
