@@ -22,11 +22,11 @@
         </encoder>
     </appender>
 
-    <logger name="analytics" level="DEBUG" additivity="false">
+    <logger name="analytics" level="trace" additivity="false">
         <appender-ref ref="ANALYTICS-FILE"/>
     </logger>
 
-    <root level="TRACE">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
