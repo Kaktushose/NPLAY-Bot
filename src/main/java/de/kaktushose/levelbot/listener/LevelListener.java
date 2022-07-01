@@ -7,6 +7,7 @@ import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.shop.data.ShopService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -21,6 +22,7 @@ public class LevelListener extends ListenerAdapter {
     private final LevelService levelService;
     private final EventService eventService;
     private final UserService userService;
+    private final ShopService shopService;
     private final EmbedCache embedCache;
     private final Levelbot levelbot;
 
@@ -28,6 +30,7 @@ public class LevelListener extends ListenerAdapter {
         this.levelService = levelbot.getLevelService();
         this.eventService = levelbot.getEventService();
         this.userService = levelbot.getUserService();
+        this.shopService = levelbot.getShopService();
         this.embedCache = levelbot.getEmbedCache();
         this.levelbot = levelbot;
     }
@@ -55,8 +58,7 @@ public class LevelListener extends ListenerAdapter {
             long eventPoints = userService.increaseEventPoints(userId);
 
             if (eventPoints == collectEvent.getItemBound()) {
-                //userService.addUpItem(userId, collectEvent.getItem().getItemId(), levelbot);
-                userService.addDiamonds(userId, 5);
+                shopService.addItem(userId, collectEvent.getItem().getItemId());
                 channel.sendMessage(author.getAsMention())
                         .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())
@@ -75,7 +77,6 @@ public class LevelListener extends ListenerAdapter {
         }
 
         Optional<Rank> optional = levelService.onValidMessage(userId);
-
         if (optional.isEmpty()) {
             return;
         }

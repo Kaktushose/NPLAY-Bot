@@ -123,9 +123,10 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(839226183409467442L)),
+                new VoiceTextLink(jda.getTextChannelById(367353132772098052L)),
                 new ShopListener(this),
                 new DailyRewardListener(this),
+                new BoosterListener(),
                 new ContestEventListener(settingsService, eventService)
         );
 
@@ -223,13 +224,22 @@ public class Levelbot {
     }
 
     public void addRankRole(long userId, int rankId) {
+        log.info("addRankRole({}, {})", userId, rankId);
         Rank rank = levelService.getRank(rankId);
-        guild.addRoleToMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+        Member member = guild.getMemberById(userId);
+        if (member == null) {
+            return;
+        }
+        guild.addRoleToMember(member, guild.getRoleById(rank.getRoleId())).queue();
+        log.info("Added role {} to member {}", rank.getRoleId(), member);
     }
 
     public void removeRankRole(long userId, int rankId) {
+        log.info("removeRankRole({}, {})", userId, rankId);
         Rank rank = levelService.getRank(rankId);
         guild.removeRoleFromMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+        log.info("Removed role {} from member {}", rank.getRoleId(), userId);
+
     }
 
     public void addItemRole(long userId, int itemId) {

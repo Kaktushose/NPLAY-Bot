@@ -10,11 +10,23 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>./levelbot.log</file>
         <encoder>
-            <Pattern>%d{HH:mm:ss} [%t] %level %logger - %msg%n</Pattern>
+            <Pattern>%date [%t] %level %logger - %msg%n</Pattern>
         </encoder>
     </appender>
 
-    <root level="debug">
+    <appender name="ANALYTICS-FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./analytics.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%date [%t] %level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="analytics" level="trace" additivity="false">
+        <appender-ref ref="ANALYTICS-FILE"/>
+    </logger>
+
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>

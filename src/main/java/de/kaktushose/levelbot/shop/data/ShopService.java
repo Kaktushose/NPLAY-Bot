@@ -76,8 +76,13 @@ public class ShopService {
 
         BotUser botUser = userService.getUserById(userId);
         Transaction transaction;
-        if (hasItem(userId, itemId)) {
-            transaction = getTransaction(userId, itemId);
+        if (hasItemOfCategory(userId, item.getCategoryId())) {
+            // TODO add getItemByCategoryId method
+            int id = getItems(userId).stream().filter(i -> i.getCategoryId() == item.getCategoryId())
+                    .findFirst()
+                    .orElseThrow()
+                    .getItemId();
+            transaction = getTransaction(userId, id);
             transaction.setBuyTime(transaction.getBuyTime() + item.getDuration());
         } else {
             transaction = addItemToUser(botUser, item);
