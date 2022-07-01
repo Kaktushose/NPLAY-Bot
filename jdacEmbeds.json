@@ -114,5 +114,10 @@
     "footer": {
       "text": "Bitte kontaktiere Kaktushose"
     }
+  },
+  "migration": {
+    "title": "Eingestellt",
+    "description": "Textbefehle wurden deaktiviert. Dieser Command ist jetzt nur noch als Slash Command verfügbar. Tippe `/` ein, um eine Liste aller verfügbaren Commands zu sehen!",
+    "color": "ffc800"
   }
 }

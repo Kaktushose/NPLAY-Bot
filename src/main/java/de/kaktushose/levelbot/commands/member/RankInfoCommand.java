@@ -14,14 +14,9 @@ public class RankInfoCommand {
     @Inject
     Levelbot levelbot;
 
-    @Command(
-            name = "Kontoinformation abrufen",
-            usage = "{prefix}info <member>",
-            desc = "Zeigt die Kontoinformationen zu einem User an"
-    )
+    @Command(name = "Kontoinformation abrufen", desc = "Zeigt die Kontoinformationen zu einem User an")
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         Member target = member == null ? event.getMember() : member;
         event.reply(levelbot.generateRankInfo(target.getUser(), false));
     }
 }
-

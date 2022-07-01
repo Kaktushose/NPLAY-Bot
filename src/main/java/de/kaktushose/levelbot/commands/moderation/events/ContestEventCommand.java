@@ -38,8 +38,8 @@ public class ContestEventCommand {
             desc = "Startet ein Bilder Contest Event",
             category = "Moderation"
     )
-    public void onContestEventStart(CommandEvent event, TextChannel textChannel, String emote) {
-        eventService.startContestEvent(event.getGuild().getIdLong(), textChannel.getIdLong(), emote);
+    public void onContestEventStart(CommandEvent event, TextChannel channel, String emote) {
+        eventService.startContestEvent(event.getGuild().getIdLong(), channel.getIdLong(), emote);
         event.reply(embedCache.getEmbed("contestEventStart"));
     }
 

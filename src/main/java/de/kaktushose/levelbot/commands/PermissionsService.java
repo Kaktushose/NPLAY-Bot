@@ -23,9 +23,9 @@ public class PermissionsService implements PermissionsProvider {
     @Override
     public boolean hasPermission(@NotNull User user, @NotNull CommandContext context) {
         for (String permission : context.getCommand().getPermissions()) {
-           if (!userService.getUsersByPermission(getLevelByName(permission)).contains(user.getIdLong())) {
-               return false;
-           }
+            if (!userService.getUsersByPermission(getLevelByName(permission)).contains(user.getIdLong())) {
+                return false;
+            }
         }
         return true;
     }

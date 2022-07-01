@@ -11,7 +11,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-@CommandController("eval")
+@CommandController(value = "eval", isActive = false)
 @Permission("owner")
 public class EvalCommand {
 

@@ -2,13 +2,14 @@ package de.kaktushose.levelbot.listener;
 
 import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.SettingsService;
-import net.dv8tion.jda.api.events.message.guild.GenericGuildMessageEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.message.GenericMessageEvent;
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmojiEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,8 +24,12 @@ public class ContestEventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         long guildId = event.getGuild().getIdLong();
+
         if (event.getAuthor().isBot()) {
             return;
         }
@@ -38,51 +43,64 @@ public class ContestEventListener extends ListenerAdapter {
             return;
         }
 
-        event.getMessage().addReaction(settingsService.getEventEmote(guildId)).queue();
+        event.getMessage().addReaction(Emoji.fromFormatted(settingsService.getEventEmote(guildId))).queue();
         eventService.createVoteCount(event.getMessage().getIdLong(), event.getAuthor().getIdLong());
     }
 
     @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         long guildId = event.getGuild().getIdLong();
+
         if (event.getUser().isBot()) {
             return;
         }
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(guildId)) {
             return;
         }
-        if (event.getReactionEmote().getName().equals(settingsService.getEventEmote(guildId))) {
+        if (event.getEmoji().getName().equals(settingsService.getEventEmote(guildId))) {
             eventService.increaseVoteCount(event.getMessageIdLong());
         }
     }
 
     // single reaction removed
     @Override
-    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         long guildId = event.getGuild().getIdLong();
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(guildId)) {
             return;
         }
-        if (event.getReactionEmote().getName().equals(settingsService.getEventEmote(guildId))) {
+        if (event.getEmoji().getName().equals(settingsService.getEventEmote(guildId))) {
             eventService.decreaseVoteCount(event.getMessageIdLong());
         }
     }
 
     // all reactions of a emote removed
     @Override
-    public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
+    public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         long guildId = event.getGuild().getIdLong();
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(guildId)) {
             return;
         }
-        if (event.getReactionEmote().getName().equals(settingsService.getEventEmote(guildId))) {
+        if (event.getEmoji().getName().equals(settingsService.getEventEmote(guildId))) {
             removeEntry(event);
         }
     }
 
     // all reactions removed
     @Override
-    public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
+    public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(event.getGuild().getIdLong())) {
             return;
         }
@@ -91,14 +109,17 @@ public class ContestEventListener extends ListenerAdapter {
 
     // message deleted
     @Override
-    public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
+    public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        if (!event.isFromGuild()) {
+            return;
+        }
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(event.getGuild().getIdLong())) {
             return;
         }
         removeEntry(event);
     }
 
-    private void removeEntry(GenericGuildMessageEvent event) {
+    private void removeEntry(GenericMessageEvent event) {
         eventService.deleteVoteCount(event.getMessageIdLong());
     }
 }

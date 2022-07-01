@@ -1,7 +1,6 @@
 package de.kaktushose.levelbot.shop;
 
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.services.LevelService;
@@ -13,7 +12,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,7 @@ public class ShopListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         // bots should just be ignored
         if (event.getUser().isBot()) {
             return;
@@ -105,7 +104,7 @@ public class ShopListener extends ListenerAdapter {
         }
 
         int variant;
-        switch (event.getReactionEmote().getName()) {
+        switch (event.getEmoji().getName()) {
             case NumberEmojis.ONE:
                 variant = 0;
                 break;
@@ -135,7 +134,7 @@ public class ShopListener extends ListenerAdapter {
             fail = "Du hast nicht genug Münzen!";
         }
 
-        TextChannel channel = event.getChannel();
+        TextChannel channel = event.getTextChannel();
 
         Consumer<Message> delete = success -> success.delete().queueAfter(
                 30, TimeUnit.SECONDS, null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
@@ -164,27 +163,28 @@ public class ShopListener extends ListenerAdapter {
                         success -> activeUsers.remove(member.getIdLong()),
                         new ErrorHandler().ignore(UNKNOWN_MESSAGE)
                 );
-                confirmMessage.addReaction(CONFIRM).and(confirmMessage.addReaction(CANCEL)).queue();
-                ReactionWaiter waiter = new ReactionWaiter(confirmMessage, event.getMember(), CONFIRM, CANCEL);
-                waiter.onEvent(reactionEvent -> { // on reaction confirm or cancel emoji
-                    confirmMessage.delete().queue();
-                    if (reactionEvent.getEmote().equals(CONFIRM)) {
-                        shopService.buyItem(botUser.getUserId(), item.getItemId());
-                        channel.sendMessageEmbeds( // successful transaction
-                                embedCache.getEmbed("shopSuccess")
-                                        .injectValue("item", item.getName())
-                                        .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
-                                        .toMessageEmbed()
-                        ).queue(delete);
-                        levelbot.getLogChannel().sendMessageEmbeds(embedCache.getEmbed("buyLog")
-                                .injectValue("user", member.getAsMention())
-                                .injectValue("item", item.getName())
-                                .toMessageEmbed()
-                        ).queue();
-                    }
-                    activeUsers.remove(member.getIdLong());
-                    waiter.stopWaiting(false);
-                });
+                // TODO use buttons
+//                confirmMessage.addReaction(CONFIRM).and(confirmMessage.addReaction(CANCEL)).queue();
+//                ReactionWaiter waiter = new ReactionWaiter(confirmMessage, event.getMember(), CONFIRM, CANCEL);
+//                waiter.onEvent(reactionEvent -> { // on reaction confirm or cancel emoji
+//                    confirmMessage.delete().queue();
+//                    if (reactionEvent.getEmote().equals(CONFIRM)) {
+//                        shopService.buyItem(botUser.getUserId(), item.getItemId());
+//                        channel.sendMessageEmbeds( // successful transaction
+//                                embedCache.getEmbed("shopSuccess")
+//                                        .injectValue("item", item.getName())
+//                                        .injectValue("days", TimeUnit.MILLISECONDS.toDays(item.getDuration()))
+//                                        .toMessageEmbed()
+//                        ).queue(delete);
+//                        levelbot.getLogChannel().sendMessageEmbeds(embedCache.getEmbed("buyLog")
+//                                .injectValue("user", member.getAsMention())
+//                                .injectValue("item", item.getName())
+//                                .toMessageEmbed()
+//                        ).queue();
+//                    }
+//                    activeUsers.remove(member.getIdLong());
+//                    waiter.stopWaiting(false);
+//                });
             });
         }
         event.getReaction().removeReaction(member.getUser()).queue();

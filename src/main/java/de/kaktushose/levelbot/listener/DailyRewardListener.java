@@ -3,7 +3,7 @@ package de.kaktushose.levelbot.listener;
 import de.kaktushose.levelbot.bot.Levelbot;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class DailyRewardListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         // bots should just be ignored
         if (event.getUser().isBot()) {
             return;
@@ -36,7 +36,7 @@ public class DailyRewardListener extends ListenerAdapter {
         }
 
         // must be :gift: emote
-        if (!event.getReactionEmote().getName().equals("\uD83C\uDF81")) {
+        if (!event.getEmoji().getName().equals("\uD83C\uDF81")) {
             return;
         }
         User user = event.getUser();

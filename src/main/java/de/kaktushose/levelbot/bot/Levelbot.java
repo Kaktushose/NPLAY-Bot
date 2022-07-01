@@ -5,7 +5,7 @@ import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.EmbedDTO;
 import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
 import com.github.kaktushose.jda.commands.embeds.help.JsonHelpMessageFactory;
-import de.kaktushose.discord.reactionwaiter.ReactionListener;
+import com.github.kaktushose.jda.commands.interactions.commands.CommandRegistrationPolicy;
 import de.kaktushose.levelbot.Bootstrapper;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.database.model.BotUser;
@@ -105,7 +105,7 @@ public class Levelbot {
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.GUILD_PRESENCES
         ).disableCache(
-                CacheFlag.EMOTE,
+                CacheFlag.EMOJI,
                 CacheFlag.CLIENT_STATUS
         ).enableCache(
                 CacheFlag.ACTIVITY
@@ -131,12 +131,13 @@ public class Levelbot {
         );
 
         log.debug("Starting ReactionListener...");
-        ReactionListener.setAutoRemove(true);
-        ReactionListener.setAutoRemoveDelay(60, TimeUnit.SECONDS);
-        ReactionListener.startListening(jda);
 
         log.debug("Starting jda-commands...");
-        jdaCommands = JDACommands.start(jda, Bootstrapper.class, "de.kaktushose.levelbot");
+        jdaCommands = JDACommands.slash(jda, Bootstrapper.class, "de.kaktushose.levelbot")
+                .guilds(guildId)
+                .registrationPolicy(CommandRegistrationPolicy.TEXT_AND_SLASH)
+                .startGuild();
+
         EmbedCache embeds = new EmbedCache("jdacEmbeds.json");
         embeds.loadEmbedsToCache();
         jdaCommands.getImplementationRegistry().setHelpMessageFactory(
@@ -237,7 +238,7 @@ public class Levelbot {
     public void removeRankRole(long userId, int rankId) {
         log.info("removeRankRole({}, {})", userId, rankId);
         Rank rank = levelService.getRank(rankId);
-        guild.removeRoleFromMember(userId, guild.getRoleById(rank.getRoleId())).queue();
+        guild.removeRoleFromMember(UserSnowflake.fromId(userId), guild.getRoleById(rank.getRoleId())).queue();
         log.info("Removed role {} from member {}", rank.getRoleId(), userId);
 
     }
@@ -247,7 +248,7 @@ public class Levelbot {
         if (item.getRoleId() == -1) {
             return;
         }
-        guild.addRoleToMember(userId, guild.getRoleById(item.getRoleId())).queue();
+        guild.addRoleToMember(UserSnowflake.fromId(userId), guild.getRoleById(item.getRoleId())).queue();
     }
 
     public void removeItemRole(long userId, int itemId) {
@@ -255,12 +256,12 @@ public class Levelbot {
         if (item.getRoleId() == -1) {
             return;
         }
-        guild.removeRoleFromMember(userId, guild.getRoleById(item.getRoleId())).queue();
+        guild.removeRoleFromMember(UserSnowflake.fromId(userId), guild.getRoleById(item.getRoleId())).queue();
     }
 
     public void addCollectEventRole(long userId) {
         CollectEvent event = eventService.getActiveCollectEvent(guildId);
-        guild.addRoleToMember(userId, guild.getRoleById(event.getRoleId())).queue();
+        guild.addRoleToMember(UserSnowflake.fromId(userId), guild.getRoleById(event.getRoleId())).queue();
     }
 
     public void updateUserStatistics() {

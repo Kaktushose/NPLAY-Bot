@@ -23,12 +23,11 @@ public class SetPriceCommand {
             desc = "Setzt den Preis eines Items auf den angegebenen Wert",
             category = "Moderation"
     )
-    public void onSetPrice(CommandEvent event, int itemId, int price) {
-        if (levelService.setItemPrice(itemId, price)) {
+    public void onSetPrice(CommandEvent event, int id, int price) {
+        if (levelService.setItemPrice(id, price)) {
             event.reply(embedCache.getEmbed("itemPriceChanged"));
         } else {
-            event.reply(embedCache.getEmbed("itemNotFound").injectValue("id", itemId));
+            event.reply(embedCache.getEmbed("itemNotFound").injectValue("id", id));
         }
     }
 }
-

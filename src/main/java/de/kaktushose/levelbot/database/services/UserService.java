@@ -1,13 +1,9 @@
 package de.kaktushose.levelbot.database.services;
 
-import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.model.BotUser;
 import de.kaktushose.levelbot.database.repositories.UserRepository;
-import de.kaktushose.levelbot.shop.data.items.FrozenItem;
 import de.kaktushose.levelbot.shop.data.items.FrozenItemRepository;
-import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.shop.data.items.ItemRepository;
-import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class UserService {
 
