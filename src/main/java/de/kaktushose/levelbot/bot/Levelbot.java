@@ -103,7 +103,8 @@ public class Levelbot {
                 GatewayIntent.GUILD_VOICE_STATES,
                 GatewayIntent.GUILD_MESSAGES,
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                GatewayIntent.GUILD_PRESENCES
+                GatewayIntent.GUILD_PRESENCES,
+                GatewayIntent.GUILD_EMOJIS_AND_STICKERS
         ).disableCache(
                 CacheFlag.EMOJI,
                 CacheFlag.CLIENT_STATUS
@@ -123,7 +124,6 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(367353132772098052L)),
                 new ShopListener(this),
                 new DailyRewardListener(this),
                 new BoosterListener(),
