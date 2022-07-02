@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 public class RankInfoCommand {
 
     @Inject
-    Levelbot levelbot;
+    private Levelbot levelbot;
 
     @Command(name = "Kontoinformation abrufen", desc = "Zeigt die Kontoinformationen zu einem User an")
     public void onRankInfo(CommandEvent event, @Optional Member member) {

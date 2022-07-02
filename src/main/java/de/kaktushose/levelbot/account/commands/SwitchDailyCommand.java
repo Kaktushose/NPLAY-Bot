@@ -9,7 +9,7 @@ import de.kaktushose.levelbot.account.data.UserService;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 
-@CommandController(value = {"täglich", "daily"}, category = "Levelsystem")
+@CommandController(value = {"täglich", "daily"}, category = "Levelsystem", ephemeral = true)
 public class SwitchDailyCommand {
 
     @Inject
@@ -19,7 +19,6 @@ public class SwitchDailyCommand {
 
     @Command(
             name = "Täglich Command",
-            usage = "{prefix}täglich",
             desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen"
     )
     public void onSwitchDaily(CommandEvent event) {
@@ -33,7 +32,7 @@ public class SwitchDailyCommand {
                                     .toMessageEmbed()
                             )
                     )
-                    .queue(success -> event.getMessage().delete().queue(),
+                    .queue(success -> event.reply(embedCache.getEmbed("switchDailySuccess").injectValue("action", "aktiviert")),
                             new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, e -> {
                                 userService.switchDaily(event.getAuthor().getIdLong());
                                 event.reply(embedCache.getEmbed("switchDailyError"));
