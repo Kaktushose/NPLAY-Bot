@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.listener;
 
 import de.kaktushose.levelbot.bot.Levelbot;
-import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.account.data.BotUser;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

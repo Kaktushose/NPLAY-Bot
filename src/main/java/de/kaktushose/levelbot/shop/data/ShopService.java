@@ -1,9 +1,9 @@
 package de.kaktushose.levelbot.shop.data;
 
 import de.kaktushose.levelbot.bot.Levelbot;
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.BotUser;
+import de.kaktushose.levelbot.account.data.UserRepository;
+import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.shop.data.items.*;
 import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;

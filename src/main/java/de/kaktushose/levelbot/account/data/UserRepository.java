@@ -1,6 +1,5 @@
-package de.kaktushose.levelbot.database.repositories;
+package de.kaktushose.levelbot.account.data;
 
-import de.kaktushose.levelbot.database.model.BotUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

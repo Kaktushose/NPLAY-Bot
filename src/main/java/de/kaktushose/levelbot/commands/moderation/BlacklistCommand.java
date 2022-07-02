@@ -6,8 +6,8 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.BotUser;
+import de.kaktushose.levelbot.account.data.UserService;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;

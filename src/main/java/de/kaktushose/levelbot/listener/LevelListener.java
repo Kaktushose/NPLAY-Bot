@@ -6,7 +6,7 @@ import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.LevelService;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;

@@ -1,5 +1,6 @@
 package de.kaktushose.levelbot.database.services;
 
+import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.database.model.CollectEvent;
 import de.kaktushose.levelbot.database.model.ContestEntry;
 import de.kaktushose.levelbot.database.model.CurrencyChance;
@@ -155,6 +156,7 @@ public class EventService {
 
     public String startCollectEvent(int id, Guild guild) {
         settingsService.setActiveCollectEvent(guild.getIdLong(), id);
+        // TODO make query
         userService.getAllUsers().forEach(botUser -> userService.resetEventPoints(botUser.getUserId()));
         return getCollectEvent(id).getName();
     }

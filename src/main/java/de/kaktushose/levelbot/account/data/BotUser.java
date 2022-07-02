@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.database.model;
+package de.kaktushose.levelbot.account.data;
 
 import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.util.Pageable;
@@ -83,16 +83,12 @@ public class BotUser implements Pageable {
 
     @Override
     public long getCount(Pagination.CurrencyType currencyType) {
-        switch (currencyType) {
-            case XP:
-                return getXp();
-            case DIAMONDS:
-                return getDiamonds();
-            case COINS:
-                return getCoins();
-            default:
-                return 0;
-        }
+        return switch (currencyType) {
+            case XP -> getXp();
+            case DIAMONDS -> getDiamonds();
+            case COINS -> getCoins();
+            default -> 0;
+        };
     }
 
     public void setUserId(Long userId) {

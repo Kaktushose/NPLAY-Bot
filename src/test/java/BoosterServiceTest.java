@@ -1,8 +1,7 @@
 import de.kaktushose.levelbot.Bootstrapper;
-import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.database.services.BoosterService;
-import de.kaktushose.levelbot.database.services.UserService;
-import org.junit.jupiter.api.AfterEach;
+import de.kaktushose.levelbot.account.data.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

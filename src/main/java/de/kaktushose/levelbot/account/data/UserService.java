@@ -1,10 +1,6 @@
-package de.kaktushose.levelbot.database.services;
+package de.kaktushose.levelbot.account.data;
 
-import de.kaktushose.levelbot.database.model.BotUser;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
-import de.kaktushose.levelbot.shop.data.items.FrozenItemRepository;
-import de.kaktushose.levelbot.shop.data.items.ItemRepository;
-import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;
+import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.spring.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -15,24 +11,20 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
-    private final ItemRepository itemRepository;
-    private final FrozenItemRepository frozenItemRepository;
 
     public UserService() {
         ApplicationContext context = ApplicationContextHolder.getContext();
         userRepository = context.getBean(UserRepository.class);
-        transactionRepository = context.getBean(TransactionRepository.class);
-        itemRepository = context.getBean(ItemRepository.class);
-        frozenItemRepository = context.getBean(FrozenItemRepository.class);
     }
 
+    @Deprecated
     public List<BotUser> getAllUsers() {
         List<BotUser> result = new ArrayList<>();
         userRepository.findAll().forEach(result::add);
         return result;
     }
 
+    @Deprecated
     public List<Long> getAllUserIds() {
         return userRepository.findAllIds();
     }
@@ -41,8 +33,18 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow();
     }
 
+    /**
+     *
+     * @deprecated use {@link #isMuted(long)}
+     */
+    @Deprecated
     public List<Long> getMutedUsers() {
         return userRepository.findMutedUsers();
+    }
+
+    public boolean isMuted(long userId) {
+        return false;
+        // TODO implement
     }
 
     public List<Long> getUsersByPermission(int permissionLevel) {
@@ -65,8 +67,8 @@ public class UserService {
         return optional.get();
     }
 
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
     }
 
     public void exchangeDiamonds(long userId, long diamonds) {
@@ -88,6 +90,29 @@ public class UserService {
         userRepository.save(botUser);
     }
 
+    public BotUser addCurrencies(long userId, long coins, long xp, long diamonds) {
+        return addCurrencies(getUserById(userId), coins, xp, diamonds);
+    }
+
+    public BotUser addCurrencies(BotUser botUser, long coins, long xp, long diamonds) {
+        return botUser;
+        // TODO implement
+    }
+
+    public BotUser addReward(long userId, Reward reward) {
+        return addReward(getUserById(userId), reward);
+    }
+
+    public BotUser addReward(BotUser botUser, Reward reward) {
+        return botUser;
+        // TODO implement
+    }
+
+    /**
+     *
+     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
+     */
+    @Deprecated
     public long addCoins(long userId, long amount) {
         BotUser botUser = getUserById(userId);
         botUser.setCoins(botUser.getCoins() + amount);
@@ -95,6 +120,11 @@ public class UserService {
         return botUser.getCoins();
     }
 
+    /**
+     *
+     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
+     */
+    @Deprecated
     public long addXp(long userId, long amount) {
         BotUser botUser = getUserById(userId);
         botUser.setXp(botUser.getXp() + amount);
@@ -102,6 +132,11 @@ public class UserService {
         return botUser.getXp();
     }
 
+    /**
+     *
+     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
+     */
+    @Deprecated
     public long addDiamonds(long userId, long amount) {
         BotUser botUser = getUserById(userId);
         botUser.setDiamonds(botUser.getDiamonds() + amount);
@@ -127,18 +162,35 @@ public class UserService {
         userRepository.save(botUser);
     }
 
+
+    public void onValidMessage(long userId) {
+        // TODO implement
+    }
+
+    /**
+     *
+     * @deprecated {@link #onValidMessage(long)}
+     */
+    @Deprecated
     public void updateLastValidMessage(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setLastValidMessage(System.currentTimeMillis());
         userRepository.save(botUser);
     }
 
+    /**
+     *
+     * @deprecated {@link #onValidMessage(long)}
+     */
+    @Deprecated
     public void updateMessageCount(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setMessageCount(botUser.getMessageCount() + 1);
         userRepository.save(botUser);
     }
 
+    // TODO make external script
+    @Deprecated
     public void updateUserStatistics(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setStartCoins(botUser.getCoins());
@@ -179,12 +231,15 @@ public class UserService {
         userRepository.save(botUser);
     }
 
+    @Deprecated
     public void resetEventPoints(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setEventPoints(0);
         userRepository.save(botUser);
     }
 
+    // TODO move to event service
+    @Deprecated
     public long increaseEventPoints(long userId) {
         BotUser botUser = getUserById(userId);
         botUser.setEventPoints(botUser.getEventPoints() + 1);

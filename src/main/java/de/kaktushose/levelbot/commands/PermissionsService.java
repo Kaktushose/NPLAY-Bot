@@ -4,7 +4,7 @@ import com.github.kaktushose.jda.commands.annotations.Component;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.dispatching.CommandContext;
 import com.github.kaktushose.jda.commands.permissions.PermissionsProvider;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.UserService;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +23,7 @@ public class PermissionsService implements PermissionsProvider {
     @Override
     public boolean hasPermission(@NotNull User user, @NotNull CommandContext context) {
         for (String permission : context.getCommand().getPermissions()) {
+            // TODO replace with query
             if (!userService.getUsersByPermission(getLevelByName(permission)).contains(user.getIdLong())) {
                 return false;
             }

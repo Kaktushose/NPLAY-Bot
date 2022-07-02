@@ -1,11 +1,11 @@
-package de.kaktushose.levelbot.commands.member;
+package de.kaktushose.levelbot.account.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.UserService;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 

@@ -7,9 +7,9 @@ import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.bot.Levelbot;
-import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.database.services.LevelService;
-import de.kaktushose.levelbot.database.services.UserService;
+import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @CommandController("additem")

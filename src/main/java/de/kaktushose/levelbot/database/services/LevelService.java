@@ -1,13 +1,14 @@
 package de.kaktushose.levelbot.database.services;
 
+import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.bot.Levelbot;
-import de.kaktushose.levelbot.database.model.BotUser;
+import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.database.model.CurrencyChance;
 import de.kaktushose.levelbot.database.model.Rank;
 import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.RankRepository;
-import de.kaktushose.levelbot.database.repositories.UserRepository;
+import de.kaktushose.levelbot.account.data.UserRepository;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.shop.data.items.ItemCategory;
