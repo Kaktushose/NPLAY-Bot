@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.account.data;
 
 import de.kaktushose.levelbot.database.model.Reward;
-import de.kaktushose.levelbot.spring.ApplicationContextHolder;
+import de.kaktushose.levelbot.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;

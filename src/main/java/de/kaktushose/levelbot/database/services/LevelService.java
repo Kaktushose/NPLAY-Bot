@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.database.services;
 
 import de.kaktushose.levelbot.account.data.UserService;
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.database.model.CurrencyChance;
 import de.kaktushose.levelbot.database.model.Rank;
@@ -13,7 +13,7 @@ import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.shop.data.items.ItemCategory;
 import de.kaktushose.levelbot.shop.data.items.ItemRepository;
-import de.kaktushose.levelbot.spring.ApplicationContextHolder;
+import de.kaktushose.levelbot.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.context.ApplicationContext;

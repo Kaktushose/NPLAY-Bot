@@ -3,7 +3,6 @@ package de.kaktushose.levelbot;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.account.data.UserService;
-import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.database.services.BoosterService;
 import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.LevelService;

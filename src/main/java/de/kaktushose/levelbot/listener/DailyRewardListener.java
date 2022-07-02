@@ -1,6 +1,6 @@
 package de.kaktushose.levelbot.listener;
 
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;

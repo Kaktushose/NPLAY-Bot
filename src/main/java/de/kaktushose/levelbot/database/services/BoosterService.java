@@ -2,14 +2,14 @@ package de.kaktushose.levelbot.database.services;
 
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.account.data.UserService;
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import de.kaktushose.levelbot.database.model.NitroBooster;
 import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.NitroBoosterRepository;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.ItemCategory;
 import de.kaktushose.levelbot.shop.data.items.ItemVariant;
-import de.kaktushose.levelbot.spring.ApplicationContextHolder;
+import de.kaktushose.levelbot.ApplicationContextHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Member;

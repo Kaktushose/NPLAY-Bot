@@ -7,7 +7,7 @@ import de.kaktushose.levelbot.database.model.CurrencyChance;
 import de.kaktushose.levelbot.database.repositories.ChancesRepository;
 import de.kaktushose.levelbot.database.repositories.CollectEventRepository;
 import de.kaktushose.levelbot.database.repositories.ContestRepository;
-import de.kaktushose.levelbot.spring.ApplicationContextHolder;
+import de.kaktushose.levelbot.ApplicationContextHolder;
 import de.kaktushose.levelbot.util.Pagination;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;

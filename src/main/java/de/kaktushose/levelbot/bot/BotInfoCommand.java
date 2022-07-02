@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.commands.member;
+package de.kaktushose.levelbot.bot;
 
 import com.github.kaktushose.jda.commands.annotations.Command;
 import com.github.kaktushose.jda.commands.annotations.CommandController;
@@ -23,7 +23,7 @@ public class BotInfoCommand {
     public void onBotInfo(CommandEvent event) {
         long guildId = event.getGuild().getIdLong();
         event.reply(embedCache.getEmbed("botInfo")
-                .injectValue("prefix", settingsService.getBotPrefix(guildId))
+                .injectValue("prefix", event.getCommandContext().getContextualPrefix())
                 .injectValue("version", settingsService.getVersion(guildId))
         );
     }

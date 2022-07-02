@@ -5,7 +5,7 @@ import com.github.kaktushose.jda.commands.annotations.CommandController;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Optional;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import net.dv8tion.jda.api.entities.Member;
 
 @CommandController(value = {"info", "rank", "konto"}, category = "Levelsystem")

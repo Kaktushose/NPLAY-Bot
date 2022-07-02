@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.spring;
+package de.kaktushose.levelbot;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;

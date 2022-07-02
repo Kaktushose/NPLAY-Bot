@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.bot;
+package de.kaktushose.levelbot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -6,7 +6,6 @@ import com.github.kaktushose.jda.commands.embeds.EmbedDTO;
 import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
 import com.github.kaktushose.jda.commands.embeds.help.JsonHelpMessageFactory;
 import com.github.kaktushose.jda.commands.interactions.commands.CommandRegistrationPolicy;
-import de.kaktushose.levelbot.Bootstrapper;
 import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.commands.moderation.WelcomeEmbedsCommand;
 import de.kaktushose.levelbot.account.data.BotUser;
@@ -18,6 +17,7 @@ import de.kaktushose.levelbot.shop.ShopListener;
 import de.kaktushose.levelbot.shop.data.ShopService;
 import de.kaktushose.levelbot.shop.data.items.Item;
 import de.kaktushose.levelbot.util.Statistics;
+import de.kaktushose.levelbot.util.TaskScheduler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -55,7 +55,6 @@ public class Levelbot {
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
     private final Statistics statistics;
-    private final ShutdownHttpServer httpServer;
     private final long guildId;
     private final GuildType guildType;
     private JDACommands jdaCommands;
@@ -74,7 +73,6 @@ public class Levelbot {
         embedCache = null;
         taskScheduler = null;
         statistics = null;
-        httpServer = null;
         guildId = 0;
         guildType = GuildType.UNKNOWN;
     }
@@ -91,7 +89,6 @@ public class Levelbot {
         embedCache = new EmbedCache(new File("commandEmbeds.json"));
         taskScheduler = new TaskScheduler();
         statistics = new Statistics(this, guildId);
-        httpServer = new ShutdownHttpServer(this, 8080);
     }
 
     public Levelbot start() throws LoginException, InterruptedException {
@@ -197,9 +194,6 @@ public class Levelbot {
                     .toMessageEmbed()
             ).queue();
         }
-
-        httpServer.start();
-
         return this;
     }
 

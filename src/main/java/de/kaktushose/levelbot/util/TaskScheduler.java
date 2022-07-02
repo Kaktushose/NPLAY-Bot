@@ -1,4 +1,4 @@
-package de.kaktushose.levelbot.bot;
+package de.kaktushose.levelbot.util;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

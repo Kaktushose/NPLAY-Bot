@@ -1,4 +1,4 @@
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import de.kaktushose.levelbot.database.services.BoosterService;
 import de.kaktushose.levelbot.database.services.SettingsService;
 import de.kaktushose.levelbot.account.data.UserService;

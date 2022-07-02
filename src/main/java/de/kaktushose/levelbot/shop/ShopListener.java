@@ -1,7 +1,7 @@
 package de.kaktushose.levelbot.shop;
 
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import de.kaktushose.levelbot.bot.Levelbot;
+import de.kaktushose.levelbot.Levelbot;
 import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.account.data.UserService;

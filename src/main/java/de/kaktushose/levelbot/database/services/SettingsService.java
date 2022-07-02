@@ -4,7 +4,7 @@ import de.kaktushose.levelbot.database.model.GuildSettings;
 import de.kaktushose.levelbot.database.model.Reward;
 import de.kaktushose.levelbot.database.repositories.RewardRepository;
 import de.kaktushose.levelbot.database.repositories.SettingsRepository;
-import de.kaktushose.levelbot.spring.ApplicationContextHolder;
+import de.kaktushose.levelbot.ApplicationContextHolder;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
