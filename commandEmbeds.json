@@ -14,28 +14,28 @@
     ]
   },
   "currencyChange": {
-    "title": "Erfolg!",
-    "description": "Die {currency} von {user} wurden um {value} {operation}.",
+    "title": "Erfolg",
+    "description": "Die {currency} von {user} wurden um {value} {operation}",
     "color": "#86c240"
   },
   "currencySet": {
-    "title": "Erfolg!",
-    "description": "Die {currency} von {user} wurden auf {value} gesetzt.",
+    "title": "Erfolg",
+    "description": "Die {currency} von {user} wurden auf {value} gesetzt",
     "color": "#86c240"
   },
   "memberNotFound": {
-    "title": "Fehler!",
-    "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588> .",
+    "title": "Fehler",
+    "description": "Der angegebene Nutzer ist nicht in der Datenbank vorhanden.\n\nBitte kontaktiere <@393843637437464588> ",
     "color": "#aa0c14"
   },
   "confirmAction": {
-    "title": "Achtung!",
+    "title": "Achtung",
     "description": "Bist du sicher, dass {action}",
     "color": "#f4cd53"
   },
   "memberBlacklistAdd": {
-    "title": "Erfolg!",
-    "description": "{user} wurde zur Blacklist hinzugefügt und kann nicht mehr mit dem Bot interagieren.",
+    "title": "Erfolg",
+    "description": "{user} wurde zur Blacklist hinzugefügt und kann nicht mehr mit dem Bot interagieren",
     "color": "#86c240"
   },
   "memberBlacklistShow": {
@@ -44,33 +44,33 @@
     "color": "#86c240"
   },
   "memberBlacklistRemove": {
-    "title": "Erfolg!",
-    "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.\nHinweis: Sein Berechtigungslevel wurde auf `1` zurückgesetzt!",
+    "title": "Erfolg",
+    "description": "{user} wurde von der Blacklist entfernt und kann wieder mit dem Bot interagieren.\nHinweis: Sein Berechtigungslevel wurde auf `1` zurückgesetzt",
     "color": "#86c240"
   },
   "memberBlacklistInvalidTarget": {
-    "title": "Unzureichende Berechtigungen!",
-    "description": "Dein Berechtigungslevel reicht nicht aus, um {user} zur Blacklist hinzuzufügen.",
+    "title": "Unzureichende Berechtigungen",
+    "description": "Dein Berechtigungslevel reicht nicht aus, um {user} zur Blacklist hinzuzufügen",
     "color": "#aa0c14"
   },
   "permissionSet": {
-    "title": "Erfolg!",
-    "description": "Das Berechtigungslevel von {user} wurde auf {value} gesetzt.",
+    "title": "Erfolg",
+    "description": "Das Berechtigungslevel von {user} wurde auf {value} gesetzt",
     "color": "#86c240"
   },
   "permissionSetInvalidTarget": {
-    "title": "Unzureichende Berechtigungen!",
-    "description": "Dein Berechtigungslevel reicht nicht aus, um das Berechtigungslevel von {user} zu bearbeiten.",
+    "title": "Unzureichende Berechtigungen",
+    "description": "Dein Berechtigungslevel reicht nicht aus, um das Berechtigungslevel von {user} zu bearbeiten",
     "color": "#aa0c14"
   },
   "invalidValue": {
-    "title": "Fehler!",
-    "description": "Es sind nur Werte von {min} bis einschließlich {max} erlaubt.",
+    "title": "Fehler",
+    "description": "Es sind nur Werte von {min} bis einschließlich {max} erlaubt",
     "color": "#aa0c14"
   },
   "bulkDeleteSuccess": {
-    "title": "Erfolg!",
-    "description": "{amount} Nachrichten wurden gelöscht.",
+    "title": "Erfolg",
+    "description": "{amount} Nachrichten wurden gelöscht",
     "color": "#86c240"
   },
   "removeItem": {
@@ -82,8 +82,8 @@
     }
   },
   "removeItemSuccess": {
-    "title": "Erfolg!",
-    "description": "{user} wurde das Item entfernt.",
+    "title": "Erfolg",
+    "description": "{user} wurde das Item entfernt",
     "color": "#86c240"
   },
   "evalCommand": {
@@ -118,22 +118,22 @@
     ]
   },
   "missingCurrency": {
-    "title": "Fehler!",
-    "description": "Du hast nicht genügend {currency}.",
+    "title": "Fehler",
+    "description": "Du hast nicht genügend {currency}",
     "color": "#aa0c14"
   },
   "diamondChangeSuccess": {
-    "title": "Erfolg!",
-    "description": "Du hast {diamonds} Diamanten gegen {coins} Münzen getauscht.",
+    "title": "Erfolg",
+    "description": "Du hast {diamonds} Diamanten gegen {coins} Münzen getauscht",
     "color": "#86c240"
   },
   "switchDailySuccess": {
-    "title": "Erfolg!",
-    "description": "Die tägliche Kontoinformation wurde {action}.",
+    "title": "Erfolg",
+    "description": "Die tägliche Kontoinformation wurde {action}",
     "color": "#86c240"
   },
   "switchDailyError": {
-    "title": "Fehler!",
+    "title": "Fehler",
     "description": "Der Bot kann dir keine Direktnachrichten senden!\nBitte überprüfe deine Einstellungen und versuche es dann erneut!",
     "color": "#aa0c14"
   },
@@ -331,12 +331,12 @@
     "color": "#f4cd53"
   },
   "shopError": {
-    "title": "Fehler!",
+    "title": "Fehler",
     "description": "{message}",
     "color": "#aa0c14"
   },
   "levelUp": {
-    "title": ":arrow_up: Stufenaufstieg!",
+    "title": ":arrow_up: Stufenaufstieg",
     "description": "{user}",
     "color": "{color}",
     "fields": [
@@ -355,8 +355,8 @@
     ]
   },
   "itemExpired": {
-    "title": "Item abgelaufen!",
-    "description": "Dein {item} ist abgelaufen!",
+    "title": "Item abgelaufen",
+    "description": "Dein {item} ist abgelaufen",
     "color": "#f4cd53",
     "fields": [
       {
@@ -366,23 +366,23 @@
     ]
   },
   "botStop": {
-    "title": "Bot wurde heruntergefahren!",
-    "description": ":wrench: Wir sind in Kürze wieder zurück!",
+    "title": "Bot wurde heruntergefahren",
+    "description": ":wrench: Wir sind in Kürze wieder zurück",
     "color": "#aa0c14"
   },
   "botStart": {
-    "title": "Bot wurde gestartet!",
+    "title": "Bot wurde gestartet",
     "description": ":gear: Version: {version}",
     "color": "#86c240"
   },
   "itemNotFound": {
-    "title": "Fehler!",
-    "description": "Es wurde kein Item mit der ID {id} gefunden!",
+    "title": "Fehler",
+    "description": "Es wurde kein Item mit der ID {id} gefunden",
     "color": "#aa0c14"
   },
   "itemPriceChanged": {
-    "title": "Erfolg!",
-    "description": "Der Preis wurde erfolgreich geändert!",
+    "title": "Erfolg",
+    "description": "Der Preis wurde erfolgreich geändert",
     "color": "#86c240"
   },
   "nitroBoostStart": {
@@ -397,12 +397,12 @@
   },
   "nitroBoostStop": {
     "title": "Information zu Deinem Server-Boost bei nordrheintvplay",
-    "description": "Lieber {user},\nschade, dass du unseren Server nicht mehr mit einem Server-Boost unterstützt.\nWir möchten dich darüber informieren, dass mit der Beendigung des Boosts auch die dazugehörigen fortlaufenden Belohnungen entfallen. \nWir bedanken uns für Deine Treue und wünschen Dir weiterhin viel Spaß auf dem Server.\nDein Serverteam\n",
+    "description": "Lieber {user},\nschade, dass du unseren Server nicht mehr mit einem Server-Boost unterstützt.\nWir möchten dich darüber informieren, dass mit der Beendigung des Boosts auch die dazugehörigen fortlaufenden Belohnungen entfallen. \nWir bedanken uns für Deine Treue und wünschen Dir weiterhin viel Spaß auf dem Server\nDein Serverteam\n",
     "color": "#f4cd53"
   },
   "shopInitSuccess": {
-    "title": "Erfolg!",
-    "description": "Der Reaction Shop wurde erfolgreich eingerichtet!",
+    "title": "Erfolg",
+    "description": "Der Reaction Shop wurde erfolgreich eingerichtet",
     "color": "#86c240"
   },
   "statistics": {
@@ -415,7 +415,7 @@
   },
   "dailyReward": {
     "title": "Herzlichen Glückwunsch, {user}!",
-    "description": "Du hast Deine tägliche Belohnung in Höhe von {reward} erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei.",
+    "description": "Du hast Deine tägliche Belohnung in Höhe von {reward} erfolgreich abgeholt.\nSchau gerne morgen wieder vorbei",
     "color": "#86c240"
   },
   "balanceEventList": {
@@ -424,38 +424,38 @@
     "color": "#86c240"
   },
   "unknownEventId": {
-    "title": "Fehler!",
+    "title": "Fehler",
     "description": "Unbekannte Event ID. Siehe `event <balance|collect> list` für Details!",
     "color": "#aa0c14"
   },
   "balanceEventStart": {
-    "title": "Erfolg!",
-    "description": "Das Event \"{name}\" wurde erfolgreich aktiviert.",
+    "title": "Erfolg",
+    "description": "Das Event \"{name}\" wurde erfolgreich aktiviert",
     "color": "#86c240"
   },
   "balanceEventStop": {
-    "title": "Erfolg!",
-    "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert.",
+    "title": "Erfolg",
+    "description": "Das Event \"{name}\" wurde erfolgreich deaktiviert",
     "color": "#86c240"
   },
   "contestEventStart": {
-    "title": "Erfolg!",
-    "description": "Das Bilder Contest Event wurde erfolgreich aktiviert.",
+    "title": "Erfolg",
+    "description": "Das Bilder Contest Event wurde erfolgreich aktiviert",
     "color": "#86c240"
   },
   "contestEventStop": {
-    "title": "Erfolg!",
-    "description": "Das Bilder Contest Event wurde erfolgreich deaktiviert.",
+    "title": "Erfolg",
+    "description": "Das Bilder Contest Event wurde erfolgreich deaktiviert",
     "color": "#86c240"
   },
   "collectEventStart": {
-    "title": "Erfolg!",
-    "description": "Das Sammel Event \"{name}\" wurde erfolgreich aktiviert.",
+    "title": "Erfolg",
+    "description": "Das Sammel Event \"{name}\" wurde erfolgreich aktiviert",
     "color": "#86c240"
   },
   "collectEventStop": {
-    "title": "Erfolg!",
-    "description": "Das Sammel Event wurde erfolgreich deaktiviert.",
+    "title": "Erfolg",
+    "description": "Das Sammel Event wurde erfolgreich deaktiviert",
     "color": "#86c240"
   },
   "collectEventList": {
@@ -464,8 +464,8 @@
     "color": "#86c240"
   },
   "noActiveCollectEvent": {
-    "title": "Fehler!",
-    "description": "Es ist kein Sammel Event aktiviert.",
+    "title": "Fehler",
+    "description": "Es ist kein Sammel Event aktiviert",
     "color": "#aa0c14"
   },
   "collectEventItemReward": {
@@ -479,23 +479,23 @@
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
-    "title": "Fehler!",
-    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nSchau gerne in {hours} Stunden wieder vorbei!",
+    "title": "Fehler",
+    "description": "Du hast deine tägliche Belohnung bereits abgeholt.\nSchau gerne in {hours} Stunden wieder vorbei",
     "color": "#f4cd53"
   },
   "shopCommandDeprecated": {
     "title": ":information_source: Hinweis",
-    "description": "Der Shop-Command wurde entfernt.\nItems kannst du ab sofort direkt in <#851388807239827466> kaufen.",
+    "description": "Der Shop-Command wurde entfernt.\nItems kannst du ab sofort direkt in <#851388807239827466> kaufen",
     "color": "#f4cd53"
   },
   "mutedChannelsAdd": {
-    "title": "Erfolg!",
-    "description": "{channel} wird ab sofort vom Levelsystem ignoriert.",
+    "title": "Erfolg",
+    "description": "{channel} wird ab sofort vom Levelsystem ignoriert",
     "color": "#86c240"
   },
   "mutedChannelsRemove": {
-    "title": "Erfolg!",
-    "description": "{channel} wird nicht mehr vom Levelsystem ignoriert.",
+    "title": "Erfolg",
+    "description": "{channel} wird nicht mehr vom Levelsystem ignoriert",
     "color": "#86c240"
   },
   "mutedChannelsList": {
@@ -505,7 +505,22 @@
   },
   "buyLog": {
     "title": "Transaktion",
-    "description": "{user} hat das Item \"{item}\" gekauft.",
+    "description": "{user} hat das Item \"{item}\" gekauft",
     "color": "#86c240"
+  },
+  "changeDiamonds": {
+    "title": "Bestätigen",
+    "description": "Möchtest du %s Diamanten gegen %d Münzen tauschen?",
+    "color": "#86c240"
+  },
+  "interactionCancel": {
+    "title": "Hinweis",
+    "description": "Die Interaktion wurde abgebrochen",
+    "color": "#f4cd53"
+  },
+  "interactionTimeout": {
+    "title": "Fehler",
+    "description": "Die Interaktion ist abgelaufen",
+    "color": "#f4cd53"
   }
 }

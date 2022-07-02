@@ -60,10 +60,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <parameters>true</parameters>
-                    <testCompilerArgument>-parameters</testCompilerArgument>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -94,7 +90,7 @@
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>65053c2313</version>
+            <version>4aa6061792</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>

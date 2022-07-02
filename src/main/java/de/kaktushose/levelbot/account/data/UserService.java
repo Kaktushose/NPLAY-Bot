@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public class UserService {
 
+    /**
+     * the exchange rate for diamonds -> coins
+     */
+    public static final int EXCHANGE_RATE = 20;
     private final UserRepository userRepository;
 
     public UserService() {
@@ -34,7 +38,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated use {@link #isMuted(long)}
      */
     @Deprecated
@@ -71,10 +74,9 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    public void exchangeDiamonds(long userId, long diamonds) {
-        BotUser botUser = getUserById(userId);
+    public void exchangeDiamonds(BotUser botUser, long diamonds) {
         botUser.setDiamonds(botUser.getDiamonds() - diamonds);
-        botUser.setCoins(botUser.getCoins() + diamonds * 20);
+        botUser.setCoins(botUser.getCoins() + diamonds * EXCHANGE_RATE);
         userRepository.save(botUser);
     }
 
@@ -109,7 +111,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
      */
     @Deprecated
@@ -121,7 +122,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
      */
     @Deprecated
@@ -133,7 +133,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
      */
     @Deprecated
@@ -168,7 +167,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated {@link #onValidMessage(long)}
      */
     @Deprecated
@@ -179,7 +177,6 @@ public class UserService {
     }
 
     /**
-     *
      * @deprecated {@link #onValidMessage(long)}
      */
     @Deprecated

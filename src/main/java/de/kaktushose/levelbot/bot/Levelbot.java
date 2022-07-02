@@ -57,6 +57,7 @@ public class Levelbot {
     private final Statistics statistics;
     private final ShutdownHttpServer httpServer;
     private final long guildId;
+    private final GuildType guildType;
     private JDACommands jdaCommands;
     private JDA jda;
     private Guild guild;
@@ -75,9 +76,11 @@ public class Levelbot {
         statistics = null;
         httpServer = null;
         guildId = 0;
+        guildType = GuildType.UNKNOWN;
     }
 
     public Levelbot(GuildType guildType) {
+        this.guildType = guildType;
         userService = new UserService();
         shopService = new ShopService(this);
         settingsService = new SettingsService();
@@ -188,10 +191,12 @@ public class Levelbot {
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
         jda.getPresence().setActivity(Activity.playing(version));
 
-        getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStart")
-                .injectValue("version", version)
-                .toMessageEmbed()
-        ).queue();
+        if (guildType == GuildType.PRODUCTION) {
+            getBotChannel().sendMessageEmbeds(embedCache.getEmbed("botStart")
+                    .injectValue("version", version)
+                    .toMessageEmbed()
+            ).queue();
+        }
 
         httpServer.start();
 
@@ -432,6 +437,7 @@ public class Levelbot {
 
     public enum GuildType {
 
+        UNKNOWN(-1),
         TESTING(496614159254028289L),
         PRODUCTION(367353132772098048L);
 
