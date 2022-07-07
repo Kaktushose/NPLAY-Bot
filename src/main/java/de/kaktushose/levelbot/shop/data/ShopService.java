@@ -1,13 +1,13 @@
 package de.kaktushose.levelbot.shop.data;
 
-import de.kaktushose.levelbot.Levelbot;
 import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.account.data.UserRepository;
 import de.kaktushose.levelbot.account.data.UserService;
+import de.kaktushose.levelbot.bot.ApplicationContextHolder;
+import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.shop.data.items.*;
 import de.kaktushose.levelbot.shop.data.transactions.Transaction;
 import de.kaktushose.levelbot.shop.data.transactions.TransactionRepository;
-import de.kaktushose.levelbot.ApplicationContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;

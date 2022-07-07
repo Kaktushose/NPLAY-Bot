@@ -6,7 +6,7 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import de.kaktushose.levelbot.database.services.LevelService;
+import de.kaktushose.levelbot.leveling.data.LevelService;
 
 @CommandController("setprice")
 @Permission("moderator")

@@ -1,5 +1,5 @@
-import de.kaktushose.levelbot.database.model.Reward;
-import de.kaktushose.levelbot.database.services.SettingsService;
+import de.kaktushose.levelbot.leveling.data.reward.Reward;
+import de.kaktushose.levelbot.bot.data.SettingsService;
 
 public class SettingsServiceMock extends SettingsService {
 

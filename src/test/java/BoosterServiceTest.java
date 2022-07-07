@@ -1,6 +1,6 @@
 import de.kaktushose.levelbot.Bootstrapper;
 import de.kaktushose.levelbot.account.data.BotUser;
-import de.kaktushose.levelbot.database.services.BoosterService;
+import de.kaktushose.levelbot.booster.data.BoosterService;
 import de.kaktushose.levelbot.account.data.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
