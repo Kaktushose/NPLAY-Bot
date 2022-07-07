@@ -33,8 +33,8 @@ public class SetPermsCommand {
             return;
         }
 
-        BotUser executor = userService.getUserById(event.getAuthor().getIdLong());
-        BotUser target = userService.getUserById(member.getIdLong());
+        BotUser executor = userService.getBotUser(event.getAuthor());
+        BotUser target = userService.getBotUser(member);
 
         // can only update users with lower perms
         if (executor.getPermissionLevel() < level + 1 || executor.getPermissionLevel() < target.getPermissionLevel()) {

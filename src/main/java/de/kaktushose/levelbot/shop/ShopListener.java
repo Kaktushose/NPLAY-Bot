@@ -63,7 +63,7 @@ public class ShopListener extends ListenerAdapter {
             return;
         }
 
-        if (levelbot.getUserService().getMutedUsers().contains(event.getUser().getIdLong())) {
+        if (levelbot.getUserService().isMuted(event.getUser())) {
             event.getReaction().removeReaction(event.getUser()).queue(
                     null, new ErrorHandler().ignore(UNKNOWN_MESSAGE)
             );
@@ -125,7 +125,7 @@ public class ShopListener extends ListenerAdapter {
         }
 
         Item item = levelService.getItemsByCategoryId(itemCategory.id).get(variant);
-        BotUser botUser = userService.getUserById(member.getIdLong());
+        BotUser botUser = userService.getBotUser(member);
         String fail = null;
         if (shopService.hasItemOfCategory(member.getIdLong(), item.getCategoryId())) {
             fail = "Du besitzt dieses Item bereits!";

@@ -136,9 +136,7 @@ public class BoosterService {
 
     public String addMonthlyReward(long userId) {
         Reward reward = settingsService.getMonthlyNitroBoosterReward();
-        userService.addCoins(userId, reward.getCoins());
-        userService.addXp(userId, reward.getXp());
-        userService.addDiamonds(userId, reward.getDiamonds());
+        userService.addCurrencies(userId, reward);
         if (reward.getItem() != null) {
             shopService.addItem(userId, reward.getItem().getItemId());
         }
@@ -147,9 +145,7 @@ public class BoosterService {
 
     public String addOneTimeReward(long userId) {
         Reward reward = settingsService.getOneTimeNitroBoosterReward();
-        userService.addCoins(userId, reward.getCoins());
-        userService.addXp(userId, reward.getXp());
-        userService.addDiamonds(userId, reward.getDiamonds());
+        userService.addCurrencies(userId, reward);
         if (reward.getItem() != null) {
             shopService.addItem(userId, reward.getItem().getItemId());
         }

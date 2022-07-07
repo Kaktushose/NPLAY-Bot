@@ -36,7 +36,7 @@ public class ChangeCurrencyCommand {
             category = "Moderation"
     )
     public void onAddCoins(CommandEvent event, Member member, Integer amount) {
-        userService.addCoins(member.getIdLong(), amount);
+        userService.addCurrencies(member.getIdLong(), amount, 0, 0);
         event.reply(embedCache.getEmbed("currencyChange")
                 .injectValue("currency", "Münzen")
                 .injectValue("user", member.getAsMention())
@@ -53,7 +53,7 @@ public class ChangeCurrencyCommand {
             category = "Moderation"
     )
     public void onAddXp(CommandEvent event, Member member, Integer amount) {
-        userService.addXp(member.getIdLong(), amount);
+        userService.addCurrencies(member.getIdLong(), 0, amount, 0);
         event.reply(embedCache.getEmbed("currencyChange")
                 .injectValue("currency", "XP")
                 .injectValue("user", member.getAsMention())
@@ -70,7 +70,7 @@ public class ChangeCurrencyCommand {
             category = "Moderation"
     )
     public void onAddDiamonds(CommandEvent event, Member member, Integer amount) {
-        userService.addDiamonds(member.getIdLong(), amount);
+        userService.addCurrencies(member.getIdLong(), 0, 0, amount);
         event.reply(embedCache.getEmbed("currencyChange")
                 .injectValue("currency", "Diamanten")
                 .injectValue("user", member.getAsMention())

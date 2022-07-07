@@ -38,8 +38,8 @@ public class BlacklistCommand {
             desc = "Fügt einen Benutzer zur Blacklist hinzu"
     )
     public void onBlacklistAdd(CommandEvent event, Member member) {
-        BotUser executor = userService.getUserById(event.getAuthor().getIdLong());
-        BotUser target = userService.getUserById(member.getIdLong());
+        BotUser executor = userService.getBotUser(event.getAuthor());
+        BotUser target = userService.getBotUser(member);
         // can only blacklist users with lower permissions
         if (executor.getPermissionLevel() < target.getPermissionLevel()) {
             event.reply(embedCache.getEmbed("memberBlacklistInvalidTarget").injectValue("user", member.getAsMention()));
@@ -56,7 +56,7 @@ public class BlacklistCommand {
             desc = "Entfernt einen Benutzer von der Blacklist"
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
-        BotUser target = userService.getUserById(member.getIdLong());
+        BotUser target = userService.getBotUser(member);
         userService.setPermission(member.getIdLong(), 1);
         event.reply(embedCache.getEmbed("memberBlacklistRemove")
                 .injectValue("user", member.getAsMention())

@@ -22,7 +22,7 @@ public class SwitchDailyCommand {
             desc = "Aktiviert bzw. deaktiviert die täglichen Kontoinformationen"
     )
     public void onSwitchDaily(CommandEvent event) {
-        if (!userService.switchDaily(event.getAuthor().getIdLong())) {
+        if (!userService.switchDaily(event.getAuthor())) {
             event.reply(embedCache.getEmbed("switchDailySuccess").injectValue("action", "deaktiviert"));
         } else {
             event.getAuthor().openPrivateChannel()
@@ -34,7 +34,7 @@ public class SwitchDailyCommand {
                     )
                     .queue(success -> event.reply(embedCache.getEmbed("switchDailySuccess").injectValue("action", "aktiviert")),
                             new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, e -> {
-                                userService.switchDaily(event.getAuthor().getIdLong());
+                                userService.switchDaily(event.getAuthor());
                                 event.reply(embedCache.getEmbed("switchDailyError"));
                             })
                     );

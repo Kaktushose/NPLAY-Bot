@@ -51,7 +51,7 @@ public class LevelService {
     }
 
     public Rank getPreviousRank(long userId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         if (botUser.getLevel() == 1) {
             return getRank(1);
         }
@@ -59,12 +59,12 @@ public class LevelService {
     }
 
     public Rank getCurrentRank(long userId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         return getRank(botUser.getLevel());
     }
 
     public Rank getNextRank(long userId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         if (botUser.getLevel() == 13) {
             return getRank(13);
         }
@@ -102,7 +102,7 @@ public class LevelService {
     }
 
     public boolean isValidMessage(long userId, long guildId, long channelId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         if (settingsService.isIgnoredChannel(channelId)) {
             return false;
         }
@@ -146,8 +146,7 @@ public class LevelService {
     }
 
     public Optional<Rank> onValidMessage(long userId) {
-        userService.updateLastValidMessage(userId);
-        userService.updateMessageCount(userId);
+        BotUser botUser = userService.onValidMessage(userId);
 
         long diamonds = randomDiamonds();
         long coins = randomCoins();
@@ -159,9 +158,7 @@ public class LevelService {
             xp += 2;
         }
 
-        userService.addDiamonds(userId, diamonds);
-        userService.addCoins(userId, coins);
-        long newXp = userService.addXp(userId, xp);
+        long newXp = userService.addCurrencies(botUser, coins, xp, diamonds).getXp();
 
         if (getCurrentRank(userId).getRankId() == 13) {
             return Optional.empty();
@@ -173,26 +170,24 @@ public class LevelService {
 
         Rank rank = rankRepository.getRankByXp(newXp);
 
-        return Optional.of(getRank(userService.setRank(userId, rank.getRankId())));
+        return Optional.of(getRank(userService.setRank(botUser, rank.getRankId())));
     }
 
     public Optional<String> getDailyReward(long userId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
 
         int rewardLevel;
         if (System.currentTimeMillis() - botUser.getLastReward() >= 172800000L) {
-            rewardLevel = userService.resetRewardLevel(userId);
+            rewardLevel = userService.resetRewardLevel(botUser);
         } else if (System.currentTimeMillis() - botUser.getLastReward() >= 86400000L) {
-            rewardLevel = userService.increaseRewardLevel(userId);
+            rewardLevel = userService.increaseRewardLevel(botUser);
         } else {
             return Optional.empty();
         }
 
         Reward reward = settingsService.getReward(rewardLevel);
-        userService.addCoins(userId, reward.getCoins());
-        userService.addXp(userId, reward.getXp());
-        userService.addDiamonds(userId, reward.getDiamonds());
-        userService.updateLastReward(userId);
+        userService.addCurrencies(botUser, reward);
+        userService.updateLastReward(botUser);
         if (reward.getItem() != null) {
             shopService.addItem(userId, reward.getItem().getItemId());
         }
@@ -204,9 +199,7 @@ public class LevelService {
         Rank rank = getRank(rankId);
         StringBuilder rewardText = new StringBuilder();
         rank.getRankRewards().forEach(rankReward -> {
-            userService.addCoins(userId, rankReward.getCoins());
-            userService.addDiamonds(userId, rankReward.getDiamonds());
-            userService.addXp(userId, rankReward.getXp());
+            userService.addCurrencies(userId, rankReward);
             if (rankReward.getItem() != null) {
                 shopService.addItem(userId, rankReward.getItem().getItemId());
             }

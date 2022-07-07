@@ -31,7 +31,7 @@ public class DailyRewardListener extends ListenerAdapter {
             return;
         }
 
-        if (levelbot.getUserService().getMutedUsers().contains(event.getUser().getIdLong())) {
+        if (levelbot.getUserService().isMuted(event.getUser())) {
             return;
         }
 
@@ -51,7 +51,7 @@ public class DailyRewardListener extends ListenerAdapter {
             );
             event.getChannel().sendMessage(builder.build()).queue(message -> message.delete().queueAfter(30, TimeUnit.SECONDS));
         } else {
-            long timePassed = System.currentTimeMillis() - levelbot.getUserService().getUserById(user.getIdLong()).getLastReward();
+            long timePassed = System.currentTimeMillis() - levelbot.getUserService().getBotUser(user).getLastReward();
             long millis = TimeUnit.HOURS.toMillis(24) - timePassed;
             long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
             builder.setEmbeds(levelbot.getEmbedCache()

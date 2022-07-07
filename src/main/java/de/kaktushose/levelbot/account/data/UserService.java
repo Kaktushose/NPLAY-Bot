@@ -2,11 +2,11 @@ package de.kaktushose.levelbot.account.data;
 
 import de.kaktushose.levelbot.bot.ApplicationContextHolder;
 import de.kaktushose.levelbot.leveling.data.reward.Reward;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserService {
 
@@ -21,53 +21,36 @@ public class UserService {
         userRepository = context.getBean(UserRepository.class);
     }
 
-    @Deprecated
-    public List<BotUser> getAllUsers() {
-        List<BotUser> result = new ArrayList<>();
-        userRepository.findAll().forEach(result::add);
-        return result;
+    public BotUser getBotUser(User user) {
+        return getBotUser(user.getIdLong());
     }
 
-    @Deprecated
-    public List<Long> getAllUserIds() {
-        return userRepository.findAllIds();
+    public BotUser getBotUser(Member member) {
+        return getBotUser(member.getIdLong());
     }
 
-    public BotUser getUserById(long userId) {
-        return userRepository.findById(userId).orElseThrow();
-    }
-
-    /**
-     * @deprecated use {@link #isMuted(long)}
-     */
-    @Deprecated
-    public List<Long> getMutedUsers() {
-        return userRepository.findMutedUsers();
-    }
-
-    public boolean isMuted(long userId) {
-        return false;
-        // TODO implement
-    }
-
-    public List<Long> getUsersByPermission(int permissionLevel) {
-        return userRepository.findByPermissionLevel(permissionLevel);
-    }
-
-    public List<BotUser> getUsersByDailyEnabled() {
-        return userRepository.getAllWithDaily();
+    public BotUser getBotUser(long userId) {
+        return userRepository.findById(userId).orElseGet(() -> createUser(userId));
     }
 
     public BotUser createUser(long userId) {
         return userRepository.save(new BotUser(userId));
     }
 
-    public BotUser createUserIfAbsent(long userId) {
-        Optional<BotUser> optional = userRepository.findById(userId);
-        if (optional.isEmpty()) {
-            return createUser(userId);
-        }
-        return optional.get();
+    public boolean isMuted(User user) {
+        return userRepository.isMuted(user.getIdLong());
+    }
+
+    public List<Long> getUsersByPermission(int permissionLevel) {
+        return userRepository.findByPermissionLevel(permissionLevel);
+    }
+
+    public boolean hasPermission(User user, int permissionLevel) {
+        return userRepository.hasPermission(user.getIdLong(), permissionLevel);
+    }
+
+    public List<BotUser> getUsersByDailyEnabled() {
+        return userRepository.getAllWithDaily();
     }
 
     public void deleteUser(long userId) {
@@ -80,166 +63,103 @@ public class UserService {
         userRepository.save(botUser);
     }
 
-    public boolean switchDaily(long userId) {
-        BotUser botUser = getUserById(userId);
+    public boolean switchDaily(User user) {
+        BotUser botUser = getBotUser(user.getIdLong());
         botUser.setDailyUpdate(!botUser.isDailyUpdate());
         return userRepository.save(botUser).isDailyUpdate();
     }
 
     public void setPermission(long userId, int permissionLevel) {
-        BotUser botUser = getUserById(userId);
+        BotUser botUser = getBotUser(userId);
         botUser.setPermissionLevel(permissionLevel);
         userRepository.save(botUser);
     }
 
     public BotUser addCurrencies(long userId, long coins, long xp, long diamonds) {
-        return addCurrencies(getUserById(userId), coins, xp, diamonds);
+        return addCurrencies(getBotUser(userId), coins, xp, diamonds);
     }
 
     public BotUser addCurrencies(BotUser botUser, long coins, long xp, long diamonds) {
-        return botUser;
-        // TODO implement
+        botUser.setCoins(botUser.getCoins() + coins);
+        botUser.setXp(botUser.getXp() + xp);
+        botUser.setDiamonds(botUser.getDiamonds() + diamonds);
+        return userRepository.save(botUser);
     }
 
-    public BotUser addReward(long userId, Reward reward) {
-        return addReward(getUserById(userId), reward);
+    public BotUser addCurrencies(long userId, Reward reward) {
+        return addCurrencies(getBotUser(userId), reward);
     }
 
-    public BotUser addReward(BotUser botUser, Reward reward) {
-        return botUser;
-        // TODO implement
-    }
-
-    /**
-     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
-     */
-    @Deprecated
-    public long addCoins(long userId, long amount) {
-        BotUser botUser = getUserById(userId);
-        botUser.setCoins(botUser.getCoins() + amount);
-        userRepository.save(botUser);
-        return botUser.getCoins();
-    }
-
-    /**
-     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
-     */
-    @Deprecated
-    public long addXp(long userId, long amount) {
-        BotUser botUser = getUserById(userId);
-        botUser.setXp(botUser.getXp() + amount);
-        userRepository.save(botUser);
-        return botUser.getXp();
-    }
-
-    /**
-     * @deprecated {@link #addCurrencies(long, long, long, long)} {@link #addReward(long, Reward)}
-     */
-    @Deprecated
-    public long addDiamonds(long userId, long amount) {
-        BotUser botUser = getUserById(userId);
-        botUser.setDiamonds(botUser.getDiamonds() + amount);
-        userRepository.save(botUser);
-        return botUser.getDiamonds();
+    public BotUser addCurrencies(BotUser botUser, Reward reward) {
+        botUser.setCoins(botUser.getCoins() + reward.getCoins());
+        botUser.setXp(botUser.getXp() + reward.getXp());
+        botUser.setDiamonds(botUser.getDiamonds() + reward.getDiamonds());
+        return userRepository.save(botUser);
     }
 
     public void setCoins(long userId, int amount) {
-        BotUser botUser = getUserById(userId);
+        BotUser botUser = getBotUser(userId);
         botUser.setCoins(amount);
         userRepository.save(botUser);
     }
 
     public void setXp(long userId, int amount) {
-        BotUser botUser = getUserById(userId);
+        BotUser botUser = getBotUser(userId);
         botUser.setXp(amount);
         userRepository.save(botUser);
     }
 
     public void setDiamonds(long userId, int amount) {
-        BotUser botUser = getUserById(userId);
+        BotUser botUser = getBotUser(userId);
         botUser.setDiamonds(amount);
         userRepository.save(botUser);
     }
 
 
-    public void onValidMessage(long userId) {
-        // TODO implement
-    }
-
-    /**
-     * @deprecated {@link #onValidMessage(long)}
-     */
-    @Deprecated
-    public void updateLastValidMessage(long userId) {
-        BotUser botUser = getUserById(userId);
+    public BotUser onValidMessage(long userId) {
+        BotUser botUser = getBotUser(userId);
         botUser.setLastValidMessage(System.currentTimeMillis());
-        userRepository.save(botUser);
-    }
-
-    /**
-     * @deprecated {@link #onValidMessage(long)}
-     */
-    @Deprecated
-    public void updateMessageCount(long userId) {
-        BotUser botUser = getUserById(userId);
         botUser.setMessageCount(botUser.getMessageCount() + 1);
-        userRepository.save(botUser);
+        return userRepository.save(botUser);
     }
 
-    // TODO make external script
-    @Deprecated
-    public void updateUserStatistics(long userId) {
-        BotUser botUser = getUserById(userId);
-        botUser.setStartCoins(botUser.getCoins());
-        botUser.setStartXp(botUser.getXp());
-        botUser.setStartDiamonds(botUser.getDiamonds());
-        userRepository.save(botUser);
+    public void updateUserStatistics() {
+        userRepository.updateStatistics();
     }
 
-    public int setRank(long userId, int rank) {
-        BotUser botUser = getUserById(userId);
+    public int setRank(BotUser botUser, int rank) {
         if (botUser.getLevel() == 13) {
             return 13;
         }
         botUser.setLevel(rank);
-        userRepository.save(botUser);
-        return botUser.getLevel();
+        return  userRepository.save(botUser).getLevel();
     }
 
-    public int increaseRewardLevel(long userId) {
-        BotUser botUser = getUserById(userId);
+    public int increaseRewardLevel(BotUser botUser) {
         int newLevel = botUser.getRewardLevel() + 1;
         newLevel = newLevel > 7 ? 1 : newLevel;
         botUser.setRewardLevel(newLevel);
-        userRepository.save(botUser);
-        return newLevel;
+        return userRepository.save(botUser).getRewardLevel();
     }
 
-    public int resetRewardLevel(long userId) {
-        BotUser botUser = getUserById(userId);
+    public int resetRewardLevel(BotUser botUser) {
         botUser.setRewardLevel(1);
         userRepository.save(botUser);
         return 1;
     }
 
-    public void updateLastReward(long userId) {
-        BotUser botUser = getUserById(userId);
+    public void updateLastReward(BotUser botUser) {
         botUser.setLastReward(System.currentTimeMillis());
         userRepository.save(botUser);
     }
 
-    @Deprecated
-    public void resetEventPoints(long userId) {
-        BotUser botUser = getUserById(userId);
-        botUser.setEventPoints(0);
-        userRepository.save(botUser);
+    public void resetEventPoints() {
+        userRepository.resetEventPoints();
     }
 
-    // TODO move to event service
-    @Deprecated
-    public long increaseEventPoints(long userId) {
-        BotUser botUser = getUserById(userId);
+    public BotUser increaseEventPoints(long userId) {
+        BotUser botUser = getBotUser(userId);
         botUser.setEventPoints(botUser.getEventPoints() + 1);
-        return userRepository.save(botUser).getEventPoints();
+        return userRepository.save(botUser);
     }
 }

@@ -40,6 +40,7 @@ public class BotUser implements Pageable {
         this.userId = userId;
         level = 1;
         permissionLevel = 1;
+        coins = 100;
     }
 
     public BotUser(long userId,

@@ -1,6 +1,7 @@
 package de.kaktushose.levelbot.leveling.listener;
 
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import de.kaktushose.levelbot.account.data.BotUser;
 import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.bot.Levelbot;
 import de.kaktushose.levelbot.events.data.EventService;
@@ -59,7 +60,8 @@ public class LevelListener extends ListenerAdapter {
 
         if (eventService.isCollectEventActive(guildId)) {
             CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
-            long eventPoints = userService.increaseEventPoints(userId);
+            BotUser botUser = userService.increaseEventPoints(userId);
+            long eventPoints = botUser.getEventPoints();
 
             if (eventPoints == collectEvent.getItemBound()) {
                 shopService.addItem(userId, collectEvent.getItem().getItemId());

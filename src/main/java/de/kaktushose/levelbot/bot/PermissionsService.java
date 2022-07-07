@@ -17,14 +17,13 @@ public class PermissionsService implements PermissionsProvider {
 
     @Override
     public boolean isMuted(@NotNull User user, @NotNull CommandContext context) {
-        return userService.getMutedUsers().contains(user.getIdLong());
+        return userService.isMuted(user);
     }
 
     @Override
     public boolean hasPermission(@NotNull User user, @NotNull CommandContext context) {
         for (String permission : context.getCommand().getPermissions()) {
-            // TODO replace with query
-            if (!userService.getUsersByPermission(getLevelByName(permission)).contains(user.getIdLong())) {
+            if (!userService.hasPermission(user, getLevelByName(permission))) {
                 return false;
             }
         }
@@ -36,6 +35,7 @@ public class PermissionsService implements PermissionsProvider {
         return hasPermission(member.getUser(), context);
     }
 
+    // TODO replace with Enum
     private int getLevelByName(String name) {
         switch (name) {
             case "moderator":

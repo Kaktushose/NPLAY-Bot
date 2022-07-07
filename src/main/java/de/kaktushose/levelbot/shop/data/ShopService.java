@@ -52,7 +52,7 @@ public class ShopService {
     }
 
     public void buyItem(long userId, int itemId) {
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         Item item = itemRepository.findById(itemId).orElseThrow();
         transactionRepository.save(addItemToUser(botUser, item));
         botUser.setCoins(botUser.getCoins() - item.getPrice());
@@ -74,7 +74,7 @@ public class ShopService {
             }
         }
 
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
         Transaction transaction;
         if (hasItemOfCategory(userId, item.getCategoryId())) {
             // TODO add getItemByCategoryId method
@@ -112,7 +112,7 @@ public class ShopService {
 
     public void removeItem(long userId, int itemId) {
         transactionRepository.deleteByUserIdAndItemId(userId, itemId);
-        BotUser botUser = userService.getUserById(userId);
+        BotUser botUser = userService.getBotUser(userId);
 
         if (itemId == 3) {
             if (frozenItemRepository.existsById(userId)) {

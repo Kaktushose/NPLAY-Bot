@@ -81,7 +81,7 @@ public class BoosterServiceTest {
     public void addMonthlyReward_ShouldAddCurrencies() {
         userService.createUser(0);
         String rewardText = boosterService.addMonthlyReward(0);
-        BotUser botUser = userService.getUserById(0);
+        BotUser botUser = userService.getBotUser(0);
         assertEquals(50, botUser.getXp());
         assertEquals(50, botUser.getCoins());
         assertEquals(5, botUser.getDiamonds());
@@ -97,7 +97,7 @@ public class BoosterServiceTest {
     public void addOneTime_ShouldAddCurrencies() {
         userService.createUser(0);
         String rewardText = boosterService.addOneTimeReward(0);
-        BotUser botUser = userService.getUserById(0);
+        BotUser botUser = userService.getBotUser(0);
         assertEquals(250, botUser.getXp());
         assertEquals(250, botUser.getCoins());
         assertEquals(25, botUser.getDiamonds());

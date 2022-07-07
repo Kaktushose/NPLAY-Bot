@@ -35,7 +35,7 @@ public class ChangeDiamondsCommand {
             desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert"
     )
     public void onChangeDiamonds(CommandEvent event, @Optional("1") @Param(value = "Die Anzahl an Diamanten", name = "anzahl") long amount) {
-        BotUser botUser = userService.getUserById(event.getAuthor().getIdLong());
+        BotUser botUser = userService.getBotUser(event.getAuthor());
         long diamonds = botUser.getDiamonds();
 
         if (diamonds == 0 || amount > diamonds) {

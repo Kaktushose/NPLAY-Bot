@@ -194,7 +194,7 @@ public class AddItemCommand {
     }
 
     private Optional<String> addItem(Member member, Item item) {
-        BotUser botUser = userService.getUserById(member.getIdLong());
+        BotUser botUser = userService.getBotUser(member);
 
         if (shopService.hasItem(member.getIdLong(), item.getItemId())) {
             return Optional.of(member.getAsMention() + " besitzt dieses Item bereits!");

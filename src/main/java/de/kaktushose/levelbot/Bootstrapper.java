@@ -30,7 +30,7 @@ public class Bootstrapper {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> log.error("An unexpected error has occurred!", e));
         SpringApplication.run(Bootstrapper.class, args);
         levelbot = new Levelbot(Levelbot.GuildType.TESTING);
-        levelbot.start().indexMembers();
+        levelbot.start();
         startTime = System.currentTimeMillis() - startTime;
         log.info("Successfully started bot! Took {} seconds", TimeUnit.MILLISECONDS.toSeconds(startTime));
     }

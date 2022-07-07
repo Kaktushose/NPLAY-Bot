@@ -1,5 +1,7 @@
 package de.kaktushose.levelbot.events.data;
 
+import de.kaktushose.levelbot.account.data.BotUser;
+import de.kaktushose.levelbot.account.data.UserRepository;
 import de.kaktushose.levelbot.account.data.UserService;
 import de.kaktushose.levelbot.bot.ApplicationContextHolder;
 import de.kaktushose.levelbot.bot.data.SettingsService;
@@ -157,8 +159,7 @@ public class EventService {
 
     public String startCollectEvent(int id, Guild guild) {
         settingsService.setActiveCollectEvent(guild.getIdLong(), id);
-        // TODO make query
-        userService.getAllUsers().forEach(botUser -> userService.resetEventPoints(botUser.getUserId()));
+        userService.resetEventPoints();
         return getCollectEvent(id).getName();
     }
 

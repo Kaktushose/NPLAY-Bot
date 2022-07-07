@@ -19,7 +19,7 @@ import de.kaktushose.levelbot.events.data.collect.CollectEvent;
 import de.kaktushose.levelbot.leveling.data.LevelService;
 import de.kaktushose.levelbot.leveling.data.rank.Rank;
 import de.kaktushose.levelbot.leveling.listener.DailyRewardListener;
-import de.kaktushose.levelbot.leveling.listener.JoinLeaveListener;
+import de.kaktushose.levelbot.leveling.listener.LeaveListener;
 import de.kaktushose.levelbot.leveling.listener.LevelListener;
 import de.kaktushose.levelbot.shop.ShopListener;
 import de.kaktushose.levelbot.shop.data.ShopService;
@@ -46,9 +46,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("ConstantConditions")
 public class Levelbot {
@@ -99,11 +97,8 @@ public class Levelbot {
         statistics = new Statistics(this, guildId);
     }
 
-    public Levelbot start() throws LoginException, InterruptedException {
+    public void start() throws LoginException, InterruptedException {
         log.info("Bot is running at version {}", settingsService.getVersion(guildId));
-
-        embedCache.loadEmbedsToCache();
-
         log.debug("Starting jda...");
         String token = settingsService.getBotToken(guildId);
         jda = JDABuilder.create(
@@ -131,7 +126,7 @@ public class Levelbot {
 
         log.debug("Registering event listeners...");
         jda.addEventListener(
-                new JoinLeaveListener(this),
+                new LeaveListener(this),
                 new LevelListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
@@ -148,7 +143,6 @@ public class Levelbot {
                 .startGuild();
 
         EmbedCache embeds = new EmbedCache("jdacEmbeds.json");
-        embeds.loadEmbedsToCache();
         jdaCommands.getImplementationRegistry().setHelpMessageFactory(
                 new JsonHelpMessageFactory(embeds)
         );
@@ -177,7 +171,7 @@ public class Levelbot {
                 log.info("Checking for booster rewards...");
                 checkForNitroBoostersRewards();
                 log.info("Update user statistics...");
-                updateUserStatistics();
+                userService.updateUserStatistics();
                 log.info("Done!");
             } catch (Throwable t) {
                 log.error("An exception has occurred while executing daily tasks!", t);
@@ -202,7 +196,7 @@ public class Levelbot {
                     .toMessageEmbed()
             ).queue();
         }
-        return this;
+        userService.resetEventPoints();
     }
 
     public Levelbot stop() {
@@ -214,22 +208,6 @@ public class Levelbot {
 
     public void terminate(int status) {
         System.exit(status);
-    }
-
-    public Levelbot indexMembers() {
-        log.info("Indexing members...");
-        guild.loadMembers().onSuccess(guildMembers -> {
-            guildMembers.forEach(member -> userService.createUserIfAbsent(member.getIdLong()));
-
-            List<Long> guildMemberIds = guildMembers.stream().map(ISnowflake::getIdLong).collect(Collectors.toList());
-            userService.getAllUsers().forEach(botUser -> {
-                if (!guildMemberIds.contains(botUser.getUserId())) {
-                    log.info("Removing " + botUser.getUserId());
-                    userService.deleteUser(botUser.getUserId());
-                }
-            });
-        });
-        return this;
     }
 
     public void addRankRole(long userId, int rankId) {
@@ -272,10 +250,6 @@ public class Levelbot {
         guild.addRoleToMember(UserSnowflake.fromId(userId), guild.getRoleById(event.getRoleId())).queue();
     }
 
-    public void updateUserStatistics() {
-        userService.getAllUserIds().forEach(userService::updateUserStatistics);
-    }
-
     public void dmRankInfo() {
         userService.getUsersByDailyEnabled().forEach(botUser -> {
             User user = jda.getUserById(botUser.getUserId());
@@ -308,7 +282,7 @@ public class Levelbot {
     }
 
     public EmbedBuilder generateRankInfo(User target, boolean dm) {
-        BotUser botUser = userService.getUserById(target.getIdLong());
+        BotUser botUser = userService.getBotUser(target);
 
         Rank currentRank = levelService.getCurrentRank(botUser.getUserId());
         Rank nextRank = levelService.getNextRank(botUser.getUserId());
@@ -369,6 +343,9 @@ public class Levelbot {
     }
 
     public void updateStatistics() {
+        if (guildType != GuildType.PRODUCTION) {
+            return;
+        }
         statistics.queryStatistics().onSuccess(stats -> {
             TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
             channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
