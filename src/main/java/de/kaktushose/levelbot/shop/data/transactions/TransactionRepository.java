@@ -25,6 +25,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
     @Query("SELECT new java.lang.Boolean(count(*) > 0) FROM Transaction t WHERE t.userId = :userId AND t.item.itemId in (SELECT i.itemId from Item i where i.categoryId = :categoryId)")
     boolean existsByUserIdAndCategoryId(@Param("userId") long userId, @Param("categoryId") int categoryId);
 
-    @Query(value = "SELECT * FROM transactions INNER JOIN items ON items.item_id=transactions.item_id WHERE duration - (ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000) - buy_time) < 86400000 AND transactions.item_id <> 3", nativeQuery = true)
+    @Query(value = "SELECT * FROM transactions INNER JOIN items ON items.item_id=transactions.item_id WHERE duration - ((UNIX_TIMESTAMP(NOW()) * 1000) - buy_time) < 86400000 AND transactions.item_id <> 3", nativeQuery = true)
     List<Transaction> findExpiringTransactions();
 }
