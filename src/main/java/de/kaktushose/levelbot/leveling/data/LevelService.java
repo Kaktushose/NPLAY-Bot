@@ -89,15 +89,24 @@ public class LevelService {
         return true;
     }
 
-    public Pagination getXpLeaderboard(int pageSize, JDA jda) {
+    public Pagination getLeaderboard(Pagination.CurrencyType currencyType, int pageSize, JDA jda) {
+        return switch (currencyType) {
+            case XP -> getXpLeaderboard(pageSize, jda);
+            case COINS -> getCoinsLeaderboard(pageSize, jda);
+            case DIAMONDS ->  getDiamondsLeaderboard(pageSize, jda);
+            case CONTEST -> throw new IllegalArgumentException();
+        };
+    }
+
+    private Pagination getXpLeaderboard(int pageSize, JDA jda) {
         return new Pagination(pageSize, userRepository.getXpLeaderboard(), jda, Pagination.CurrencyType.XP);
     }
 
-    public Pagination getCoinsLeaderboard(int pageSize, JDA jda) {
+    private Pagination getCoinsLeaderboard(int pageSize, JDA jda) {
         return new Pagination(pageSize, userRepository.getCoinsLeaderboard(), jda, Pagination.CurrencyType.COINS);
     }
 
-    public Pagination getDiamondsLeaderboard(int pageSize, JDA jda) {
+    private Pagination getDiamondsLeaderboard(int pageSize, JDA jda) {
         return new Pagination(pageSize, userRepository.getDiamondsLeaderboard(), jda, Pagination.CurrencyType.DIAMONDS);
     }
 

@@ -43,7 +43,7 @@ public class ChangeDiamondsCommand {
             return;
         }
 
-        event.with(Buttons.enabled("onConfirm"), Buttons.enabled("onCancel")).reply(embedCache.getEmbed("changeDiamonds")
+        event.withButtons("onConfirm", "onCancel").reply(embedCache.getEmbed("changeDiamonds")
                 .injectFormat(amount == 1 ? "einen" : String.valueOf(amount), amount * UserService.EXCHANGE_RATE)
         );
 

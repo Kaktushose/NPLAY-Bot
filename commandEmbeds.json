@@ -262,7 +262,7 @@
     }
   },
   "leaderboard": {
-    "title": "Rangliste {guild}: {currency}",
+    "title": "Rangliste: %s",
     "color": "#86c240"
   },
   "shopOverview": {

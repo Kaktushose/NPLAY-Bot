@@ -1,142 +1,97 @@
-// TODO use buttons
-//package de.kaktushose.levelbot.commands.member;
-//
-//import com.github.kaktushose.jda.commands.annotations.Command;
-//import com.github.kaktushose.jda.commands.annotations.CommandController;
-//import com.github.kaktushose.jda.commands.annotations.Inject;
-//import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
-//import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-//import de.kaktushose.discord.reactionwaiter.ReactionWaiter;
-//import de.kaktushose.levelbot.leveling.data.LevelService;
-//import de.kaktushose.levelbot.util.Pagination;
-//import net.dv8tion.jda.api.EmbedBuilder;
-//import net.dv8tion.jda.api.entities.Guild;
-//import net.dv8tion.jda.api.entities.Message;
-//
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.function.Consumer;
-//
-//import static de.kaktushose.levelbot.util.Pagination.CurrencyType;
-//
-//@CommandController(value = {"rangliste", "leaderboard", "lb"}, category = "Levelsystem")
-//public class LeaderboardCommand {
-//
-//    private static final String BACK = "◀️";
-//    private static final String FORTH = "▶️";
-//    private static final String XP = "\uD83C\uDF1F";
-//    private static final String COINS = "\uD83D\uDCB0";
-//    private static final String DIAMONDS = "\uD83D\uDC8E";
-//
-//    @Inject
-//    private LevelService levelService;
-//    @Inject
-//    private EmbedCache embedCache;
-//    private Guild guild;
-//    private CurrencyType currencyType;
-//    private Map<CurrencyType, Pagination> paginationMap;
-//
-//    @Command(
-//            name = "Rangliste",
-//            usage = "{prefix}rangliste",
-//            desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten"
-//    )
-//    public void onLeaderboard(CommandEvent event) {
-//        this.guild = event.getGuild();
-//        currencyType = CurrencyType.XP;
-//        paginationMap = new HashMap<>();
-//        paginationMap.put(CurrencyType.XP, levelService.getXpLeaderboard(10, event.getJDA()));
-//        paginationMap.put(CurrencyType.COINS, levelService.getCoinsLeaderboard(10, event.getJDA()));
-//        paginationMap.put(CurrencyType.DIAMONDS, levelService.getDiamondsLeaderboard(10, event.getJDA()));
-//        showLeaderboard(event, null);
-//    }
-//
-//    public void showLeaderboard(CommandEvent event, Message sentMessage) {
-//        Pagination pagination = paginationMap.get(currencyType);
-//        Consumer<Message> success = message -> {
-//            addReactions(message, pagination.index(), pagination.pages());
-//            ReactionWaiter waiter = new ReactionWaiter(message, event.getMember(), BACK, FORTH, XP, COINS, DIAMONDS);
-//            waiter.onEvent(reactionEvent -> {
-//                switch (reactionEvent.getEmote()) {
-//                    case BACK:
-//                        if (pagination.index() == 0) {
-//                            return;
-//                        }
-//                        pagination.previousPage();
-//                        break;
-//                    case FORTH:
-//                        if (pagination.index() + 1 == pagination.pages()) {
-//                            return;
-//                        }
-//                        pagination.nextPage();
-//                        break;
-//                    case XP:
-//                        if (currencyType == CurrencyType.XP) {
-//                            return;
-//                        }
-//                        currencyType = CurrencyType.XP;
-//                        break;
-//                    case COINS:
-//                        if (currencyType == CurrencyType.COINS) {
-//                            return;
-//                        }
-//                        currencyType = CurrencyType.COINS;
-//                        break;
-//                    case DIAMONDS:
-//                        if (currencyType == CurrencyType.DIAMONDS) {
-//                            return;
-//                        }
-//                        currencyType = CurrencyType.DIAMONDS;
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                showLeaderboard(event, message);
-//                waiter.stopWaiting(true);
-//            });
-//        };
-//
-//        if (sentMessage == null) {
-//            event.reply(buildEmbed(pagination.getPage(), pagination.index(), pagination.pages()), success);
-//        } else {
-//            sentMessage.editMessage(buildEmbed(pagination.getPage(), pagination.index(), pagination.pages()).build()).queue(success);
-//        }
-//    }
-//
-//    private EmbedBuilder buildEmbed(List<String> users, int index, int page) {
-//        EmbedBuilder embedBuilder = embedCache.getEmbed("leaderboard")
-//                .injectValue("guild", guild.getName())
-//                .injectValue("currency", currencyType.toString())
-//                .toEmbedBuilder();
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (int i = 0; i < users.size(); i++) {
-//            stringBuilder.append(String.format("`%d)` ", (i + 1) + index * 10)).append(users.get(i)).append("\n");
-//        }
-//
-//        return embedBuilder.setDescription(stringBuilder.toString())
-//                .setFooter(String.format("Seite %d/%d", index + 1, page));
-//    }
-//
-//    private void addReactions(Message message, int index, int pages) {
-//        if (index == 0) {
-//            message.addReaction(FORTH).queue();
-//        } else if (index + 1 == pages) {
-//            message.addReaction(BACK).queue();
-//        } else {
-//            message.addReaction(BACK).and(message.addReaction(FORTH)).queue();
-//        }
-//        switch (currencyType) {
-//            case XP:
-//                message.addReaction(COINS).and(message.addReaction(DIAMONDS)).queue();
-//                break;
-//            case COINS:
-//                message.addReaction(XP).and(message.addReaction(DIAMONDS)).queue();
-//                break;
-//            case DIAMONDS:
-//                message.addReaction(XP).and(message.addReaction(COINS)).queue();
-//                break;
-//        }
-//    }
-//}
+package de.kaktushose.levelbot.account.commands;
+
+import com.github.kaktushose.jda.commands.annotations.Command;
+import com.github.kaktushose.jda.commands.annotations.CommandController;
+import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.github.kaktushose.jda.commands.annotations.interactions.Button;
+import com.github.kaktushose.jda.commands.annotations.interactions.Choices;
+import com.github.kaktushose.jda.commands.annotations.interactions.Param;
+import com.github.kaktushose.jda.commands.data.StateSection;
+import com.github.kaktushose.jda.commands.dispatching.ButtonEvent;
+import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.interactions.components.Buttons;
+import de.kaktushose.levelbot.leveling.data.LevelService;
+import de.kaktushose.levelbot.util.Pagination;
+import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static de.kaktushose.levelbot.util.Pagination.CurrencyType;
+
+@SuppressWarnings("OptionalGetWithoutIsPresent")
+@CommandController(value = "rangliste", category = "Levelsystem", ephemeral = true)
+public class LeaderboardCommand {
+
+    private final StateSection section;
+    @Inject
+    private LevelService levelService;
+    @Inject
+    private EmbedCache embedCache;
+
+    public LeaderboardCommand() {
+        section = new StateSection(5, TimeUnit.MINUTES);
+    }
+
+    @Command(
+            name = "Rangliste",
+            usage = "{prefix}rangliste",
+            desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten"
+    )
+    public void onLeaderboard(CommandEvent event,
+                              @Choices({"xp", "münzen", "diamanten"})
+                              @Param(name = "währung", value = "Die Währung dessen Rangliste gezeigt werden soll")
+                                      CurrencyType currencyType) {
+        Pagination pagination = levelService.getLeaderboard(currencyType, 10, event.getJDA());
+        event.with(Buttons.disabled("onBack"), Buttons.enabled("onForth")).reply(buildEmbed(pagination));
+        section.put(event.getAuthor().getId(), pagination);
+    }
+
+    @Button(label = "Zurück")
+    public void onBack(ButtonEvent event) {
+        if (!section.contains(event.getAuthor().getId())) {
+            event.clearComponents().edit(embedCache.getEmbed("interactionTimeout"));
+            return;
+        }
+        Pagination pagination = section.get(event.getAuthor().getId(), Pagination.class).get();
+        pagination.previousPage();
+        if (pagination.index() == 0) {
+            event.with(Buttons.disabled("onBack"), Buttons.enabled("onForth")).edit(buildEmbed(pagination));
+        } else {
+            event.with(Buttons.enabled("onBack", "onForth")).edit(buildEmbed(pagination));
+        }
+    }
+
+    @Button(label = "Weiter")
+    public void onForth(ButtonEvent event) {
+        if (!section.contains(event.getAuthor().getId())) {
+            event.clearComponents().edit(embedCache.getEmbed("interactionTimeout"));
+            return;
+        }
+        Pagination pagination = section.get(event.getAuthor().getId(), Pagination.class).get();
+        pagination.nextPage();
+        if (pagination.index() == pagination.pages()) {
+            event.with(Buttons.enabled("onBack"), Buttons.disabled("onForth")).edit(buildEmbed(pagination));
+        } else {
+            event.with(Buttons.enabled("onBack", "onForth")).edit(buildEmbed(pagination));
+        }
+    }
+
+    private EmbedBuilder buildEmbed(Pagination pagination) {
+        EmbedBuilder embedBuilder = embedCache.getEmbed("leaderboard")
+                .injectFormat(pagination.getCurrencyType().toString())
+                .toEmbedBuilder();
+
+        List<String> users = pagination.getPage();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < users.size(); i++) {
+            stringBuilder.append(String.format("`%d)` ", (i + 1) + pagination.index() * 10)).append(users.get(i)).append("\n");
+        }
+
+        return embedBuilder.setDescription(stringBuilder.toString())
+                .setFooter(String.format("Seite %d/%d", pagination.index() + 1, pagination.pages()));
+    }
+
+}

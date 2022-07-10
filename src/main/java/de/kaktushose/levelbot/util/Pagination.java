@@ -61,19 +61,17 @@ public class Pagination {
     }
 
     private String format(Pageable pageable) {
-        User user = jda.getUserById(pageable.getUserId());
-        switch (currencyType) {
-            case XP:
-                return String.format("%s#%s (%d XP)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.XP));
-            case COINS:
-                return String.format("%s#%s (%d Münzen)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.COINS));
-            case DIAMONDS:
-                return String.format("%s#%s (%d Diamanten)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.DIAMONDS));
-            case CONTEST:
-                return String.format("%s#%s (%d Votes)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.CONTEST));
-            default:
-                throw new IllegalArgumentException("Unsupported currency type!");
-        }
+        User user = jda.retrieveUserById(pageable.getUserId()).complete();
+        return switch (currencyType) {
+            case XP -> String.format("%s#%s (%d XP)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.XP));
+            case COINS -> String.format("%s#%s (%d Münzen)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.COINS));
+            case DIAMONDS -> String.format("%s#%s (%d Diamanten)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.DIAMONDS));
+            case CONTEST -> String.format("%s#%s (%d Votes)", user.getName(), user.getDiscriminator(), pageable.getCount(CurrencyType.CONTEST));
+        };
+    }
+
+    public CurrencyType getCurrencyType() {
+        return currencyType;
     }
 
     public enum CurrencyType {

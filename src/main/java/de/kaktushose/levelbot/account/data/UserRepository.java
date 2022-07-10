@@ -41,9 +41,9 @@ public interface UserRepository extends CrudRepository<BotUser, Long> {
     @Query(value = "UPDATE users SET start_coins = coins, start_xp = xp, start_diamonds = diamonds", nativeQuery = true)
     void updateStatistics();
 
-    @Query(value = "SELECT new java.lang.Boolean(permission_level < 1) FROM users WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT new java.lang.Boolean(permission_level < 1) FROM BotUser WHERE user_id = :userId")
     boolean isMuted(long userId);
 
-    @Query(value = "SELECT new java.lang.Boolean(permission_level >= :permissionLevel) FROM users WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT new java.lang.Boolean(permission_level >= :permissionLevel) FROM BotUser WHERE user_id = :userId")
     boolean hasPermission(long userId, int permissionLevel);
 }

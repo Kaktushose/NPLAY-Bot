@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>4aa6061792</version>
+            <version>e9c1d76c6b</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
