@@ -123,7 +123,6 @@ public class Levelbot {
         jda.addEventListener(
                 new JoinLeaveListener(this),
                 new LevelListener(this),
-                new VoiceTextLink(jda.getTextChannelById(367353132772098052L)),
                 new ShopListener(this),
                 new DailyRewardListener(this),
                 new BoosterListener(),
@@ -337,11 +336,11 @@ public class Levelbot {
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
             if (eventPoints >= collectEvent.getItemBound()) {
-                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\n:blue_circle: Eventrolle " + collectEventRole.getName());
+                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\n:green_circle: Eventrolle " + collectEventRole.getName());
             } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", ":blue_circle: Eventrolle " + collectEventRole.getName());
+                embedDTO.injectValue("eventRewards", ":green_circle: Eventrolle " + collectEventRole.getName());
             } else {
-                embedDTO.injectValue("eventRewards", ":x: noch keine");
+                embedDTO.injectValue("eventRewards", ":no_entry_sign: noch keine");
             }
         }
 

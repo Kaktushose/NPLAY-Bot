@@ -21,11 +21,6 @@ public class JoinLeaveListener extends ListenerAdapter {
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         BotUser botUser = levelbot.getUserService().createUserIfAbsent(event.getMember().getIdLong());
         levelbot.getUserService().addCoins(botUser.getUserId(), 100);
-        levelbot.getTaskScheduler().addSingleTask(
-                () -> levelbot.addRankRole(event.getMember().getIdLong(), 1),
-                20,
-                TimeUnit.MINUTES
-        );
     }
 
     @Override
