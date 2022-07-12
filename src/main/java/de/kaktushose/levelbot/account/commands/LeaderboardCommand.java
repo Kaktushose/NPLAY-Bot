@@ -71,7 +71,7 @@ public class LeaderboardCommand {
         }
         Pagination pagination = section.get(event.getAuthor().getId(), Pagination.class).get();
         pagination.nextPage();
-        if (pagination.index() == pagination.pages()) {
+        if (pagination.index() + 1 == pagination.pages()) {
             event.with(Buttons.enabled("onBack"), Buttons.disabled("onForth")).edit(buildEmbed(pagination));
         } else {
             event.with(Buttons.enabled("onBack", "onForth")).edit(buildEmbed(pagination));

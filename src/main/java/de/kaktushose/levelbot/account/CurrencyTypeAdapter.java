@@ -16,7 +16,7 @@ public class CurrencyTypeAdapter implements TypeAdapter<Pagination.CurrencyType>
         return switch (raw) {
             case "xp" -> Optional.of(Pagination.CurrencyType.XP);
             case "münzen" -> Optional.of(Pagination.CurrencyType.COINS);
-            case "diamonds" -> Optional.of(Pagination.CurrencyType.DIAMONDS);
+            case "diamanten" -> Optional.of(Pagination.CurrencyType.DIAMONDS);
             default -> Optional.empty();
         };
     }
