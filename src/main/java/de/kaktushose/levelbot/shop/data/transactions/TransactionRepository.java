@@ -1,6 +1,5 @@
 package de.kaktushose.levelbot.shop.data.transactions;
 
-import de.kaktushose.levelbot.shop.data.items.Item;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

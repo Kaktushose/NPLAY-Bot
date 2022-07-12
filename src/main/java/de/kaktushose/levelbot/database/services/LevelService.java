@@ -165,8 +165,6 @@ public class LevelService {
             return Optional.empty();
         }
 
-        System.out.println(newXp);
-        System.out.println(getNextRank(userId).getBound());
         if (newXp < getNextRank(userId).getBound()) {
             return Optional.empty();
         }
