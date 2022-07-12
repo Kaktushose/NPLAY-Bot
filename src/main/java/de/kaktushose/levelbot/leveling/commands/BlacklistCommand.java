@@ -45,7 +45,7 @@ public class BlacklistCommand {
             event.reply(embedCache.getEmbed("memberBlacklistInvalidTarget").injectValue("user", member.getAsMention()));
             return;
         }
-        userService.setPermission(member.getIdLong(), 0);
+        userService.setPermission(member, 0);
         event.reply(embedCache.getEmbed("memberBlacklistAdd").injectValue("user", member.getAsMention()));
     }
 
@@ -57,7 +57,7 @@ public class BlacklistCommand {
     )
     public void onBlacklistRemove(CommandEvent event, Member member) {
         BotUser target = userService.getBotUser(member);
-        userService.setPermission(member.getIdLong(), 1);
+        userService.setPermission(member, 1);
         event.reply(embedCache.getEmbed("memberBlacklistRemove")
                 .injectValue("user", member.getAsMention())
         );

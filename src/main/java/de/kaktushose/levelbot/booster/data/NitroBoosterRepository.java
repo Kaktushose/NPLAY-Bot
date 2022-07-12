@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface NitroBoosterRepository extends CrudRepository<NitroBooster, Long> {
 
-    @Query(value = "SELECT * FROM nitro_boosters where active = true", nativeQuery = true)
-    List<NitroBooster> getActiveNitroBoosters();
+    @Query(value = "SELECT user_id FROM nitro_boosters WHERE `active` = true", nativeQuery = true)
+    List<Long> getActiveNitroBoosters();
+
+    @Query(value = "SELECT user_id FROM nitro_boosters WHERE (UNIX_TIMESTAMP(NOW()) - boost_start / 1000) % (30 * 24 * 60 * 60) < 24 * 60 * 60 AND `active` = true;", nativeQuery = true)
+    List<Long> getRewardableBoosters();
 
 }

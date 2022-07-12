@@ -25,7 +25,6 @@ public class BoosterService {
 
     private static final Logger log = LoggerFactory.getLogger("analytics");
     private final NitroBoosterRepository nitroBoosterRepository;
-    private final Levelbot levelbot;
     private final ShopService shopService;
     private final UserService userService;
     private final SettingsService settingsService;
@@ -36,7 +35,6 @@ public class BoosterService {
         this.shopService = levelbot.getShopService();
         this.settingsService = levelbot.getSettingsService();
         userService = levelbot.getUserService();
-        this.levelbot = levelbot;
     }
 
     public void updateBoosterStatus(Guild guild, TextChannel botChannel, EmbedCache embedCache) {
@@ -48,13 +46,13 @@ public class BoosterService {
                 long userId = member.getIdLong();
                 log.debug("Checking on {}...", member);
                 // user is already registered as an active booster in db, skip this one
-                if (isActiveNitroBooster(userId)) {
+                if (isCurrentlyBoosting(userId)) {
                     log.debug("Member is active booster!");
                     return;
                 }
 
                 // user is in db, must be a resumed booster
-                if (isNitroBooster(userId)) {
+                if (isRegisteredBooster(userId)) {
                     changeNitroBoosterStatus(userId, true);
                     addMonthlyReward(userId);
                     shopService.addItem(userId, ItemCategory.PREMIUM, ItemVariant.UNLIMITED);
@@ -80,17 +78,15 @@ public class BoosterService {
 
             log.debug("Comparing with active boosters...");
             // iterate through all active boosters and compare with actual boosters
-            getActiveNitroBoosters().forEach(nitroBooster -> {
-                Long userId = nitroBooster.getUserId();
-                Member member = guild.retrieveMemberById(userId).complete();
-                log.debug("Checking on {}...", member);
+            getActiveNitroBoosters().forEach(userId -> {
+                log.debug("Checking on {}...", userId);
                 if (boosterList.stream().map(ISnowflake::getIdLong).noneMatch(userId::equals)) {
                     log.debug("Member stopped boosting!");
                     changeNitroBoosterStatus(userId, false);
                     shopService.removeItem(userId, ItemCategory.PREMIUM, ItemVariant.UNLIMITED);
-                    botChannel.sendMessage(member.getAsMention())
+                    botChannel.sendMessage("<@%s>".formatted(userId))
                             .and(botChannel.sendMessageEmbeds(embedCache.getEmbed("nitroBoostStop")
-                                    .injectValue("user", member.getAsMention())
+                                    .injectValue("user", "<@%s>".formatted(userId))
                                     .toMessageEmbed()
                             )).queue();
                 }
@@ -109,16 +105,16 @@ public class BoosterService {
         return result;
     }
 
-    public List<NitroBooster> getActiveNitroBoosters() {
+    public List<Long> getActiveNitroBoosters() {
         return nitroBoosterRepository.getActiveNitroBoosters();
     }
 
-    public boolean isNitroBooster(long userId) {
+    public boolean isRegisteredBooster(long userId) {
         return nitroBoosterRepository.findById(userId).isPresent();
     }
 
-    public boolean isActiveNitroBooster(long userId) {
-        return getActiveNitroBoosters().stream().map(NitroBooster::getUserId).anyMatch(((Long) userId)::equals);
+    public boolean isCurrentlyBoosting(long userId) {
+        return getActiveNitroBoosters().contains(userId);
     }
 
     public void createNewNitroBooster(long userId) {
@@ -126,7 +122,7 @@ public class BoosterService {
     }
 
     public void changeNitroBoosterStatus(long userId, boolean active) {
-        if (!isNitroBooster(userId)) {
+        if (!isRegisteredBooster(userId)) {
             return;
         }
         NitroBooster nitroBooster = nitroBoosterRepository.findById(userId).orElseThrow();
@@ -150,5 +146,9 @@ public class BoosterService {
             shopService.addItem(userId, reward.getItem().getItemId());
         }
         return reward.getMessage();
+    }
+
+    public List<Long> getRewardableBoosters() {
+        return nitroBoosterRepository.getRewardableBoosters();
     }
 }

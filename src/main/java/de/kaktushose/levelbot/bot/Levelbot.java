@@ -260,11 +260,7 @@ public class Levelbot {
     }
 
     public void checkForNitroBoostersRewards() {
-        boosterService.getActiveNitroBoosters().forEach(nitroBooster -> {
-            if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - nitroBooster.getBoostStart()) % 30 == 0) {
-                boosterService.addMonthlyReward(nitroBooster.getUserId());
-            }
-        });
+        boosterService.getRewardableBoosters().forEach(boosterService::addMonthlyReward);
     }
 
     public void sendItemExpiredInformation(long userId, int itemId, long buyTime) {
@@ -343,11 +339,11 @@ public class Levelbot {
     }
 
     public void updateStatistics() {
-        if (guildType != GuildType.PRODUCTION) {
-            return;
-        }
+//        if (guildType != GuildType.PRODUCTION) {
+//            return;
+//        }
         statistics.queryStatistics().onSuccess(stats -> {
-            TextChannel channel = guild.getTextChannelById(WelcomeEmbedsCommand.WELCOME_CHANNEL_ID);
+            TextChannel channel = guild.getTextChannelById(settingsService.getStatisticsChannelId(guildId));
             channel.retrieveMessageById(settingsService.getStatisticsMessageId(guildId)).flatMap(message ->
                     message.editMessageEmbeds(embedCache.getEmbed("statistics")
                             .injectFields(statistics)

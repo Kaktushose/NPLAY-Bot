@@ -23,10 +23,7 @@ public class GiftCommand {
     @Inject
     private Levelbot levelbot;
 
-    @Command(
-            name = "Geschenke",
-            desc = "Fröhliche Weihnachten!"
-    )
+    @Command(name = "Geschenke", desc = "Fröhliche Weihnachten!")
     public void onGift(CommandEvent event) {
         if (settingsService.getRewardedUsers().contains(event.getAuthor().getIdLong())) {
             event.reply("Du hast dein Geschenk bereits erhalten!");

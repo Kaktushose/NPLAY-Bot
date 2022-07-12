@@ -3,6 +3,8 @@ package de.kaktushose.levelbot.bot.data;
 import de.kaktushose.levelbot.bot.ApplicationContextHolder;
 import de.kaktushose.levelbot.leveling.data.reward.Reward;
 import de.kaktushose.levelbot.leveling.data.reward.RewardRepository;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -88,6 +90,13 @@ public class SettingsService {
         return settingsRepository.getRewardedUsers();
     }
 
+    public void updateStatisticsMessage(Guild guild, Message message) {
+        GuildSettings settings = getGuildSettings(guild.getIdLong());
+        settings.setStatisticsChannelId(message.getChannel().getIdLong());
+        settings.setStatisticsMessageId(message.getIdLong());
+        settingsRepository.save(settings);
+    }
+
     public void addRewardedUser(long userId) {
         settingsRepository.addRewardedUser(userId);
     }
@@ -126,6 +135,10 @@ public class SettingsService {
 
     public long getStatisticsMessageId(long guildId) {
         return getGuildSettings(guildId).getStatisticsMessageId();
+    }
+
+    public long getStatisticsChannelId(long guildId) {
+        return getGuildSettings(guildId).getStatisticsChannelId();
     }
 
 }

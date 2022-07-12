@@ -6,15 +6,18 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.Permission;
 import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import de.kaktushose.levelbot.bot.data.SettingsService;
 
 import java.io.File;
 
-@CommandController(value = "sendembeds", category = "Moderation")
+@CommandController(value = "send embeds", category = "Moderation", ephemeral = true)
 @Permission("moderator")
 public class WelcomeEmbedsCommand {
 
-    public static final long WELCOME_CHANNEL_ID = 851434963316375602L;
+    private static final String STATISTICS_EMBED_TITLE = "Fehler!";
     private final EmbedCache welcomeEmbedCache;
+    @Inject
+    private SettingsService settingsService;
     @Inject
     private EmbedCache embedCache;
 
@@ -22,15 +25,17 @@ public class WelcomeEmbedsCommand {
         welcomeEmbedCache = new EmbedCache(new File("welcomeEmbeds.json"));
     }
 
-    @Command(
-            name = "Willkommen Embeds senden",
-            usage = "{prefix}sendembeds",
-            desc = "Sendet die Embeds in <#551483788337872927>"
-    )
+    @Command(name = "Willkommen Embeds senden", desc = "Sendet die Embeds in <#551483788337872927>")
     public void sendEmbeds(CommandEvent event) {
-        welcomeEmbedCache.loadEmbedsToCache();
+        event.reply(embedCache.getEmbed("welcomeEmbedsSuccess"));
         welcomeEmbedCache.values().forEach(embedDTO -> {
-            event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessageEmbeds(embedDTO.toMessageEmbed()).queue();
+            if (embedDTO.getTitle().equals(STATISTICS_EMBED_TITLE)) {
+                event.getChannel().sendMessageEmbeds(embedDTO.toMessageEmbed()).queue(message ->
+                        settingsService.updateStatisticsMessage(event.getGuild(), message)
+                );
+                return;
+            }
+            event.getChannel().sendMessageEmbeds(embedDTO.toMessageEmbed()).queue();
         });
     }
 }

@@ -8,7 +8,7 @@ import com.github.kaktushose.jda.commands.dispatching.CommandEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import de.kaktushose.levelbot.leveling.data.LevelService;
 
-@CommandController("setprice")
+@CommandController("set price")
 @Permission("moderator")
 public class SetPriceCommand {
 

@@ -45,36 +45,36 @@ public class BoosterServiceTest {
     @Test
     public void createNewNitroBooster_ShouldBeActiveBooster() {
         boosterService.createNewNitroBooster(0);
-        assertTrue(boosterService.isNitroBooster(0));
+        assertTrue(boosterService.isRegisteredBooster(0));
     }
 
     @Test
     public void isNitroBooster_WithoutUsers_ShouldReturnFalse() {
-        assertFalse(boosterService.isNitroBooster(0));
+        assertFalse(boosterService.isRegisteredBooster(0));
     }
 
     @Test
     public void isNitroBooster_WithUsers_ShouldReturnTrue() {
         boosterService.createNewNitroBooster(0);
-        assertTrue(boosterService.isNitroBooster(0));
+        assertTrue(boosterService.isRegisteredBooster(0));
     }
 
     @Test
     public void isActiveNitroBooster_WithoutUsers_ShouldReturnFalse() {
-        assertFalse(boosterService.isActiveNitroBooster(0));
+        assertFalse(boosterService.isCurrentlyBoosting(0));
     }
 
     @Test
     public void isActiveNitroBooster_WithUsers_ShouldReturnTrue() {
         boosterService.createNewNitroBooster(0);
-        assertTrue(boosterService.isActiveNitroBooster(0));
+        assertTrue(boosterService.isCurrentlyBoosting(0));
     }
 
     @Test
     public void changeNitroBoosterStatus_WithTrue_ShouldBeActiveBooster() {
         boosterService.createNewNitroBooster(0);
         boosterService.changeNitroBoosterStatus(0, true);
-        assertTrue(boosterService.isNitroBooster(0));
+        assertTrue(boosterService.isRegisteredBooster(0));
     }
 
     @Test

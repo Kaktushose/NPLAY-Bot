@@ -12,7 +12,7 @@ import com.github.kaktushose.jda.commands.interactions.components.Buttons;
 import de.kaktushose.levelbot.bot.Levelbot;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
-@CommandController(value = {"stop", "shutdown"}, ephemeral = true)
+@CommandController(value = "stop", category = "Owner", ephemeral = true)
 @Permission("owner")
 public class StopCommand {
 
@@ -21,12 +21,7 @@ public class StopCommand {
     @Inject
     private EmbedCache embedCache;
 
-    @Command(
-            name = "Bot herunterfahren",
-            usage = "{prefix}stop",
-            desc = "Fährt den Bot herunter",
-            category = "Owner"
-    )
+    @Command(name = "Bot herunterfahren", desc = "Fährt den Bot herunter")
     public void onStop(CommandEvent event) {
         event.with(Buttons.enabled("onConfirm"), Buttons.enabled("onCancel"))
                 .reply(embedCache.getEmbed("confirmAction").injectValue(

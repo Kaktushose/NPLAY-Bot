@@ -522,5 +522,10 @@
     "title": "Fehler",
     "description": "Die Interaktion ist abgelaufen",
     "color": "#f4cd53"
+  },
+  "welcomeEmbedsSuccess": {
+    "title": "Erfolg",
+    "description": "Die Nachrichten wurden erfolgreich gesendet",
+    "color": "#86c240"
   }
 }

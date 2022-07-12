@@ -12,9 +12,7 @@ public class PingCommand {
     @Inject
     private EmbedCache embedCache;
 
-    @Command(
-            name = "Ping Command",
-            desc = "Zeigt den Ping zur Discord-API an")
+    @Command(name = "Ping Command", desc = "Zeigt den Ping zur Discord-API an")
     public void onPing(CommandEvent event) {
         long gatewayPing = event.getJDA().getGatewayPing();
         long restPing = event.getJDA().getRestPing().complete();

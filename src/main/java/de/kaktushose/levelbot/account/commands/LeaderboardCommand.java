@@ -34,11 +34,7 @@ public class LeaderboardCommand {
         section = new StateSection(5, TimeUnit.MINUTES);
     }
 
-    @Command(
-            name = "Rangliste",
-            usage = "{prefix}rangliste",
-            desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten"
-    )
+    @Command(name = "Rangliste", desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP, Münzen oder Diamanten")
     public void onLeaderboard(CommandEvent event,
                               @Choices({"xp", "münzen", "diamanten"})
                               @Param(name = "währung", value = "Die Währung dessen Rangliste gezeigt werden soll")

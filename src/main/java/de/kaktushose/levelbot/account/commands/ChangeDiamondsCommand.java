@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
 import java.util.concurrent.TimeUnit;
 
-@CommandController(value = {"tauschen", "wechseln"}, category = "Levelsystem", ephemeral = true)
+@CommandController(value = "tauschen", category = "Levelsystem", ephemeral = true)
 public class ChangeDiamondsCommand {
 
     private final StateSection stateSection;
@@ -30,10 +30,7 @@ public class ChangeDiamondsCommand {
         stateSection = new StateSection(1, TimeUnit.MINUTES);
     }
 
-    @Command(
-            name = "Diamanten tauschen",
-            desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert"
-    )
+    @Command(name = "Diamanten tauschen", desc = "Tauscht Diamanten gegen Münzen ein. Ein Diamant ist 20 Münzen wert")
     public void onChangeDiamonds(CommandEvent event, @Optional("1") @Param(value = "Die Anzahl an Diamanten", name = "anzahl") long amount) {
         BotUser botUser = userService.getBotUser(event.getAuthor());
         long diamonds = botUser.getDiamonds();

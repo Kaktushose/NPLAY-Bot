@@ -11,36 +11,27 @@ import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@CommandController(value = {"delete", "purge", "clear"}, category = "Moderation")
+@CommandController(value = "delete", category = "Moderation", ephemeral = true)
 @Permission("moderator")
 public class BulkDeleteCommand {
 
     @Inject
     private EmbedCache embedCache;
 
-    @Command(
-            name = "Nachrichten löschen",
-            usage = "{prefix}delete <amount>",
-            desc = "Löscht die angegebene Zahl von Nachrichten aus einem Channel"
-    )
+    @Command(name = "Nachrichten löschen", desc = "Löscht die angegebene Zahl von Nachrichten aus einem Channel")
     public void onBulkDeleteMessages(
             CommandEvent event,
             @Min(value = 1, message = "Muss mindestens eine Nachricht löschen")
-            @Max(value = 100, message = "Kann maximal 100 Nachrichten gleichzeitig löschen") int amount
+            @Max(value = 100, message = "Kann maximal 100 Nachrichten gleichzeitig löschen")
+            @Param("Die Anzahl zu löschender Nachrichten") int amount
     ) {
-        // amount + 1 so we delete the command message as well
-        // complete aka blocking to make sure that the success message is sent correctly
-        List<Message> messageHistory = event.getChannel().getHistory().retrievePast(amount + 1).complete();
-        messageHistory.forEach(message -> message.delete().complete());
+        event.getChannel().getHistory().retrievePast(amount).queue(history -> history.forEach(message -> message.delete().queue()));
 
-        event.reply(embedCache.getEmbed("bulkDeleteSuccess")
-                        .injectValue("amount", amount),
-                message -> message.delete().queueAfter(10, TimeUnit.SECONDS,
-                        null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
-                )); // delete success message after 10 secs
+        event.reply(embedCache.getEmbed("bulkDeleteSuccess").injectValue("amount", amount));
     }
 }

@@ -69,8 +69,8 @@ public class UserService {
         return userRepository.save(botUser).isDailyUpdate();
     }
 
-    public void setPermission(long userId, int permissionLevel) {
-        BotUser botUser = getBotUser(userId);
+    public void setPermission(Member member, int permissionLevel) {
+        BotUser botUser = getBotUser(member.getIdLong());
         botUser.setPermissionLevel(permissionLevel);
         userRepository.save(botUser);
     }
