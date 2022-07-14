@@ -471,12 +471,12 @@
 
   "collectEventRoleReward": {
     "title": "Das ist Deine Sommerzeit :man_surfing:️, {user}!",
-    "description": "Du hast nun bereits **3 Wassermelonen** :watermelon: geerntet.\nRuh Dich etwas aus und probiere doch mal eine!\nAls kleine Belohnung verleihen wir Dir feierlich die **Eventrolle SOMMER 2022** :green_circle:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **DOPPEL-SOMMERBOOSTER** :timer::star2: mit gedritteltem Cooldown und 2-fachen XP aktiviert.",
+    "description": "Du hast nun bereits **3 Wassermelonen** :watermelon: geerntet.\nRuh Dich etwas aus und probiere doch mal eine!\nAls kleine Belohnung verleihen wir Dir feierlich die **Eventrolle SOMMER 2022** :green_circle:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **XXL-SOMMERBOOSTER** :timer::star2: mit **2-fachen XP** und **2-fachten Münzen** aktiviert.",
     "color": "#EC5C0F"
   },
   "collectEventItemReward": {
     "title": "Ein Geschenk für Dich :man_surfing:, {user}!",
-    "description": "Du hast nun großartige **30 Wassermelonen** :watermelon: geerntet.\nWie versprochen darfst Du jetzt **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server genießen!\nWir wünschen Dir weiterhin viel Spaß mit der NPLAY-Sommerzeit :man_surfing:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **DOPPEL-SOMMERBOOSTER** :timer::star2: mit gedritteltem Cooldown und 2-fachen XP aktiviert.",
+    "description": "Du hast nun großartige **30 Wassermelonen** :watermelon: geerntet.\nWie versprochen darfst Du jetzt **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server genießen!\nWir wünschen Dir weiterhin viel Spaß mit der NPLAY-Sommerzeit :man_surfing:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **XXL-SOMMERBOOSTER** :timer::star2: mit **2-fachen XP** und **2-fachten Münzen** aktiviert.",
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
