@@ -125,7 +125,6 @@ public class Levelbot {
                 new LevelListener(this),
                 new ShopListener(this),
                 new DailyRewardListener(this),
-                new BoosterListener(),
                 new ContestEventListener(settingsService, eventService)
         );
 

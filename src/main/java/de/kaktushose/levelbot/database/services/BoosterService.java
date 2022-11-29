@@ -20,7 +20,7 @@ import java.util.List;
 
 public class BoosterService {
 
-    private static final Logger log = LoggerFactory.getLogger("analytics");
+    private static final Logger log = LoggerFactory.getLogger(BoosterService.class);
     private final NitroBoosterRepository nitroBoosterRepository;
     private final Levelbot levelbot;
     private final ShopService shopService;

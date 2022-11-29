@@ -14,18 +14,6 @@
         </encoder>
     </appender>
 
-    <appender name="ANALYTICS-FILE" class="ch.qos.logback.core.FileAppender">
-        <file>./analytics.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%date [%t] %level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <logger name="analytics" level="trace" additivity="false">
-        <appender-ref ref="ANALYTICS-FILE"/>
-    </logger>
-
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
