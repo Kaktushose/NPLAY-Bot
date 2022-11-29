@@ -222,22 +222,13 @@ public class Levelbot {
     }
 
     public void addRankRole(long userId, int rankId) {
-        log.info("addRankRole({}, {})", userId, rankId);
         Rank rank = levelService.getRank(rankId);
-        Member member = guild.getMemberById(userId);
-        if (member == null) {
-            return;
-        }
-        guild.addRoleToMember(member, guild.getRoleById(rank.getRoleId())).queue();
-        log.info("Added role {} to member {}", rank.getRoleId(), member);
+        guild.addRoleToMember(userId, guild.getRoleById(rank.getRoleId())).queue();
     }
 
     public void removeRankRole(long userId, int rankId) {
-        log.info("removeRankRole({}, {})", userId, rankId);
         Rank rank = levelService.getRank(rankId);
         guild.removeRoleFromMember(userId, guild.getRoleById(rank.getRoleId())).queue();
-        log.info("Removed role {} from member {}", rank.getRoleId(), userId);
-
     }
 
     public void addItemRole(long userId, int itemId) {
