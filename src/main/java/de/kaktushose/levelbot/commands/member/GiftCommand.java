@@ -40,7 +40,7 @@ public class GiftCommand {
                 .setDescription("Das ganze Serverteam wünscht Dir **frohe Festtage** und einen **guten Rutsch.**\n\n" +
                         "Wir bedanken uns für Deine Treue und schenken Dir das Item:\n**:gift: PREMIUM light :star:!**\n\n" +
                         "Freue dich über **15 Tage kostenfreies PREMIUM** auf dem Server mit **vielen Vorteilen!**\n\n" +
-                        ":point_right: Übrigens: Schau gleich mal im Kanal <#539517056543096843> vorbei - dort läuft gerade ein **weiteres Gewinnspiel** :tada: exklusiv für PREMIUM-User.")
+                        "Dein Serverteam")
                 .setColor(Color.ORANGE)
         );
     }

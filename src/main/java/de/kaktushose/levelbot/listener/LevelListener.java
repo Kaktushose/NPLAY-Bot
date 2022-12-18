@@ -57,19 +57,27 @@ public class LevelListener extends ListenerAdapter {
             CollectEvent collectEvent = eventService.getActiveCollectEvent(guildId);
             long eventPoints = userService.increaseEventPoints(userId);
 
-            if (eventPoints == collectEvent.getItemBound()) {
-                shopService.addItem(userId, collectEvent.getItem().getItemId());
-                channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
-                                .injectValue("user", author.getName())
-                                .toMessageEmbed())
-                        ).queue();
-
-            } else if (eventPoints == collectEvent.getRoleBound()) {
-                levelbot.addCollectEventRole(userId);
+            if (eventPoints == 1) {
+                guild.addRoleToMember(userId, guild.getRoleById(collectEvent.getRoleId())).queue();
 
                 channel.sendMessage(author.getAsMention())
                         .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventRoleReward")
+                                .injectValue("user", author.getName())
+                                .toMessageEmbed())
+                        ).queue();
+            } else if (eventPoints == 12) {
+                userService.addXp(userId, 50);
+
+                channel.sendMessage(author.getAsMention())
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventXpReward")
+                                .injectValue("user", author.getName())
+                                .toMessageEmbed())
+                        ).queue();
+            } else if (eventPoints == 24) {
+                userService.addCoins(userId, 100);
+
+                channel.sendMessage(author.getAsMention())
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventCoinsReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();

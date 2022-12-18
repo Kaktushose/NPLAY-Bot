@@ -325,15 +325,16 @@ public class Levelbot {
                     .injectValue("currencyName", collectEvent.getCurrencyName())
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
-            if (eventPoints >= collectEvent.getItemBound()) {
-                embedDTO.injectValue("eventRewards", collectEvent.getItem().getName() + "\n:green_circle: Eventrolle " + collectEventRole.getName());
-            } else if (eventPoints >= collectEvent.getRoleBound()) {
-                embedDTO.injectValue("eventRewards", ":green_circle: Eventrolle " + collectEventRole.getName());
+            if (eventPoints >= 24) {
+                embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**\n:star2: **50 XP**\n:moneybag **100 Münzen**");
+            } else if (eventPoints >= 12) {
+                embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**\n:star2: **50 XP**");
+            } else if (eventPoints >= 1) {
+                embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**");
             } else {
                 embedDTO.injectValue("eventRewards", ":no_entry_sign: noch keine");
             }
         }
-
         EmbedBuilder embedBuilder = embedDTO.toEmbedBuilder();
 
         if (botUser.getTransactions().isEmpty()) {

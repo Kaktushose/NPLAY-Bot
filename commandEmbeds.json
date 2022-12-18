@@ -470,13 +470,23 @@
   },
 
   "collectEventRoleReward": {
-    "title": "Das ist Deine Sommerzeit :man_surfing:️, {user}!",
-    "description": "Du hast nun bereits **3 Wassermelonen** :watermelon: geerntet.\nRuh Dich etwas aus und probiere doch mal eine!\nAls kleine Belohnung verleihen wir Dir feierlich die **Eventrolle SOMMER 2022** :green_circle:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **XXL-SOMMERBOOSTER** :timer::star2: mit **2-fachen XP** und **2-fachten Münzen** aktiviert.",
+    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast Dein **erstes Rentier** :deer: auf dem Server gefunden!\nAls Belohnung verleihen wir Dir unsere exklusive **Eventrolle XMAS 2022** :red_circle:, mit der Du über die Weihnachtage ganz oben auf dem Server gelistet bist! Genieße die freie Zeit und finde insgesamt **12 Rentiere** :deer: für eine weitere Belohnung.\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
     "color": "#EC5C0F"
   },
   "collectEventItemReward": {
     "title": "Ein Geschenk für Dich :man_surfing:, {user}!",
     "description": "Du hast nun großartige **30 Wassermelonen** :watermelon: geerntet.\nWie versprochen darfst Du jetzt **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server genießen!\nWir wünschen Dir weiterhin viel Spaß mit der NPLAY-Sommerzeit :man_surfing:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **XXL-SOMMERBOOSTER** :timer::star2: mit **2-fachen XP** und **2-fachten Münzen** aktiviert.",
+    "color": "#EC5C0F"
+  },
+  "collectEventXpReward": {
+    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast nun satte **12 Rentiere** :deer: auf dem Server gefunden!\nAls Dankeschön haben wir Dir zusätzlich **50 XP** :star2: auf Deinem Konto gutgeschrieben. Und die Suche geht weiter, denn ab insgesamt **24 Rentieren** :deer: erhältst Du eine weitere Belohnung!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+    "color": "#EC5C0F"
+  },
+  "collectEventCoinsReward": {
+    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast nun fabelhafte **24 Rentiere** :deer: auf dem Server gefunden!\nDafür schenken wir Dir weitere **100 Münzen** :moneybag:. Viel Spaß damit und weiterhin eine gute Zeit!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
