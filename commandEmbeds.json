@@ -470,8 +470,8 @@
   },
 
   "collectEventRoleReward": {
-    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast Dein **erstes Rentier** :deer: auf dem Server gefunden!\nAls Belohnung verleihen wir Dir unsere exklusive **Eventrolle XMAS 2022** :red_circle:, mit der Du über die Weihnachtage ganz oben auf dem Server gelistet bist! Genieße die freie Zeit und finde insgesamt **12 Rentiere** :deer: für eine weitere Belohnung.\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+    "title": "Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast Dein **erstes Rentier** :deer: auf dem Server gefunden!\nAls Belohnung verleihen wir Dir unsere exklusive **Eventrolle XMAS 2022** :red_circle:, mit der Du über die Weihnachtage ganz oben auf dem Server gelistet bist! Genieße die freie Zeit und finde insgesamt **12 Rentiere** :deer: für eine weitere Belohnung.\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
     "color": "#EC5C0F"
   },
   "collectEventItemReward": {
@@ -480,13 +480,13 @@
     "color": "#EC5C0F"
   },
   "collectEventXpReward": {
-    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast nun satte **12 Rentiere** :deer: auf dem Server gefunden!\nAls Dankeschön haben wir Dir zusätzlich **50 XP** :star2: auf Deinem Konto gutgeschrieben. Und die Suche geht weiter, denn ab insgesamt **24 Rentieren** :deer: erhältst Du eine weitere Belohnung!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+    "title": "Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast nun satte **12 Rentiere** :deer: auf dem Server gefunden!\nAls Dankeschön haben wir Dir zusätzlich **50 XP** :star2: auf Deinem Konto gutgeschrieben. Und die Suche geht weiter, denn ab insgesamt **24 Rentieren** :deer: erhältst Du eine weitere Belohnung!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
     "color": "#EC5C0F"
   },
   "collectEventCoinsReward": {
-    "title": "1. Titel: Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast nun fabelhafte **24 Rentiere** :deer: auf dem Server gefunden!\nDafür schenken wir Dir weitere **100 Münzen** :moneybag:. Viel Spaß damit und weiterhin eine gute Zeit!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053722258012635137>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+    "title": "Frohe Weihnachtszeit :santa: , {user}!",
+    "description": "Du hast nun fabelhafte **24 Rentiere** :deer: auf dem Server gefunden!\nDafür schenken wir Dir weitere **100 Münzen** :moneybag:. Viel Spaß damit und weiterhin eine gute Zeit!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
