@@ -326,7 +326,7 @@ public class Levelbot {
                     .injectValue("currencyEmote", collectEvent.getCurrencyEmote())
                     .injectValue("currencyPoints", eventPoints);
             if (eventPoints >= 24) {
-                embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**\n:star2: **50 XP**\n:moneybag **100 Münzen**");
+                embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**\n:star2: **50 XP**\n:moneybag: **100 Münzen**");
             } else if (eventPoints >= 12) {
                 embedDTO.injectValue("eventRewards", ":red_circle: **Eventrolle XMAS 2022**\n:star2: **50 XP**");
             } else if (eventPoints >= 1) {

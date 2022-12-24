@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-@CommandController(value = "geschenk", category = "Levelsystem", isActive = false)
+@CommandController(value = "geschenk", category = "Levelsystem", isActive = true)
 public class GiftCommand {
 
     @Inject
