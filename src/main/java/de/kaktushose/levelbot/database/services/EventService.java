@@ -108,6 +108,10 @@ public class EventService {
         return contestRepository.existsByUserId(userId);
     }
 
+    public boolean isSelfUser(long messageId, long userId) {
+        return userId == contestRepository.findById(messageId).orElseThrow().getUserId();
+    }
+
     public void increaseVoteCount(long messageId) {
         ContestEntry entry = contestRepository.findById(messageId).orElseThrow();
         entry.setCount(entry.getCount(Pagination.CurrencyType.CONTEST) + 1);

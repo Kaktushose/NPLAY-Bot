@@ -51,6 +51,9 @@ public class ContestEventListener extends ListenerAdapter {
         if (event.getChannel().getIdLong() != settingsService.getEventChannelId(guildId)) {
             return;
         }
+        if (eventService.isSelfUser(event.getMessageIdLong(), event.getUserIdLong())) {
+            return;
+        }
         if (event.getReactionEmote().getName().equals(settingsService.getEventEmote(guildId))) {
             eventService.increaseVoteCount(event.getMessageIdLong());
         }
