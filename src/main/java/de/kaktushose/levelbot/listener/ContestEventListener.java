@@ -52,7 +52,7 @@ public class ContestEventListener extends ListenerAdapter {
             return;
         }
         if (eventService.isSelfUser(event.getMessageIdLong(), event.getUserIdLong())) {
-            event.getReaction().removeReaction().queue();
+            event.getReaction().removeReaction(event.getUser()).queue();
             return;
         }
         if (event.getReactionEmote().getName().equals(settingsService.getEventEmote(guildId))) {
