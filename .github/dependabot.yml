@@ -11,5 +11,7 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
+      - dependency-name: "jda*"
+        update-types: ["version-update:semver-major"]
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
