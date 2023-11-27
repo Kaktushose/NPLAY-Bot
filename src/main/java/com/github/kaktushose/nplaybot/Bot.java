@@ -17,7 +17,7 @@ public class Bot {
                 .setStatus(OnlineStatus.IDLE)
                 .build().awaitReady();
 
-        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.3"));
+        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.4"));
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
     }
