@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: de.kaktushose.levelbot.Bootstrapper
+Main-Class: com.github.kaktushose.nplaybot.Bootstrapper
