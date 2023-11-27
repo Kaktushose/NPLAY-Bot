@@ -20,7 +20,7 @@ jobs:
           tags: latest ${{ github.sha }}
           containerfiles: |
             ./Dockerfile
-          oci: true
+          oci: false
 
       - name: Push To ghcr.io
         id: push-to-ghcr
