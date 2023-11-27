@@ -1,5 +1,5 @@
-[![Java CI](https://github.com/Kaktushose/Levelbot/actions/workflows/maven.yml/badge.svg)](https://github.com/Kaktushose/Levelbot/actions/workflows/maven.yml)
-[![Deploy](https://github.com/Kaktushose/Levelbot/actions/workflows/deploy.yml/badge.svg)](https://github.com/Kaktushose/Levelbot/actions/workflows/deploy.yml)
+[![Java CI](https://github.com/Kaktushose/Levelbot/actions/workflows/maven.yml/badge.svg?branch=rewrite)](https://github.com/Kaktushose/Levelbot/actions/workflows/maven.yml)
+[![Deploy](https://github.com/Kaktushose/Levelbot/actions/workflows/deploy.yml/badge.svg?branch=rewrite)](https://github.com/Kaktushose/Levelbot/actions/workflows/deploy.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6eaa0127de99428795b4f5f759da188a)](https://www.codacy.com/gh/Kaktushose/Levelbot/dashboard?utm_source=github.com&utm_medium=referral&utm_content=Kaktushose/Levelbot&utm_campaign=Badge_Grade)
 ![Generic badge](https://img.shields.io/badge/Version-2.3.0-86c240".svg)
 [![license-shield](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)]()
