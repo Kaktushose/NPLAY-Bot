@@ -32,3 +32,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### Project ###
+.env
+/data

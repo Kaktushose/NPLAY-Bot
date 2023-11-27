@@ -15,6 +15,7 @@
     </properties>
 
     <build>
+        <finalName>NPLAY-Bot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

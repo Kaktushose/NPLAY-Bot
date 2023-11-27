@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./data/db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mariadb
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nplay-bot
+    restart: on-failure
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      BOT_PRODUCTION: ${BOT_PRODUCTION}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
