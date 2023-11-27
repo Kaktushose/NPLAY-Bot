@@ -32,7 +32,5 @@ services:
       BOT_PRODUCTION: ${BOT_PRODUCTION}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "8080:8080"
     depends_on:
       - mariadb
