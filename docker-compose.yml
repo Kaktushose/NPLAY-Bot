@@ -25,10 +25,7 @@ services:
       - mariadb
 
   bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: nplay-bot
+    image: ghcr.io/kaktushose/levelbot/nplaybot:latest
     restart: on-failure
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
