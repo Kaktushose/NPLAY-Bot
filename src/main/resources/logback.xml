@@ -8,7 +8,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>./levelbot.log</file>
+        <file>./logs/bot.log</file>
         <encoder>
             <Pattern>%date [%t] %level %logger - %msg%n</Pattern>
         </encoder>

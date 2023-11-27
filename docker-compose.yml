@@ -32,5 +32,7 @@ services:
       BOT_PRODUCTION: ${BOT_PRODUCTION}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./data/logs:/bot/logs
     depends_on:
       - mariadb
