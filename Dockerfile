@@ -10,4 +10,6 @@ FROM openjdk:21
 
 COPY --from=builder /bot/target/NPLAY-Bot.jar ./NPLAY-Bot.jar
 
+COPY src/main/resources/db/migration ./db/migration
+
 CMD ["java", "-jar", "NPLAY-Bot.jar"]
