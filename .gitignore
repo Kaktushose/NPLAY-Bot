@@ -34,3 +34,4 @@ buildNumber.properties
 ### Project ###
 .env
 /data
+/logs
