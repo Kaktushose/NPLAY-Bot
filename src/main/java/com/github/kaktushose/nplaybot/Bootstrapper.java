@@ -13,12 +13,12 @@ public class Bootstrapper {
         try {
             log.info("Starting NPLAY-Bot...");
 
-            Bot bot = Bot.start(System.getenv("BOT_TOKEN"));
+            var bot = Bot.start(System.getenv("BOT_TOKEN"));
             Thread.setDefaultUncaughtExceptionHandler((t, e) -> log.error("An uncaught exception has occurred!", e));
             Runtime.getRuntime().addShutdownHook(new Thread(bot::shutdown));
 
             log.info("Successfully started NPLAY-Bot! Took {} ms", System.currentTimeMillis() - startTime);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             log.error("Failed to start!", e);
             System.exit(1);
         }

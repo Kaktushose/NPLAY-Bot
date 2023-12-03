@@ -10,14 +10,21 @@ public class Bot {
 
     private final JDA jda;
     private final JDACommands jdaCommands;
+    private final Database database;
 
-    private Bot(String token) throws InterruptedException {
+    private Bot(String token) throws InterruptedException, RuntimeException {
+        try {
+            database = new Database();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to connect to database!", e);
+        }
+
         jda = JDABuilder.createDefault(token)
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .build().awaitReady();
 
-        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.4"));
+        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
     }
@@ -29,5 +36,6 @@ public class Bot {
     public void shutdown() {
         jdaCommands.shutdown();
         jda.shutdown();
+        database.closeDataSource();
     }
 }
