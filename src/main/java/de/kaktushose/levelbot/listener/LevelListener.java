@@ -65,19 +65,19 @@ public class LevelListener extends ListenerAdapter {
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
-            } else if (eventPoints == 12) {
+            } else if (eventPoints == 50) {
                 userService.addXp(userId, 50);
 
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventXpReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();
-            } else if (eventPoints == 24) {
-                userService.addCoins(userId, 100);
+            } else if (eventPoints == 100) {
+                guild.getTextChannelById(724727743446777896L).sendMessage(String.format("<@%d> hat 100 Schneeflocken gesammelt", userId)).queue();
 
                 channel.sendMessage(author.getAsMention())
-                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventCoinsReward")
+                        .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventVoteReward")
                                 .injectValue("user", author.getName())
                                 .toMessageEmbed())
                         ).queue();

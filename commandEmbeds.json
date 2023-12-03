@@ -470,23 +470,18 @@
   },
 
   "collectEventRoleReward": {
-    "title": "Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast Dein **erstes Rentier** :deer: auf dem Server gefunden!\nAls Belohnung verleihen wir Dir unsere exklusive **Eventrolle XMAS 2022** :red_circle:, mit der Du über die Weihnachtage ganz oben auf dem Server gelistet bist! Genieße die freie Zeit und finde insgesamt **12 Rentiere** :deer: für eine weitere Belohnung.\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+    "title": "Es hat geschneit, {user} :snowman2:!",
+    "description": "Du hast deine **erste Schneeflocke** :snowflake: auf dem Server gefunden!\nAls Belohnung haben wir Dir unsere exklusive **Eventrolle Winter 2022** :red_circle:, mit der Du den gesamten Dezember lang ganz oben auf dem Server gelistet bist! Genieße  das Schneegestöber und finde insgesamt **50 Schneeflocken** :snowflake: für **30 Tage PREMIUM** :star: auf dem Server!\n\nÜbrigens: Die drei User mit den meisten :snowflake: erhalten zusätzlich einen Code für das Case IH Farmalöl Anniversary Pack im LS 22!\n\n:point_right:Schau außerdem bei unserem winterlichen <#1178013192216129587> vorbei! Aufgabe ist, das NPLAY-Logo kreativ in einem Simulator Deiner Wahl umzusetzen und davon ein Bild zu posten. Die Gewinner erwarten Codes für die LS 22 Premium Expansion und das Case IH Farmalöl Anniversary Pack!",
     "color": "#EC5C0F"
   },
   "collectEventItemReward": {
-    "title": "Ein Geschenk für Dich :man_surfing:, {user}!",
-    "description": "Du hast nun großartige **30 Wassermelonen** :watermelon: geerntet.\nWie versprochen darfst Du jetzt **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server genießen!\nWir wünschen Dir weiterhin viel Spaß mit der NPLAY-Sommerzeit :man_surfing:.\n\nÜbrigens: Wenn du insgesamt **30 Melonen** :watermelon: gesammelt hast, darfst Du dich über **15 Tage** :clock:️ **GRATIS PREMIUM** :star: auf dem Server freuen!\nUnd während der gesamten NPLAY-Sommerzeit ist unser **XXL-SOMMERBOOSTER** :timer::star2: mit **2-fachen XP** und **2-fachten Münzen** aktiviert.",
+    "title": "Was ein Schneegestöber, {user} :snowman2:!",
+    "description": "Du hast nun bereits **50 Schneeflocken** :snowflake: auf dem Server gefunden!\nAls Dankeschön haben wir Dir zusätzlich **30 Tage PREMIUM** :star: auf dem Server freigeschaltet!\nDiese Rolle wird nur noch bis zum 31.12.2023 angeboten. Nun hast Du die Möglichkeit, die damit verbundenen Vorteile nochmals zu genießen!\nUnd das Schneegestöber geht weiter, denn ab insgesamt **100 Schneeflocken** :snowflake: winken dir **5 extra** :sparkles: für unseren Logo-Contest!\n\n:point_right: Schau außerdem bei unserem winterlichen <#1178013192216129587> vorbei! Aufgabe ist, das NPLAY-Logo kreativ in einem Simulator Deiner Wahl umzusetzen und davon ein Bild zu posten. Die Gewinner erwarten Codes für die LS 22 Premium Expansion und das Case IH Farmalöl Anniversary Pack!",
     "color": "#EC5C0F"
   },
-  "collectEventXpReward": {
-    "title": "Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast nun satte **12 Rentiere** :deer: auf dem Server gefunden!\nAls Dankeschön haben wir Dir zusätzlich **50 XP** :star2: auf Deinem Konto gutgeschrieben. Und die Suche geht weiter, denn ab insgesamt **24 Rentieren** :deer: erhältst Du eine weitere Belohnung!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
-    "color": "#EC5C0F"
-  },
-  "collectEventCoinsReward": {
-    "title": "Frohe Weihnachtszeit :santa: , {user}!",
-    "description": "Du hast nun fabelhafte **24 Rentiere** :deer: auf dem Server gefunden!\nDafür schenken wir Dir weitere **100 Münzen** :moneybag:. Viel Spaß damit und weiterhin eine gute Zeit!\n\n:point_right: Nimm an unserem Screenshot-Contest teil! Alle Infos in <#1053712477650686063>.\n\n:point_right: Und vom 24.12 - 26.12 ist unser **CHRISTMAS-BOOSTER** :christmas_tree: aktiv, der alle bisherigen Booster kombiniert.\n\n:point_right: In diesem Zeitraum kannst Du dir außerdem mit dem Befehl !geschenk im Kanal bot-befehle ein **besonderes Geschenk** :gift: abholen.",
+  "collectEventVoteReward": {
+    "title": "Was ein Schneegestöber, {user} :snowman2:!",
+    "description": "Du hast nun unfassbare **100 Schneeflocken** :snowflake: auf dem Server gefunden!\nDafür bekommst Du **5 extra** :sparkles:für unseren winterlichen Logo-Contest.\nDie :sparkles: werden zu den regulären :sparkles: addiert, die Du durch das Voting anderer Mitglieder erhältst.\n\nWir wünschen Dir weiterhin eine schöne Weihnachtszeit! :christmas_tree:\n\n:point_right: Schau außerdem bei unserem winterlichen <#1178013192216129587> vorbei! Aufgabe ist, das NPLAY-Logo kreativ in einem Simulator Deiner Wahl umzusetzen und davon ein Bild zu posten. Die Gewinner erwarten Codes für die LS 22 Premium Expansion und das Case IH Farmalöl Anniversary Pack!",
     "color": "#EC5C0F"
   },
   "rewardAlreadyClaimed": {
