@@ -32,6 +32,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### Project ###
-.env
+*.env
 /data
 /logs
+wait-for-it.sh

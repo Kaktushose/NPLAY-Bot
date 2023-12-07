@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot;
 
+import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -9,20 +10,20 @@ import java.sql.SQLException;
 public class Database {
 
     private final HikariDataSource dataSource;
+    private final SettingsService settingsService;
 
     public Database() {
         var config = new HikariConfig();
 
-        config.setJdbcUrl(System.getenv("MYSQL_URL"));
-        config.setUsername(System.getenv("MYSQL_USER"));
-        config.setPassword(System.getenv("MYSQL_PASSWORD"));
-        config.addDataSourceProperty("databaseName", System.getenv("MYSQL_DATABASE"));
+        System.out.println(System.getenv("POSTGRES_URL"));
+        config.setJdbcUrl(System.getenv("POSTGRES_URL"));
+        config.setUsername(System.getenv("POSTGRES_USER"));
+        config.setPassword(System.getenv("POSTGRES_PASSWORD"));
+        config.addDataSourceProperty("databaseName", System.getenv("POSTGRES_DB"));
 
         dataSource = new HikariDataSource(config);
-    }
 
-    public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        settingsService = new SettingsService(dataSource);
     }
 
     public void closeDataSource() {
@@ -31,4 +32,7 @@ public class Database {
         }
     }
 
+    public SettingsService getSettingsService() {
+        return settingsService;
+    }
 }
