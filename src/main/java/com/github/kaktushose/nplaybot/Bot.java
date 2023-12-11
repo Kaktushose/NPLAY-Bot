@@ -1,10 +1,12 @@
 package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
+import com.github.kaktushose.nplaybot.rank.RankListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Bot {
 
@@ -20,8 +22,16 @@ public class Bot {
         }
 
         jda = JDABuilder.createDefault(database.getSettingsService().getBotToken(guildId))
+                .enableIntents(
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_PRESENCES,
+                        GatewayIntent.MESSAGE_CONTENT
+                )
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
+                .addEventListeners(
+                        new RankListener(database.getRankService())
+                )
                 .build().awaitReady();
 
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));

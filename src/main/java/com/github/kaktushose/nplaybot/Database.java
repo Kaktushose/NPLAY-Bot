@@ -1,16 +1,15 @@
 package com.github.kaktushose.nplaybot;
 
+import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Database {
 
     private final HikariDataSource dataSource;
     private final SettingsService settingsService;
+    private final RankService rankService;
 
     public Database() {
         var config = new HikariConfig();
@@ -24,6 +23,7 @@ public class Database {
         dataSource = new HikariDataSource(config);
 
         settingsService = new SettingsService(dataSource);
+        rankService = new RankService(dataSource);
     }
 
     public void closeDataSource() {
@@ -34,5 +34,9 @@ public class Database {
 
     public SettingsService getSettingsService() {
         return settingsService;
+    }
+
+    public RankService getRankService() {
+        return rankService;
     }
 }
