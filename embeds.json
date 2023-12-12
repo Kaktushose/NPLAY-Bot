@@ -1,0 +1,32 @@
+{
+  "rankChangeIncrease": {
+    "title": ":arrow_up: Stufenaufstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (noch {xp} XP)"
+      }
+    ]
+  },
+  "rankChangeMax": {
+    "title": ":arrow_up: Stufenaufstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Herzlichen Glückwunsch",
+        "value": ":confetti_ball: Du hast hiermit die maximale Stufe erreicht"
+      }
+    ]
+  }
+}

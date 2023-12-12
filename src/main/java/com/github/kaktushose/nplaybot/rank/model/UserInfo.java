@@ -1,3 +1,6 @@
 package com.github.kaktushose.nplaybot.rank.model;
 
-public record UserInfo(int xp, Rank currentRank, Rank nextRank, int messageCount, int xpGain) { }
+import java.util.Optional;
+
+public record UserInfo(int xp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain) {
+}

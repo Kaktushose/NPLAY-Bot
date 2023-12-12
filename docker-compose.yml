@@ -37,7 +37,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       BOT_GUILD: ${BOT_GUILD}
     labels:
-     - com.centurylinklabs.watchtower.enable="true"
+      - com.centurylinklabs.watchtower.enable="true"
     volumes:
       - ./data/logs:/logs
     depends_on:

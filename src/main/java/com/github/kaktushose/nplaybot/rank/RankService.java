@@ -1,15 +1,18 @@
 package com.github.kaktushose.nplaybot.rank;
 
-import com.github.kaktushose.nplaybot.rank.model.Rank;
+import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
+import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.User;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class RankService {
 
@@ -19,40 +22,46 @@ public class RankService {
         this.dataSource = dataSource;
     }
 
+    private Optional<RankInfo> getRankInfo(int rankId) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT role_id, color, bound
+                    FROM ranks
+                    WHERE rank_id = ?
+                    """
+            );
+            statement.setLong(1, rankId);
+
+            var result = statement.executeQuery();
+
+            if (result.next()) {
+                return Optional.of(new RankInfo(
+                        result.getLong("role_id"),
+                        result.getString("color"),
+                        result.getInt("bound")
+                ));
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public UserInfo getUserInfo(long userId) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT xp, rank, message_count, start_xp, role_id, color, bound
-                    FROM users JOIN ranks
-                    WHERE user_id = ? AND rank_id = rank
+                    SELECT xp, rank_id, message_count, start_xp
+                    FROM users
+                    WHERE user_id = ?
                     """
             );
             statement.setLong(1, userId);
 
             var result = statement.executeQuery();
             result.next();
-            var currentRank = new Rank(
-                    result.getLong("role_id"),
-                    result.getString("color"),
-                    result.getInt("bound") - result.getInt("xp")
-            );
 
-            statement = connection.prepareStatement("""
-                    SELECT role_id, color, bound
-                    FROM ranks
-                    WHERE rank_id = ?
-                    """
-            );
-            statement.setLong(1, result.getInt("rank") + 1);
-            result = statement.executeQuery();
-            Rank nextRank = null;
-            if (result.next()) {
-                nextRank = new Rank(
-                        result.getLong("role_id"),
-                        result.getString("color"),
-                        result.getInt("bound") - result.getInt("xp")
-                );
-            }
+            var currentRank = getRankInfo(result.getInt("rank_id")).orElseThrow();
+            var nextRank = getRankInfo(result.getInt("rank_id") + 1);
 
             return new UserInfo(
                     result.getInt("xp"),
@@ -102,17 +111,49 @@ public class RankService {
         }
     }
 
-    public int getRandomXp() {
+    public void updateValidMessage(User user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT *
-                    FROM get_random_xp()
+                    UPDATE users
+                    SET last_valid_message = ?
+                    WHERE user_id = ?
                     """
             );
+            statement.setLong(1, System.currentTimeMillis());
+            statement.setLong(2, user.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public XpChangeResult addRandomXp(User user) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM add_random_xp(?)");
+            statement.setLong(1, user.getIdLong());
 
             var result = statement.executeQuery();
             result.next();
-            return result.getInt(1);
+            return new XpChangeResult(
+                    result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("current_rank")).orElseThrow(),
+                    getRankInfo(result.getInt("next_rank")),
+                    result.getInt("current_xp")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Long> getRankRoleIds() {
+        try (Connection connection = dataSource.getConnection()) {
+            var result = connection.prepareStatement("SELECT role_id FROM ranks").executeQuery();
+            var roleIds = new ArrayList<Long>();
+            while (result.next()) {
+                roleIds.add(result.getLong(1));
+            }
+            return roleIds;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
