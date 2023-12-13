@@ -60,12 +60,12 @@ public class Bot {
         database.closeDataSource();
     }
 
-    @Produces
+    @Produces(skipIndexing = true)
     public Database getDatabase() {
         return database;
     }
 
-    @Produces
+    @Produces(skipIndexing = true)
     public EmbedCache getEmbedCache() {
         return embedCache;
     }
