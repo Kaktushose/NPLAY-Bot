@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot.rank;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
@@ -47,7 +48,7 @@ public class RankService {
         }
     }
 
-    public UserInfo getUserInfo(long userId) {
+    public UserInfo getUserInfo(Member member) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT xp, rank_id, message_count, start_xp
@@ -55,7 +56,7 @@ public class RankService {
                     WHERE user_id = ?
                     """
             );
-            statement.setLong(1, userId);
+            statement.setLong(1, member.getIdLong());
 
             var result = statement.executeQuery();
             result.next();

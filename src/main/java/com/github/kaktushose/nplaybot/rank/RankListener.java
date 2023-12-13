@@ -43,7 +43,7 @@ public class RankListener extends ListenerAdapter {
         if (!result.rankChanged()) {
             return;
         }
-        String embed = result.nextRank().isPresent() ? "rankChangeIncrease" : "rankChangeMax";
+        var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
         event.getChannel().sendMessage(
                 embedCache.getEmbed(embed).injectValues(result.getEmbedValues(author)).toMessageCreateData()
         ).queue();

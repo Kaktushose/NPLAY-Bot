@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
+import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.rank.RankListener;
 import net.dv8tion.jda.api.JDA;
@@ -40,6 +41,8 @@ public class Bot {
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
+
+        jdaCommands.getDependencyInjector().registerProvider(this);
     }
 
     public static Bot start(long guildId) throws InterruptedException {
@@ -52,10 +55,12 @@ public class Bot {
         database.closeDataSource();
     }
 
+    @Produces
     public Database getDatabase() {
         return database;
     }
 
+    @Produces
     public EmbedCache getEmbedCache() {
         return embedCache;
     }

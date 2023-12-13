@@ -1,5 +1,5 @@
 {
-  "rankChangeIncrease": {
+  "rankIncrease": {
     "title": ":arrow_up: Stufenaufstieg!",
     "description": "{user}",
     "color": "{color}",
@@ -14,7 +14,7 @@
       }
     ]
   },
-  "rankChangeMax": {
+  "rankIncreaseMax": {
     "title": ":arrow_up: Stufenaufstieg!",
     "description": "{user}",
     "color": "{color}",
@@ -28,5 +28,66 @@
         "value": ":confetti_ball: Du hast hiermit die maximale Stufe erreicht"
       }
     ]
+  },
+  "rankInfo": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe",
+        "value": ":dart: {nextRank} (noch {missingXp} XP)"
+      },
+      {
+        "name": "Aktuelle XP",
+        "value": ":star2: {currentXp}"
+      },
+      {
+        "name": "XP-Zuwachs (24h):",
+        "value": ":chart_with_upwards_trend: {xpGain}"
+      },
+      {
+        "name": "Gewertete Nachrichten:",
+        "value": ":bar_chart: {messageCount}"
+      }
+    ]
+  },
+  "rankInfoMax": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Aktuelle XP",
+        "value": ":star2: {currentXp}"
+      },
+      {
+        "name": "XP-Zuwachs (24h):",
+        "value": ":chart_with_upwards_trend: {xpGain}"
+      },
+      {
+        "name": "Gewertete Nachrichten:",
+        "value": ":bar_chart: {messageCount}"
+      }
+    ]
+  },
+  "embedCacheReload": {
+    "title": "Erfolg",
+    "description": "Der EmbedCache wurde aktualisiert",
+    "color": "#67c94f"
   }
 }
