@@ -22,12 +22,12 @@ CREATE TABLE ranks (
 
 CREATE TABLE users (
     user_id BIGINT NOT NULL PRIMARY KEY,
-    daily_message BOOLEAN NOT NULL,
-    xp INT NOT NULL,
-    rank_id INT NOT NULL REFERENCES ranks(rank_id),
-    last_valid_message BIGINT NOT NULL,
-    message_count BIGINT NOT NULL,
-    start_xp INT NOT NULL
+    daily_message BOOLEAN NOT NULL DEFAULT FALSE,
+    xp INT NOT NULL DEFAULT 0,
+    rank_id INT NOT NULL REFERENCES ranks(rank_id) DEFAULT 1,
+    last_valid_message BIGINT NOT NULL DEFAULT 0,
+    message_count BIGINT NOT NULL DEFAULT 0,
+    start_xp INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE xp_chances (

@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot;
 import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.rank.JoinLeaveListener;
 import com.github.kaktushose.nplaybot.rank.RankListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,6 +18,7 @@ public class Bot {
     private final Database database;
     private final EmbedCache embedCache;
 
+    @SuppressWarnings("DataFlowIssue")
     private Bot(long guildId) throws InterruptedException, RuntimeException {
         try {
             database = new Database();
@@ -35,14 +37,17 @@ public class Bot {
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .addEventListeners(
-                        new RankListener(database.getRankService(), embedCache)
+                        new RankListener(database.getRankService(), embedCache),
+                        new JoinLeaveListener(database.getRankService())
                 )
                 .build().awaitReady();
-        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
+
+        database.getRankService().indexMembers(jda.getGuildById(guildId));
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
-
         jdaCommands.getDependencyInjector().registerProvider(this);
+
+        jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
     }
 
     public static Bot start(long guildId) throws InterruptedException {
