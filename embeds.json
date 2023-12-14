@@ -89,5 +89,15 @@
     "title": "Erfolg",
     "description": "Der EmbedCache wurde aktualisiert",
     "color": "#67c94f"
+  },
+  "setXpResult" : {
+    "title": "Erfolg",
+    "description": "Die XP von {user} wurden auf {xp} XP gesetzt",
+    "color": "#67c94f"
+  },
+  "addXpResult" : {
+    "title": "Erfolg",
+    "description": "{user} wurden {xp} XP hinzugefügt",
+    "color": "#67c94f"
   }
 }

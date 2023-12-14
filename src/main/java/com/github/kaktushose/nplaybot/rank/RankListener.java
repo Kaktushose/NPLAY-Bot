@@ -1,23 +1,22 @@
 package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
+import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-@SuppressWarnings("DataFlowIssue")
 public class RankListener extends ListenerAdapter {
 
     private final RankService rankService;
+    private final SettingsService settingsService;
     private final EmbedCache embedCache;
 
-    public RankListener(RankService rankService, EmbedCache embedCache) {
-        this.rankService = rankService;
+    public RankListener(Database database, EmbedCache embedCache) {
+        this.rankService = database.getRankService();
+        this.settingsService = database.getSettingsService();
         this.embedCache = embedCache;
     }
 
@@ -38,23 +37,15 @@ public class RankListener extends ListenerAdapter {
 
         rankService.updateValidMessage(author);
         var result = rankService.addRandomXp(author);
-        updateRankRoles(event.getMember(), event.getGuild(), result);
+        rankService.updateRankRoles(event.getMember(), event.getGuild(), result);
 
         if (!result.rankChanged()) {
             return;
         }
         var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
-        event.getChannel().sendMessage(
-                embedCache.getEmbed(embed).injectValues(result.getEmbedValues(author)).toMessageCreateData()
-        ).queue();
-    }
-
-    private void updateRankRoles(Member member, Guild guild, XpChangeResult result) {
-        var validRole = guild.getRoleById(result.currentRank().roleId());
-        var invalidRoles = rankService.getRankRoleIds().stream()
-                .map(guild::getRoleById)
-                .filter(it -> it != validRole)
-                .toList();
-        guild.modifyMemberRoles(member, List.of(validRole), invalidRoles).queue();
+        var messageData = new MessageCreateBuilder().addContent(author.getAsMention())
+                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(author)).toMessageEmbed())
+                .build();
+        settingsService.getBotChannel(event.getGuild()).sendMessage(messageData).queue();
     }
 }

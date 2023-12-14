@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.rank.model;
 
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public record XpChangeResult(boolean rankChanged, RankInfo currentRank, Optional<RankInfo> nextRank, int currentXp) {
 
-    public Map<String, Object> getEmbedValues(User user) {
+    public Map<String, Object> getEmbedValues(UserSnowflake user) {
         var result = new HashMap<String, Object>() {{
             put("user", String.format("<@%d>", user.getIdLong()));
             put("color", currentRank.color());

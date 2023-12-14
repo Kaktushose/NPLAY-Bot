@@ -37,7 +37,7 @@ public class Bot {
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .addEventListeners(
-                        new RankListener(database.getRankService(), embedCache),
+                        new RankListener(database, embedCache),
                         new JoinLeaveListener(database.getRankService())
                 )
                 .build().awaitReady();

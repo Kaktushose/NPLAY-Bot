@@ -6,12 +6,10 @@ import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +24,7 @@ public class RankService {
         this.dataSource = dataSource;
     }
 
-    public void addUser(User user) {
+    public void addUser(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO users VALUES(?) ON CONFLICT DO NOTHING");
             statement.setLong(1, user.getIdLong());
@@ -36,7 +34,7 @@ public class RankService {
         }
     }
 
-    public void removeUser(User user) {
+    public void removeUser(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM users WHERE user_id = ?");
             statement.setLong(1, user.getIdLong());
@@ -75,7 +73,7 @@ public class RankService {
         }
     }
 
-    public UserInfo getUserInfo(Member member) {
+    public UserInfo getUserInfo(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT xp, rank_id, message_count, start_xp
@@ -83,7 +81,7 @@ public class RankService {
                     WHERE user_id = ?
                     """
             );
-            statement.setLong(1, member.getIdLong());
+            statement.setLong(1, user.getIdLong());
 
             var result = statement.executeQuery();
             result.next();
@@ -139,7 +137,7 @@ public class RankService {
         }
     }
 
-    public void updateValidMessage(User user) {
+    public void updateValidMessage(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE users
@@ -156,7 +154,7 @@ public class RankService {
         }
     }
 
-    public XpChangeResult addRandomXp(User user) {
+    public XpChangeResult addRandomXp(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT * FROM add_random_xp(?)");
             statement.setLong(1, user.getIdLong());
@@ -174,6 +172,53 @@ public class RankService {
         }
     }
 
+    public XpChangeResult addXp(UserSnowflake user, int amount) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM add_xp(?, ?)");
+            statement.setLong(1, user.getIdLong());
+            statement.setInt(2, amount);
+
+            var result = statement.executeQuery();
+            result.next();
+            return new XpChangeResult(
+                    result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("current_rank")).orElseThrow(),
+                    getRankInfo(result.getInt("next_rank")),
+                    result.getInt("current_xp")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public XpChangeResult setXp(UserSnowflake user, int value) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM set_xp(?, ?)");
+            statement.setLong(1, user.getIdLong());
+            statement.setInt(2, value);
+
+            var result = statement.executeQuery();
+            result.next();
+            return new XpChangeResult(
+                    result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("current_rank")).orElseThrow(),
+                    getRankInfo(result.getInt("next_rank")),
+                    value
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateRankRoles(Member member, Guild guild, XpChangeResult result) {
+        var validRole = guild.getRoleById(result.currentRank().roleId());
+        var invalidRoles = getRankRoleIds().stream()
+                .map(guild::getRoleById)
+                .filter(it -> it != validRole)
+                .toList();
+        guild.modifyMemberRoles(member, List.of(validRole), invalidRoles).queue();
+    }
+
     public List<Long> getRankRoleIds() {
         try (Connection connection = dataSource.getConnection()) {
             var result = connection.prepareStatement("SELECT role_id FROM ranks").executeQuery();
@@ -186,5 +231,4 @@ public class RankService {
             throw new RuntimeException(e);
         }
     }
-
 }
