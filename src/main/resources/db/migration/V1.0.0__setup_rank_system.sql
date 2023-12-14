@@ -31,7 +31,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE xp_chances (
-    amount INT NOT NULL PRIMARY KEY,
+    chance_id INT NOT NULL PRIMARY KEY,
+    amount INT NOT NULL,
     chance INT NOT NULL
 );
 
