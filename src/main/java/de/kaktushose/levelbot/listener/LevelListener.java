@@ -8,6 +8,8 @@ import de.kaktushose.levelbot.database.services.EventService;
 import de.kaktushose.levelbot.database.services.LevelService;
 import de.kaktushose.levelbot.database.services.UserService;
 import de.kaktushose.levelbot.shop.data.ShopService;
+import de.kaktushose.levelbot.shop.data.items.ItemCategory;
+import de.kaktushose.levelbot.shop.data.items.ItemVariant;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -66,8 +68,8 @@ public class LevelListener extends ListenerAdapter {
                                 .toMessageEmbed())
                         ).queue();
             } else if (eventPoints == 50) {
-                userService.addXp(userId, 50);
-
+                shopService.addItem(userId, ItemCategory.PREMIUM, ItemVariant.BASIC);
+                guild.addRoleToMember(userId, guild.getRoleById(386302591883018242L)).queue();
                 channel.sendMessage(author.getAsMention())
                         .and(channel.sendMessageEmbeds(embedCache.getEmbed("collectEventItemReward")
                                 .injectValue("user", author.getName())
