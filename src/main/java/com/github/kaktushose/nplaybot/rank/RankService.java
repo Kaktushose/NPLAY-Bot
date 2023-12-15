@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.rank;
 
+import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
@@ -231,4 +232,36 @@ public class RankService {
             throw new RuntimeException(e);
         }
     }
+
+    public List<LeaderboardPage> getLeaderboard() {
+        try (Connection connection = dataSource.getConnection()) {
+            var result = connection.prepareStatement("""
+                    SELECT users.xp, users.user_id, ranks.role_id
+                    FROM users JOIN ranks ON ranks.rank_id = users.rank_id
+                    ORDER BY xp DESC;
+                    """
+            ).executeQuery();
+
+            List<LeaderboardPage> pages = new ArrayList<>();
+            List<LeaderboardPage.LeaderboardRow> rows = new ArrayList<>();
+            int rowCount = 1;
+            while (result.next()) {
+                if (rowCount == 11) {
+                    pages.add(new LeaderboardPage(rows));
+                    rows = new ArrayList<>();
+                    rowCount = 1;
+                }
+                rows.add(new LeaderboardPage.LeaderboardRow(
+                        result.getInt("xp"),
+                        result.getLong("user_id"),
+                        result.getLong("role_id")
+                ));
+                rowCount++;
+            }
+            return pages;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

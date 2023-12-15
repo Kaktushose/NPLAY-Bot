@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>4f948157b4</version>
+            <version>3d823b1173</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

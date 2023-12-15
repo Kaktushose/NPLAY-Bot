@@ -99,5 +99,10 @@
     "title": "Erfolg",
     "description": "{user} wurden {xp} XP hinzugefügt",
     "color": "#67c94f"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "description": "{leaderboard}",
+    "color": "#67c94f"
   }
 }

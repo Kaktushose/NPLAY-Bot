@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 public class Bot {
 
@@ -34,6 +35,7 @@ public class Bot {
                         GatewayIntent.GUILD_PRESENCES,
                         GatewayIntent.MESSAGE_CONTENT
                 )
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .addEventListeners(
