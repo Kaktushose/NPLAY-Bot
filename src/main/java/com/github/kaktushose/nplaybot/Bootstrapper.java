@@ -9,6 +9,8 @@ public class Bootstrapper {
     private final static Logger log = LoggerFactory.getLogger(Bootstrapper.class);
 
     public static void main(String[] args) {
+        Thread.currentThread().setName("Bot");
+
         long startTime = System.currentTimeMillis();
         try {
             log.info("Starting NPLAY-Bot...");

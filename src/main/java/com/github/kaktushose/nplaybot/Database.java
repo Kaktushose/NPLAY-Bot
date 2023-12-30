@@ -14,7 +14,6 @@ public class Database {
     public Database() {
         var config = new HikariConfig();
 
-        System.out.println(System.getenv("POSTGRES_URL"));
         config.setJdbcUrl(System.getenv("POSTGRES_URL"));
         config.setUsername(System.getenv("POSTGRES_USER"));
         config.setPassword(System.getenv("POSTGRES_PASSWORD"));
