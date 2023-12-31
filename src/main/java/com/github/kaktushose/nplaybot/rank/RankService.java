@@ -264,4 +264,12 @@ public class RankService {
         }
     }
 
+    public void resetDailyStatistics() {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.prepareStatement("UPDATE users SET start_xp = xp").execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
