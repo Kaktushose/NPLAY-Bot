@@ -142,7 +142,8 @@ public class RankService {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE users
-                    SET last_valid_message = ?
+                    SET last_valid_message = ?,
+                    message_count = message_count + 1
                     WHERE user_id = ?
                     """
             );
