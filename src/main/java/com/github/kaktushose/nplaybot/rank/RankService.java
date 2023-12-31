@@ -273,4 +273,12 @@ public class RankService {
         }
     }
 
+    public void increaseTotalMessageCount() {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.prepareStatement("SELECT * FROM increase_total_message_count()").execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -37,11 +37,11 @@ CREATE TABLE xp_chances (
 );
 
 CREATE TABLE rank_statistics (
-    timestamp BIGINT NOT NULL PRIMARY KEY,
-    total_message_count INT NOT NULL,
-    valid_message_count INT NOT NULL,
-    total_xp_gain INT NOT NULL,
-    total_rank_ups INT NOT NULL
+    date date NOT NULL PRIMARY KEY,
+    total_message_count INT NOT NULL DEFAULT 0,
+    valid_message_count INT NOT NULL DEFAULT 0,
+    total_xp_gain INT NOT NULL DEFAULT 0,
+    total_rank_ups INT NOT NULL DEFAULT 0
 );
 
 CREATE FUNCTION update_rank_trigger()
@@ -122,5 +122,59 @@ BEGIN
    SELECT get_random_xp INTO xp FROM get_random_xp();
 	SELECT INTO rank_changed, current_rank, next_rank, current_xp * FROM add_xp(id, xp);
 	RETURN NEXT;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION increase_valid_message_statistics()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO rank_statistics (DATE, valid_message_count) VALUES (CURRENT_DATE, NEW.message_count - OLD.message_count)
+	ON CONFLICT (DATE) DO UPDATE SET valid_message_count = rank_statistics.valid_message_count + (NEW.message_count - OLD.message_count);
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER valid_message_trigger
+BEFORE UPDATE OF message_count ON users
+FOR EACH ROW
+EXECUTE FUNCTION increase_valid_message_statistics();
+
+CREATE FUNCTION increase_total_xp_gain()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO rank_statistics (DATE, total_xp_gain) VALUES (CURRENT_DATE, NEW.xp - OLD.xp)
+	ON CONFLICT (DATE) DO UPDATE SET total_xp_gain = rank_statistics.total_xp_gain + (NEW.xp - OLD.xp);
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER xp_gain_trigger
+BEFORE UPDATE OF xp ON users
+FOR EACH ROW
+EXECUTE FUNCTION increase_total_xp_gain();
+
+CREATE FUNCTION increase_total_rank_ups()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO rank_statistics (DATE, total_rank_ups) VALUES (CURRENT_DATE, NEW.rank_id - OLD.rank_id)
+	ON CONFLICT (DATE) DO UPDATE SET total_rank_ups = rank_statistics.total_rank_ups + (NEW.rank_id - OLD.rank_id);
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER rank_up_trigger
+AFTER UPDATE OF rank_id ON users
+FOR EACH ROW
+EXECUTE FUNCTION increase_total_rank_ups();
+
+CREATE FUNCTION increase_total_message_count()
+RETURNS VOID AS
+$$
+BEGIN
+	INSERT INTO rank_statistics (DATE, total_message_count) VALUES (CURRENT_DATE, 1)
+	ON CONFLICT (DATE) DO UPDATE SET total_message_count = rank_statistics.total_message_count + 1;
 END;
 $$ LANGUAGE plpgsql;

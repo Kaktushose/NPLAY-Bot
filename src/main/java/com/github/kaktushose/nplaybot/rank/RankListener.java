@@ -31,6 +31,9 @@ public class RankListener extends ListenerAdapter {
         if (!event.isFromGuild()) {
             return;
         }
+
+        rankService.increaseTotalMessageCount();
+
         if (!rankService.isValidMessage(message)) {
             return;
         }
