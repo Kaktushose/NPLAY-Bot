@@ -74,6 +74,10 @@ public class Bot {
         database.closeDataSource();
     }
 
+    public JDA getJda() {
+        return jda;
+    }
+
     @Produces(skipIndexing = true)
     public Database getDatabase() {
         return database;

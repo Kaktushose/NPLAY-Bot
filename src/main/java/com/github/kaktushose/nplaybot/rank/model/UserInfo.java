@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.rank.model;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,23 @@ public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> n
         }};
         nextRank.ifPresent(rank -> {
             result.put("nextRank", String.format("<@&%d>", rank.roleId()));
+            result.put("missingXp", rank.xpBound() - currentXp);
+        });
+        return result;
+    }
+
+    public Map<String, Object> getEmbedValues(User user) {
+        var result = new HashMap<String, Object>() {{
+            put("user", String.format("<@%d>", user.getIdLong()));
+            put("color", currentRank.color());
+            put("avatarUrl", user.getEffectiveAvatarUrl());
+            put("currentRank", currentRank.name());
+            put("currentXp", currentXp);
+            put("xpGain", xpGain);
+            put("messageCount", messageCount);
+        }};
+        nextRank.ifPresent(rank -> {
+            result.put("nextRank", rank.name());
             result.put("missingXp", rank.xpBound() - currentXp);
         });
         return result;

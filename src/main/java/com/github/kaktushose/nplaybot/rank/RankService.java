@@ -4,20 +4,14 @@ import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class RankService {
 
@@ -58,7 +52,7 @@ public class RankService {
         log.debug("Querying rank info for rank: {}", rankId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT role_id, color, bound
+                    SELECT role_id, name, color, bound
                     FROM ranks
                     WHERE rank_id = ?
                     """
@@ -70,6 +64,7 @@ public class RankService {
             if (result.next()) {
                 return Optional.of(new RankInfo(
                         result.getLong("role_id"),
+                        result.getString("name"),
                         result.getString("color"),
                         result.getInt("bound")
                 ));
@@ -134,7 +129,7 @@ public class RankService {
             }
 
             if (message.getContentDisplay().length() < minimumLength) {
-                log.trace("Message is too short (Length: {}, Required: {}", message.getContentDisplay().length(),  minimumLength);
+                log.trace("Message is too short (Length: {}, Required: {}", message.getContentDisplay().length(), minimumLength);
                 return false;
             }
 
@@ -307,6 +302,47 @@ public class RankService {
         log.debug("Increasing total message count by one");
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("SELECT * FROM increase_total_message_count()").execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void switchDaily(UserSnowflake user, boolean enabled) {
+        log.debug("Setting daily message for user {} to {}", user, enabled);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("UPDATE users SET daily_message = ? where user_id = ?");
+            statement.setBoolean(1, enabled);
+            statement.setLong(2, user.getIdLong());
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Map<Long, UserInfo> getDailyRankInfos() {
+        log.debug("Querying daily rank infos");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT user_id, xp, rank_id, message_count, start_xp
+                    FROM users
+                    WHERE daily_message = true
+                    """
+            );
+            var result = statement.executeQuery();
+            var users = new HashMap<Long, UserInfo>();
+            while (result.next()) {
+                var currentRank = getRankInfo(result.getInt("rank_id")).orElseThrow();
+                var nextRank = getRankInfo(result.getInt("rank_id") + 1);
+
+                users.put(result.getLong("user_id"), new UserInfo(
+                        result.getInt("xp"),
+                        currentRank,
+                        nextRank,
+                        result.getInt("message_count"),
+                        result.getInt("xp") - result.getInt("start_xp")
+                ));
+            }
+            return users;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

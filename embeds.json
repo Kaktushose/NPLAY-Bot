@@ -104,5 +104,10 @@
     "title": "Leaderboard",
     "description": "{leaderboard}",
     "color": "#67c94f"
+  },
+  "switchDaily" : {
+    "title": "Erfolg",
+    "description": "Die tägliche Kontoinformation wurde {switch}",
+    "color": "#67c94f"
   }
 }
