@@ -47,7 +47,7 @@ public class TaskScheduler {
 
     private void indexTasks() {
         var methods = reflections.getMethodsAnnotatedWith(ScheduledTask.class);
-
+        log.debug("Indexing tasks:");
         for (var method : methods) {
             var scheduledTask = method.getAnnotation(ScheduledTask.class);
 
@@ -57,9 +57,10 @@ public class TaskScheduler {
                         - (TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
                            + Calendar.getInstance().get(Calendar.MINUTE));
             }
-
+            // TODO dealy and period have to be same unit
             if (scheduledTask.repeat()) {
-                executor.scheduleAtFixedRate(execute(method), delay, scheduledTask.period(), scheduledTask.unit());
+                log.debug("Scheduling repeating task {}.{}. Starts in {} minutes. Repeats every {} minutes");
+                executor.scheduleAtFixedRate(execute(method), delay, scheduledTask.period(), scheduledTask.unit();
             } else {
                 executor.scheduleAtFixedRate(execute(method), delay, scheduledTask.period(), scheduledTask.unit());
             }
@@ -69,6 +70,7 @@ public class TaskScheduler {
     private Runnable execute(Method method) {
         return () -> {
             try {
+                log.debug("Invoking task: {}.{}", method.getDeclaringClass().getSimpleName(), method.getName());
                 method.invoke(method.getDeclaringClass().getConstructors()[0].newInstance(), bot);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 log.error("Exception in scheduled task!", e);

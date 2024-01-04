@@ -12,12 +12,16 @@ import com.github.kaktushose.jda.commands.dispatching.reply.components.Buttons;
 import com.github.kaktushose.jda.commands.dispatching.reply.components.Component;
 import com.github.kaktushose.nplaybot.Database;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 
 @Interaction
 public class LeaderboardCommand {
+
+    private static final Logger log = LoggerFactory.getLogger(LeaderboardCommand.class);
 
     @Inject
     private Database database;
@@ -41,6 +45,7 @@ public class LeaderboardCommand {
     @Button(emoji = "⏪")
     public void onStart(ComponentEvent event) {
         index = 1;
+        log.trace("Leaderboard#onStart pressed, new index: {}", index);
         reply(event);
     }
 
@@ -49,6 +54,7 @@ public class LeaderboardCommand {
         if (index > minIndex) {
             index--;
         }
+        log.trace("Leaderboard#onBackward pressed, new index: {}", index);
         reply(event);
     }
 
@@ -57,16 +63,19 @@ public class LeaderboardCommand {
         if (index < maxIndex) {
             index++;
         }
+        log.trace("Leaderboard#onForward pressed, new index: {}", index);
         reply(event);
     }
 
     @Button(emoji = "⏩")
     public void onEnd(ComponentEvent event) {
         index = maxIndex;
+        log.trace("Leaderboard#onEnd pressed, new index: {}", index);
         reply(event);
     }
 
     private void reply(Replyable event) {
+        log.debug("Sending new leaderboard with index {}/{}", index, maxIndex);
         event.with(getButtons()).reply(
                 embedCache.getEmbed("leaderboard").injectValue("leaderboard", leaderboard.get(index - 1).getPage(guild))
                         .toEmbedBuilder()
@@ -75,18 +84,22 @@ public class LeaderboardCommand {
     }
 
     private Component[] getButtons() {
+        log.trace("Selecting buttons for index: {}, minIndex: {}, maxIndex: {}", index, minIndex, maxIndex);
         if (index == minIndex) {
+            log.trace("Enabling bof buttons");
             return List.of(
                     Buttons.disabled("onStart", "onBackward"),
                     Buttons.enabled("onForward", "onEnd")
             ).toArray(new Component[0]);
         }
         if (index == maxIndex) {
+            log.trace("Enabling eof buttons");
             return List.of(
                     Buttons.enabled("onStart", "onBackward"),
                     Buttons.disabled("onForward", "onEnd")
             ).toArray(new Component[0]);
         }
+        log.trace("Enabling all buttons");
         return List.of(
                 Buttons.enabled("onStart", "onBackward"),
                 Buttons.enabled("onForward", "onEnd")

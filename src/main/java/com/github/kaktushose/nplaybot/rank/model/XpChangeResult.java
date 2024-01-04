@@ -20,4 +20,14 @@ public record XpChangeResult(boolean rankChanged, RankInfo currentRank, Optional
         });
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "XpChangeResult{" +
+               "rankChanged=" + rankChanged +
+               ", currentRank=" + currentRank +
+               ", nextRank=" + nextRank +
+               ", currentXp=" + currentXp +
+               '}';
+    }
 }

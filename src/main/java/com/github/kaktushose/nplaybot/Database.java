@@ -26,9 +26,7 @@ public class Database {
     }
 
     public void closeDataSource() {
-        if (dataSource != null) {
-            dataSource.close();
-        }
+        dataSource.close();
     }
 
     public SettingsService getSettingsService() {
