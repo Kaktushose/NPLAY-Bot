@@ -51,18 +51,22 @@ public class TaskScheduler {
         for (var method : methods) {
             var scheduledTask = method.getAnnotation(ScheduledTask.class);
 
-            var delay = scheduledTask.initialDelay();
+            var delay = scheduledTask.unit().toMillis(scheduledTask.initialDelay());
+            var period = scheduledTask.unit().toMillis(scheduledTask.period());
             if (scheduledTask.startAtMidnight()) {
                 delay = TimeUnit.HOURS.toMinutes(24)
                         - (TimeUnit.HOURS.toMinutes(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
                            + Calendar.getInstance().get(Calendar.MINUTE));
+                delay = TimeUnit.MINUTES.toMillis(delay);
             }
-            // TODO dealy and period have to be same unit
+
             if (scheduledTask.repeat()) {
-                log.debug("Scheduling repeating task {}.{}. Starts in {} minutes. Repeats every {} minutes");
-                executor.scheduleAtFixedRate(execute(method), delay, scheduledTask.period(), scheduledTask.unit();
+                log.debug("Scheduling repeating task {}.{}. Starts in {} ms. Repeats every {} ms",
+                        method.getDeclaringClass().getSimpleName(), method.getName(), delay, period);
+                executor.scheduleAtFixedRate(execute(method), delay, period, scheduledTask.unit());
             } else {
-                executor.scheduleAtFixedRate(execute(method), delay, scheduledTask.period(), scheduledTask.unit());
+                log.debug("Scheduling task {}.{}. Starts in {} ms", method.getDeclaringClass().getSimpleName(), method.getName(), period);
+                executor.schedule(execute(method), delay, scheduledTask.unit());
             }
         }
     }
