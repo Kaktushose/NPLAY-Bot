@@ -26,8 +26,7 @@ services:
       - postgres
 
   bot:
-    build:
-      context: .
+    image: ghcr.io/kaktushose/levelbot/nplaybot:latest
     container_name: nplay-bot
     restart: on-failure
     environment:

@@ -16,6 +16,7 @@ COPY src/main/resources/db/migration ./db/migration
 
 COPY --from=builder /bot/*.sh .
 COPY --from=builder /bot/target/NPLAY-Bot.jar ./NPLAY-Bot.jar
+COPY --from=builder /bot/embeds.json .
 
 RUN chmod +x ./wait-for-it.sh ./entrypoint.sh
 
