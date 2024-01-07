@@ -5,6 +5,10 @@ import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,31 +125,19 @@ public class RankService {
             var lastMessage = result.getLong("last_valid_message");
             var messageCooldown = result.getInt("message_cooldown");
             var minimumLength = result.getInt("min_message_length");
-            var validChannels = Arrays.asList((Long[]) result.getArray("valid_channels").getArray());
 
             if (System.currentTimeMillis() - lastMessage < messageCooldown) {
-                log.trace("User still has cooldown ({} < {})", System.currentTimeMillis() - lastMessage, messageCooldown);
+                log.debug("User still has cooldown ({} < {})", System.currentTimeMillis() - lastMessage, messageCooldown);
                 return false;
             }
 
             if (message.getContentDisplay().length() < minimumLength) {
-                log.trace("Message is too short (Length: {}, Required: {}", message.getContentDisplay().length(), minimumLength);
+                log.debug("Message is too short (Length: {}, Required: {}", message.getContentDisplay().length(), minimumLength);
                 return false;
             }
 
-            var channelId = message.getChannelIdLong();
-            if (message.getChannelType().isThread()) {
-                channelId = message.getChannel().asThreadChannel().getParentChannel().getIdLong();
-            }
-            var valid = validChannels.contains(channelId);
-
-            if (valid) {
-                log.debug("Message is valid");
-            } else {
-                log.trace("Invalid message channel");
-            }
-
-            return valid;
+            log.debug("Message is valid");
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -343,6 +335,55 @@ public class RankService {
                 ));
             }
             return users;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getXpLootDrop(Message message) {
+        log.debug("Querying xp loot drop for message {}", message);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM get_xp_loot_drop(?)");
+            statement.setLong(1, message.getGuildIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            var xp = result.getInt(1);
+            log.debug("Xp loot drop: {} xp", xp);
+            return xp;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isValidChannel(MessageChannelUnion channel, Guild guild) {
+        log.debug("Checking channel: {}", channel);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT rank_settings.valid_channels
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            var validChannels = Arrays.asList((Long[]) result.getArray("valid_channels").getArray());
+
+            var channelId = channel.getIdLong();
+            if (channel.getType().isThread()) {
+                channelId = channel.asThreadChannel().getParentChannel().getIdLong();
+            }
+            var valid = validChannels.contains(channelId);
+
+            if (valid) {
+                log.debug("Channel is valid");
+            } else {
+                log.debug("Invalid message channel");
+            }
+
+            return valid;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

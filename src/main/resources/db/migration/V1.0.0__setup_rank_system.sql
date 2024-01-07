@@ -9,7 +9,8 @@ CREATE TABLE rank_settings (
     guild_id BIGINT NOT NULL PRIMARY KEY,
     message_cooldown INT NOT NULL,
     min_message_length INT NOT NULL,
-    valid_channels BIGINT[] NOT NULL
+    valid_channels BIGINT[] NOT NULL,
+    xp_loot_chance REAL NOT NULL
 );
 
 CREATE TABLE ranks (
@@ -176,5 +177,22 @@ $$
 BEGIN
 	INSERT INTO rank_statistics (DATE, total_message_count) VALUES (CURRENT_DATE, 1)
 	ON CONFLICT (DATE) DO UPDATE SET total_message_count = rank_statistics.total_message_count + 1;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION get_xp_loot_drop(id BIGINT)
+RETURNS TABLE (xp INT) AS
+$$
+DECLARE
+	chance INT;
+	drop_chance REAL;
+BEGIN
+	SELECT rank_settings.xp_loot_chance INTO drop_chance FROM rank_settings WHERE guild_id = id;
+	chance := floor(random() * 100) + 1;
+	IF ROUND(drop_chance) >= chance THEN
+		RETURN QUERY SELECT get_random_xp FROM get_random_xp();
+	ELSE
+		RETURN QUERY SELECT 0;
+	END IF;
 END;
 $$ LANGUAGE plpgsql;

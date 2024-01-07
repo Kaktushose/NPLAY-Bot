@@ -90,12 +90,12 @@
     "description": "Der EmbedCache wurde aktualisiert",
     "color": "#67c94f"
   },
-  "setXpResult" : {
+  "setXpResult": {
     "title": "Erfolg",
     "description": "Die XP von {user} wurden auf {xp} XP gesetzt",
     "color": "#67c94f"
   },
-  "addXpResult" : {
+  "addXpResult": {
     "title": "Erfolg",
     "description": "{user} wurden {xp} XP hinzugefügt",
     "color": "#67c94f"
@@ -105,9 +105,14 @@
     "description": "{leaderboard}",
     "color": "#67c94f"
   },
-  "switchDaily" : {
+  "switchDaily": {
     "title": "Erfolg",
     "description": "Die tägliche Kontoinformation wurde {switch}",
+    "color": "#67c94f"
+  },
+  "xpLootDropClaimed": {
+    "title": "Glückwunsch :tada:",
+    "description": "{user} hat {xp} XP :star2: gefunden!",
     "color": "#67c94f"
   }
 }

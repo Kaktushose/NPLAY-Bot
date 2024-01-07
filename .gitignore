@@ -35,4 +35,3 @@ buildNumber.properties
 *.env
 /data
 /logs
-wait-for-it.sh
