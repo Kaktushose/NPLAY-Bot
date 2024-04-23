@@ -114,5 +114,15 @@
     "title": "Glückwunsch :tada:",
     "description": "{user} hat {xp} XP :star2: gefunden!",
     "color": "#67c94f"
+  },
+  "contestEventStart": {
+    "title": "Okay",
+    "description": "Das Content-Event wurde in {channel} gestartet",
+    "color": "#67c94f"
+  },
+  "contestEventStop": {
+    "title": "Leaderboard",
+    "description": "{leaderboard}",
+    "color": "#67c94f"
   }
 }

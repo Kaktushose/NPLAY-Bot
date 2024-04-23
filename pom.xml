@@ -72,12 +72,12 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.18</version>
+            <version>5.0.0-beta.22</version>
         </dependency>
         <dependency>
             <groupId>com.github.Kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>3d823b1173</version>
+            <version>4.0.0-beta.2</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.0</version>
+            <version>42.7.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -97,12 +97,12 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.11</version>
+            <version>1.4.14</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.4.11</version>
+            <version>1.4.12</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot;
 
+import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.zaxxer.hikari.HikariConfig;
@@ -10,6 +11,7 @@ public class Database {
     private final HikariDataSource dataSource;
     private final SettingsService settingsService;
     private final RankService rankService;
+    private final ContestEventService contestEventService;
 
     public Database() {
         var config = new HikariConfig();
@@ -23,6 +25,7 @@ public class Database {
 
         settingsService = new SettingsService(dataSource);
         rankService = new RankService(dataSource);
+        contestEventService = new ContestEventService(dataSource);
     }
 
     public void closeDataSource() {
@@ -35,5 +38,9 @@ public class Database {
 
     public RankService getRankService() {
         return rankService;
+    }
+
+    public ContestEventService getContestEventService() {
+        return contestEventService;
     }
 }

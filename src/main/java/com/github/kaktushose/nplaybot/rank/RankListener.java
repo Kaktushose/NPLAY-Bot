@@ -6,7 +6,6 @@ import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
@@ -128,7 +127,7 @@ public class RankListener extends ListenerAdapter {
                             .injectValue("user", event.getMember().getAsMention())
                             .injectValue("xp", xp)
                             .toMessageCreateData()
-            ).queue(it -> it.delete().queueAfter(10, TimeUnit.SECONDS));
+            ).mentionRepliedUser(false).queue(it -> it.delete().queueAfter(10, TimeUnit.SECONDS));
             message.clearReactions().queue();
         });
     }

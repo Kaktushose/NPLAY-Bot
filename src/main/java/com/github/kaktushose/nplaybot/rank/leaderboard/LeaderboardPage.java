@@ -1,14 +1,13 @@
 package com.github.kaktushose.nplaybot.rank.leaderboard;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 public record LeaderboardPage(List<LeaderboardRow> rows) {
-    public record LeaderboardRow(int xp, long userId, long roleId) {
-    }
-
     public String getPage(Guild guild) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < rows.size(); i++) {
@@ -28,8 +27,11 @@ public record LeaderboardPage(List<LeaderboardRow> rows) {
             return member.get().getEffectiveName();
         }
         // retrieve member thus it gets loaded to cache
-        guild.retrieveMemberById(userId).queue();
+        guild.retrieveMemberById(userId).queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MEMBER));
         return String.format("<@%d>", userId);
+    }
+
+    public record LeaderboardRow(int xp, long userId, long roleId) {
     }
 
 }

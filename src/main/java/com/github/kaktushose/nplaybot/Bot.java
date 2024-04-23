@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot;
 import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.events.contest.ContestListener;
 import com.github.kaktushose.nplaybot.rank.JoinLeaveListener;
 import com.github.kaktushose.nplaybot.rank.RankListener;
 import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
@@ -44,7 +45,8 @@ public class Bot {
                 .setStatus(OnlineStatus.IDLE)
                 .addEventListeners(
                         new RankListener(database, embedCache),
-                        new JoinLeaveListener(database.getRankService())
+                        new JoinLeaveListener(database.getRankService()),
+                        new ContestListener(database.getContestEventService())
                 )
                 .build().awaitReady();
 
