@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
+import com.github.kaktushose.nplaybot.rank.model.RankConfig;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
@@ -103,6 +104,121 @@ public class RankService {
                     result.getInt("message_count"),
                     result.getInt("xp") - result.getInt("start_xp")
             );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public RankConfig getRankConfig(Guild guild) {
+        log.debug("Querying rank config for guild: {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT message_cooldown, min_message_length, xp_loot_chance
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+
+            return new RankConfig(
+                    result.getInt("message_cooldown"),
+                    result.getInt("min_message_length"),
+                    result.getDouble("xp_loot_chance")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateCooldown(Guild guild, int cooldown) {
+        log.debug("Updating cooldown for guild: {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET message_cooldown = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setInt(1, cooldown);
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateMinMessageLength(Guild guild, int length) {
+        log.debug("Updating minimum message length for guild: {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET min_message_length = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setInt(1, length);
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateXpLootChance(Guild guild, double chance) {
+        log.debug("Updating xp loot chance for guild: {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET xp_loot_chance = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setDouble(1, chance);
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Set<Long> getValidChannels(Guild guild) {
+        log.debug("Querying valid channels for guild {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT valid_channels
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return new HashSet<>(Arrays.asList((Long[]) result.getArray("valid_channels").getArray()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateValidChannels(Guild guild, Set<Long> validChannels) {
+        log.debug("Querying valid channels for guild {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET valid_channels = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setArray(1, connection.createArrayOf("BIGINT", validChannels.toArray()));
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

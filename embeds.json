@@ -124,5 +124,16 @@
     "title": "Leaderboard",
     "description": "{leaderboard}",
     "color": "#67c94f"
+  },
+  "rankConfig": {
+    "title": "Rank Configuration",
+    "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot Wahrscheinlichkeit: `{lootChance}%`\n",
+    "color": "#67c94f"
+
+  },
+  "validChannels": {
+    "title": "Gewertete Textkanäle",
+    "description": "{channels}",
+    "color": "#67c94f"
   }
 }
