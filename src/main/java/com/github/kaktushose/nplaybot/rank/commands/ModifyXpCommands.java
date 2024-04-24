@@ -4,10 +4,12 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.constraints.Max;
 import com.github.kaktushose.jda.commands.annotations.constraints.Min;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
+import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Interaction(ephemeral = true)
+@Permissions(BotPermissions.MODIFY_USER_BALANCE)
 public class ModifyXpCommands {
 
     private static final Logger log = LoggerFactory.getLogger(ModifyXpCommands.class);

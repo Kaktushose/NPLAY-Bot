@@ -5,14 +5,17 @@ import com.github.kaktushose.jda.commands.annotations.constraints.Max;
 import com.github.kaktushose.jda.commands.annotations.constraints.Min;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Param;
+import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 @Interaction
+@Permissions(BotPermissions.MODIFY_RANK_SETTINGS)
 public class RankConfigCommands {
 
     @Inject
@@ -20,7 +23,7 @@ public class RankConfigCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "rank config", desc = "Zeigt die Einstellungen für das Rank System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "get rank config", desc = "Zeigt die Einstellungen für das Rank System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onGetRankConfig(CommandEvent event) {
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig(event.getGuild())));
     }

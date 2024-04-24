@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot.rank.leaderboard;
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.Button;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
+import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
@@ -11,6 +12,7 @@ import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
 import com.github.kaktushose.jda.commands.dispatching.reply.components.Buttons;
 import com.github.kaktushose.jda.commands.dispatching.reply.components.Component;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +21,15 @@ import java.util.List;
 
 
 @Interaction
+@Permissions(BotPermissions.USER)
 public class LeaderboardCommand {
 
     private static final Logger log = LoggerFactory.getLogger(LeaderboardCommand.class);
-
+    private final int minIndex = 1;
     @Inject
     private Database database;
     @Inject
     private EmbedCache embedCache;
-
-    private final int minIndex = 1;
     private int index = 1;
     private int maxIndex;
     private List<LeaderboardPage> leaderboard;

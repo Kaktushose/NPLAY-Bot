@@ -8,3 +8,4 @@ CREATE TABLE contest_entries (
     votes INT NOT NULL DEFAULT 0,
     message_id BIGINT NOT NULL
 );
+ALTER TABLE users ADD COLUMN permissions INTEGER DEFAULT 1;

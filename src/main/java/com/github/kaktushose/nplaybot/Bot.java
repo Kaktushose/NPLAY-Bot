@@ -4,6 +4,7 @@ import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.events.contest.ContestListener;
+import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
 import com.github.kaktushose.nplaybot.rank.JoinLeaveListener;
 import com.github.kaktushose.nplaybot.rank.RankListener;
 import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
@@ -54,6 +55,7 @@ public class Bot {
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
         jdaCommands.getDependencyInjector().registerProvider(this);
+        jdaCommands.getImplementationRegistry().setPermissionsProvider(new CustomPermissionsProvider(database));
 
         taskScheduler = new TaskScheduler(this);
 

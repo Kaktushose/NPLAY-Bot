@@ -135,5 +135,15 @@
     "title": "Gewertete Textkanäle",
     "description": "{channels}",
     "color": "#67c94f"
+  },
+  "userPermissions": {
+    "title": "Berechtigungen von {user}",
+    "description": "{permissions}",
+    "color": "#67c94f"
+  },
+  "permissionsBulkEdit": {
+    "title": "Erfolg",
+    "description": "Die Berechtigungen wurden angepasst",
+    "color": "#67c94f"
   }
 }
