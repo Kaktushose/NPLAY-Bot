@@ -145,5 +145,79 @@
     "title": "Erfolg",
     "description": "Die Berechtigungen wurden angepasst",
     "color": "#67c94f"
+  },
+  "rewardCreateSelectType": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte wähle die Belohnungsart aus, mit der der Nutzer belohnt werden soll",
+    "color": "#67c94f"
+  },
+  "rewardCreateSelectRole": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll",
+    "color": "#67c94f"
+  },
+  "rewardCreateInvalidXp": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an",
+    "color": "#ffc926"
+  },
+  "rewardCreateInvalidEmbed": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/)",
+    "color": "#ffc926"
+  },
+  "rewardCreateSummarize": {
+    "title": "Belohnung: {name}",
+    "description": "Du hast folgende Belohnung konfiguriert",
+    "fields": [
+      {
+        "name": "Typ",
+        "value": "{type}"
+      },
+      {
+        "name": "Grenze",
+        "value": "{threshold}"
+      },
+      {
+        "name": "{type}",
+        "value": "{reward}"
+      }
+    ],
+    "color": "#ffc926"
+  },
+  "rewardCreateConfirm": {
+    "title": "Erfolg",
+    "description": "Die Belohnung {name} wurde erstellt",
+    "color": "#67c94f"
+  },
+  "rewardCreateCancel": {
+    "title": "Okay",
+    "description": "Die Erstellung einer Belohnung wurde abgebrochen",
+    "color": "#67c94f"
+  },
+  "collectEventStart": {
+    "title": "Erfolg",
+    "description": "Das Collect Event `{name}` wurde gestartet",
+    "color": "#67c94f"
+  },
+  "collectEventStartError": {
+    "title": "Fehler",
+    "description": "Es ist aktuell bereits ein Collect Event aktiv. Beende dies zuerst, bevor du ein neues starten kannst!",
+    "color": "#ff0000"
+  },
+  "collectEventStop": {
+    "title": "Erfolg",
+    "description": "Das aktuelle Collect Event wurde beendet",
+    "color": "#67c94f"
+  },
+  "rewardDeleteSelect": {
+    "title": "Belohnungen löschen",
+    "description": "Wähle eine oder mehrere Belohnungen aus, die du löschen möchtest",
+    "color": "#67c94f"
+  },
+  "rewardDelete": {
+    "title": "Erfolg",
+    "description": "Die Belohnung(en) wurden gelöscht",
+    "color": "#67c94f"
   }
 }

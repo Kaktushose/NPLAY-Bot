@@ -1,11 +1,13 @@
 package com.github.kaktushose.nplaybot;
 
+import com.github.kaktushose.nplaybot.events.collect.CollectEventService;
 import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import net.dv8tion.jda.api.entities.Role;
 
 public class Database {
 
@@ -13,6 +15,7 @@ public class Database {
     private final SettingsService settingsService;
     private final RankService rankService;
     private final ContestEventService contestEventService;
+    private final CollectEventService collectEventService;
     private final PermissionsService permissionsService;
 
     public Database() {
@@ -28,6 +31,7 @@ public class Database {
         settingsService = new SettingsService(dataSource);
         rankService = new RankService(dataSource);
         contestEventService = new ContestEventService(dataSource);
+        collectEventService = new CollectEventService(dataSource);
         permissionsService = new PermissionsService(dataSource);
     }
 
@@ -45,6 +49,10 @@ public class Database {
 
     public ContestEventService getContestEventService() {
         return contestEventService;
+    }
+
+    public CollectEventService getCollectEventService() {
+        return collectEventService;
     }
 
     public PermissionsService getPermissionsService() {
