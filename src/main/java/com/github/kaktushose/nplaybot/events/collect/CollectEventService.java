@@ -98,6 +98,24 @@ public class CollectEventService {
         }
     }
 
+    public void updateCollectLootChance(Guild guild, double chance) {
+        log.debug("Updating collect loot chance for guild: {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET collect_loot_chance = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setDouble(1, chance);
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public record CollectReward(int rewardId, String name) {
     }
     public List<CollectReward> getCollectRewards() {

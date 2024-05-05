@@ -1,6 +1,8 @@
 package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.github.kaktushose.jda.commands.annotations.constraints.Max;
+import com.github.kaktushose.jda.commands.annotations.constraints.Min;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Param;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
@@ -37,6 +39,12 @@ public class CollectEventCommands {
     public void onCollectEventStop(CommandEvent event) {
         database.getCollectEventService().stopCollectEvent(event.getGuild());
         event.reply(embedCache.getEmbed("collectEventStop"));
+    }
+
+    @SlashCommand(value = "set collect-loot chance", desc = "Legt die Wahrscheinlichkeit für zufällige Collect-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
+        database.getCollectEventService().updateCollectLootChance(event.getGuild(), chance);
+        event.reply(embedCache.getEmbed("collectLootChanceUpdate").injectFields("value", chance));
     }
 
 }

@@ -40,7 +40,7 @@ public class RankConfigCommands {
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig(event.getGuild())));
     }
 
-    @SlashCommand(value = "set loot chance", desc = "Legt die Wahrscheinlichkeit für zufällige XP-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "set xp-loot chance", desc = "Legt die Wahrscheinlichkeit für zufällige XP-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
         database.getRankService().updateXpLootChance(event.getGuild(), chance);
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig(event.getGuild())));

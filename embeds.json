@@ -219,5 +219,9 @@
     "title": "Erfolg",
     "description": "Die Belohnung(en) wurden gelöscht",
     "color": "#67c94f"
+  },
+  "collectLootChanceUpdate": {
+    "title": "Erfolg",
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loo-Drops wurde auf {value} gesetzt"
   }
 }
