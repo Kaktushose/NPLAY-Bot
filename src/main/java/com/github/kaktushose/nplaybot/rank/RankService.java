@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.rank;
 
+import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
 import com.github.kaktushose.nplaybot.rank.model.RankConfig;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
@@ -10,6 +11,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -336,6 +339,22 @@ public class RankService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Optional<MessageCreateData> onXpChange(XpChangeResult result, Member member, Guild guild, EmbedCache embedCache) {
+        log.debug("Checking for rank up: {}", member);
+        updateRankRoles(member, guild, result);
+
+        if (!result.rankChanged()) {
+            log.debug("Rank hasn't changed");
+            return Optional.empty();
+        }
+        log.debug("Applying changes. New rank: {}", result.currentRank());
+
+        var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
+        return Optional.of(new MessageCreateBuilder().addContent(member.getAsMention())
+                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
+                .build());
     }
 
     public void updateRankRoles(Member member, Guild guild, XpChangeResult result) {

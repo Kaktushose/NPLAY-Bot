@@ -44,7 +44,7 @@ public class CollectEventCommands {
     @SlashCommand(value = "set collect-loot chance", desc = "Legt die Wahrscheinlichkeit für zufällige Collect-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
         database.getCollectEventService().updateCollectLootChance(event.getGuild(), chance);
-        event.reply(embedCache.getEmbed("collectLootChanceUpdate").injectFields("value", chance));
+        event.reply(embedCache.getEmbed("collectLootChanceUpdate").injectValue("chance", chance));
     }
 
 }

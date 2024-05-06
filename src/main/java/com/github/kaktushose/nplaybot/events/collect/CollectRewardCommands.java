@@ -158,7 +158,7 @@ public class CollectRewardCommands {
                 }
                 object = object.get("embeds").getAsJsonArray().get(0).getAsJsonObject();
             }
-            if (!(object.has("title") || object.has("description"))) {
+            if (object.has("title") || object.has("description")) {
                 return Optional.of(object.toString());
             }
             return Optional.empty();

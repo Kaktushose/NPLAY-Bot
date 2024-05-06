@@ -2,15 +2,11 @@ package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
-import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,24 +64,9 @@ public class RankListener extends ListenerAdapter {
         rankService.updateValidMessage(event.getAuthor());
         var result = rankService.addRandomXp(event.getAuthor());
 
-        onXpChange(result, event.getMember(), event.getGuild());
-    }
-
-    private void onXpChange(XpChangeResult result, Member member, Guild guild) {
-        log.debug("Checking for rank up: {}", member);
-        rankService.updateRankRoles(member, guild, result);
-
-        if (!result.rankChanged()) {
-            log.debug("Rank hasn't changed");
-            return;
-        }
-        log.debug("Applying changes. New rank: {}", result.currentRank());
-
-        var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
-        var messageData = new MessageCreateBuilder().addContent(member.getAsMention())
-                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
-                .build();
-        settingsService.getBotChannel(guild).sendMessage(messageData).queue();
+        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache).ifPresent(it ->
+                settingsService.getBotChannel(event.getGuild()).sendMessage(it).queue()
+        );
     }
 
     private void onXpLootDrop(MessageReceivedEvent event) {
@@ -118,7 +99,9 @@ public class RankListener extends ListenerAdapter {
 
         var xp = xpLootDrops.get(messageId);
         var result = rankService.addXp(event.getMember(), xp);
-        onXpChange(result, event.getMember(), event.getGuild());
+        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache).ifPresent(it ->
+                settingsService.getBotChannel(event.getGuild()).sendMessage(it).queue()
+        );
         xpLootDrops.remove(messageId);
 
         event.retrieveMessage().queue(message -> {

@@ -9,6 +9,7 @@ import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 @Interaction
@@ -24,16 +25,27 @@ public class RankInfoCommand {
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         var target = member == null ? event.getMember() : member;
         UserInfo userInfo = database.getRankService().getUserInfo(target);
-
-        var embed = userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax";
-        event.reply(embedCache.getEmbed(embed).injectValues(userInfo.getEmbedValues(target)));
+        sendReply(userInfo, target.getUser(), event);
     }
 
     @ContextCommand(value = "Kontoinformation abrufen", type = Command.Type.USER, isGuildOnly = true, ephemeral = true)
     public void onContextRankInfo(CommandEvent event, User user) {
         UserInfo userInfo = database.getRankService().getUserInfo(user);
-
-        var embed = userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax";
-        event.reply(embedCache.getEmbed(embed).injectValues(userInfo.getEmbedValues(user)));
+        sendReply(userInfo, user, event);
     }
+
+    private void sendReply(UserInfo userInfo, User user, CommandEvent event) {
+        var embed = embedCache.getEmbed(userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
+                .injectValues(userInfo.getEmbedValues(user))
+                .toEmbedBuilder();
+
+        var guild = event.getGuild();
+        if (database.getCollectEventService().isActive(guild)) {
+            var currency = database.getCollectEventService().getCollectCurrency(guild);
+            var points = database.getCollectEventService().getCollectPoints(user);
+            embed.addField(currency.name(), String.format("%s %d", currency.emoji(), points), false);
+        }
+        event.reply(embed);
+    }
+
 }

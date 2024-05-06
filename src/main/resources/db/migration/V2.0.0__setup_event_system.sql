@@ -23,7 +23,24 @@ CREATE TABLE collect_rewards (
     reward_id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL DEFAULT 0,
     threshold INT NOT NULL,
-    xp INT,
-    role_id BIGINT,
+    xp INT NOT NULL DEFAULT 0,
+    role_id BIGINT NOT NULL DEFAULT 0,
     embed JSONB NOT NULL
 );
+
+CREATE FUNCTION get_collect_loot_drop(id BIGINT)
+RETURNS TABLE (points INT) AS
+$$
+DECLARE
+	chance INT;
+	drop_chance REAL;
+BEGIN
+	SELECT event_settings.collect_loot_chance INTO drop_chance FROM event_settings WHERE guild_id = id;
+	chance := floor(random() * 100) + 1;
+	IF ROUND(drop_chance) >= chance THEN
+		RETURN QUERY SELECT 1;
+	ELSE
+		RETURN QUERY SELECT 0;
+	END IF;
+END;
+$$ LANGUAGE plpgsql;

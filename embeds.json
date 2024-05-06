@@ -187,7 +187,7 @@
   },
   "rewardCreateConfirm": {
     "title": "Erfolg",
-    "description": "Die Belohnung {name} wurde erstellt",
+    "description": "Die Belohnung `{name}` wurde erstellt",
     "color": "#67c94f"
   },
   "rewardCreateCancel": {
@@ -222,6 +222,11 @@
   },
   "collectLootChanceUpdate": {
     "title": "Erfolg",
-    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loo-Drops wurde auf {value} gesetzt"
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loo-Drops wurde auf {chance} gesetzt"
+  },
+  "collectLootDropClaimed": {
+    "title": "Glückwunsch :tada:",
+    "description": "{user} hat 1 {name} gefunden",
+    "color": "#67c94f"
   }
 }

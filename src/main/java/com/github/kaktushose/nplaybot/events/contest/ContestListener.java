@@ -84,6 +84,9 @@ public class ContestListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
+        if (event.getChannel().getIdLong() != eventService.getContestEventChannel(event.getGuild())) {
+            return;
+        }
         if (!event.getEmoji().equals(Emoji.fromFormatted(eventService.getVoteEmoji(event.getGuild())))) {
             return;
         }
@@ -96,6 +99,9 @@ public class ContestListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
+        if (event.getChannel().getIdLong() != eventService.getContestEventChannel(event.getGuild())) {
+            return;
+        }
         log.debug("Detected removal of all vote emojis. Adding initial emoji again");
         event.getChannel().retrieveMessageById(event.getMessageId()).flatMap(message ->
                 message.addReaction(Emoji.fromFormatted(eventService.getVoteEmoji(event.getGuild())))

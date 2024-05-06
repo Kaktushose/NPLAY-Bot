@@ -2,7 +2,9 @@ package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,7 @@ public class CollectEventService {
 
     private static final Logger log = LoggerFactory.getLogger(ContestEventService.class);
     private final DataSource dataSource;
+
     public CollectEventService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -56,7 +59,7 @@ public class CollectEventService {
             );
 
             statement.setString(1, eventName);
-            statement.setString(2,currencyName);
+            statement.setString(2, currencyName);
             statement.setString(3, emoji);
             statement.setLong(4, guild.getIdLong());
 
@@ -102,7 +105,7 @@ public class CollectEventService {
         log.debug("Updating collect loot chance for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    UPDATE rank_settings
+                    UPDATE event_settings
                     SET collect_loot_chance = ?
                     WHERE guild_id = ?
                     """
@@ -116,20 +119,63 @@ public class CollectEventService {
         }
     }
 
-    public record CollectReward(int rewardId, String name) {
+    public int getCollectLootDrop(Message message) {
+        log.debug("Querying collect loot drop for message {}", message);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM get_collect_loot_drop(?)");
+            statement.setLong(1, message.getGuildIdLong());
+            var result = statement.executeQuery();
+            result.next();
+            var points = result.getInt(1);
+            log.debug("Collect loot drop: {} points", points);
+            return points;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    public record CollectCurrency(String name, String emoji) {
+    }
+
+    public CollectCurrency getCollectCurrency(Guild guild) {
+        log.debug("Querying collect currency emoji");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT collect_currency_emoji, collect_currency_name
+                    FROM event_settings
+                    WHERE guild_id = ?
+                    """);
+            statement.setLong(1, guild.getIdLong());
+            var result = statement.executeQuery();
+            result.next();
+            return new CollectCurrency(
+                    result.getString("collect_currency_name"),
+                    result.getString("collect_currency_emoji")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, String embed) {
+    }
+
     public List<CollectReward> getCollectRewards() {
         log.debug("Querying collect rewards");
         try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("""
-                    SELECT reward_id, name
-                    FROM collect_rewards
-                    """
-            );
+            var statement = connection.prepareStatement("SELECT * FROM collect_rewards");
             var result = statement.executeQuery();
             List<CollectReward> rewards = new ArrayList<>();
             while (result.next()) {
-                rewards.add(new CollectReward(result.getInt("reward_id"), result.getString("name")));
+                rewards.add(new CollectReward(
+                                result.getInt("reward_id"),
+                                result.getString("name"),
+                                result.getInt("threshold"),
+                                result.getInt("xp"),
+                                result.getLong("role_id"),
+                                result.getString("embed")
+                        )
+                );
             }
             return rewards;
         } catch (SQLException e) {
@@ -148,4 +194,28 @@ public class CollectEventService {
         }
     }
 
+    public int addCollectPoint(UserSnowflake user) {
+        log.debug("Adding one collect point to user: {}", user);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("UPDATE users SET collect_points = collect_points + 1 where user_id = ?");
+            statement.setLong(1, user.getIdLong());
+            statement.execute();
+            return getCollectPoints(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getCollectPoints(UserSnowflake user) {
+        log.debug("Querying collect points for user {}", user);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT collect_points FROM users WHERE user_Id = ?");
+            statement.setLong(1, user.getIdLong());
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
