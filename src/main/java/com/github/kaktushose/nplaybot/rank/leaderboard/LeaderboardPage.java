@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public record LeaderboardPage(List<LeaderboardRow> rows) {
-    public String getPage(Guild guild) {
+    public String getPage(Guild guild, int index) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < rows.size(); i++) {
             var row = rows.get(i);
-            appendRow(builder, i + 1, resolveName(guild, row.userId), row.xp, String.format("<@&%d>", row.roleId));
+            appendRow(builder, (i + 1) + index * 10, resolveName(guild, row.userId), row.xp, String.format("<@&%d>", row.roleId));
         }
         return builder.toString();
     }
