@@ -163,7 +163,7 @@
   },
   "rewardCreateInvalidEmbed": {
     "title": "Belohnung: {name}",
-    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/)",
+    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/?single=true&data=e30=)",
     "color": "#ffc926"
   },
   "rewardCreateSummarize": {
