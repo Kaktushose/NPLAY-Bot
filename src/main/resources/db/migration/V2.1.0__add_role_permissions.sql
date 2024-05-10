@@ -1,6 +1,6 @@
 CREATE TABLE role_permissions (
     role_id BIGINT PRIMARY KEY NOT NULL,
-    permissions INTEGER NOT NULL DEFAULT 1;
+    permissions INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE FUNCTION get_role_permissions(ids BIGINT[])
