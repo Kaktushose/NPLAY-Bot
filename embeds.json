@@ -136,14 +136,14 @@
     "description": "{channels}",
     "color": "#67c94f"
   },
-  "userPermissions": {
-    "title": "Berechtigungen von {user}",
-    "description": "{permissions}",
+  "permissionsEdit": {
+    "title": "Berechtigungen von {target}",
+    "description": "Bearbeite die Berechtigungen, indem du sie im Select Menü an- oder abwählst",
     "color": "#67c94f"
   },
-  "permissionsBulkEdit": {
-    "title": "Erfolg",
-    "description": "Die Berechtigungen wurden angepasst",
+  "permissionsList": {
+    "title": "Berechtigungen von {target}",
+    "description": "{permissions}",
     "color": "#67c94f"
   },
   "rewardCreateSelectType": {

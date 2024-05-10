@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.permissions;
 
-import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 public class PermissionsService {
@@ -19,7 +20,7 @@ public class PermissionsService {
         this.dataSource = dataSource;
     }
 
-    public int getPermissions(UserSnowflake user) {
+    public int getUserPermissions(User user) {
         log.debug("Querying permissions for user {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -38,8 +39,42 @@ public class PermissionsService {
         }
     }
 
-    public void grantPermissions(UserSnowflake user, String permission) {
-        log.warn("Granting permission {} for user {}", permission, user);
+    public int getRolePermissions(List<Role> roles) {
+        log.debug("Querying permissions for member roles");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM get_role_permissions(?)");
+            statement.setArray(1, connection.createArrayOf("BIGINT", roles.stream().map(ISnowflake::getIdLong).toArray()));
+            var result = statement.executeQuery();
+            result.next();
+            var permissions = result.getInt(1);
+            if (permissions >= BotPermissions.getPermissionValue(BotPermissions.BOT_OWNER)) {
+                permissions = BotPermissions.getPermissionValue(BotPermissions.BOT_OWNER);
+            }
+            return permissions;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Returns the combined permissions from {@link #getUserPermissions(User)} and {@link #getRolePermissions(List)} for
+     * the given member
+     *
+     * @param member the {@link Member} to return the combined permissions for
+     * @return the combined permissions
+     */
+    public int getMemberPermissions(Member member) {
+        log.debug("Querying permissions for member {}", member);
+        int permissions = getUserPermissions(member.getUser()) | getRolePermissions(member.getRoles());
+
+        if (permissions >= BotPermissions.getPermissionValue(BotPermissions.BOT_OWNER)) {
+            permissions = BotPermissions.getPermissionValue(BotPermissions.BOT_OWNER);
+        }
+        return permissions;
+    }
+
+    public void setUserPermissions(UserSnowflake user, int permissions) {
+        log.info("Granting permission {} for user {}", permissions, user);
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
                     UPDATE users
@@ -48,7 +83,7 @@ public class PermissionsService {
                     """
             );
 
-            statement.setLong(1, BotPermissions.grant(getPermissions(user), permission));
+            statement.setLong(1, permissions);
             statement.setLong(2, user.getIdLong());
 
             statement.execute();
@@ -57,27 +92,32 @@ public class PermissionsService {
         }
     }
 
-    public void revokePermissions(UserSnowflake user, String permission) {
-        log.warn("Revoking permission {} for user {}", permission, user);
+    public void setRolePermissions(Role role, int permissions) {
+        log.info("Granting permission {} for role {}", permissions, role);
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("""
-                    UPDATE users
-                    SET permissions = ?
-                    WHERE user_id = ?
+                    INSERT INTO role_permissions
+                    VALUES(?, ?)
+                    ON CONFLICT (role_id) DO UPDATE SET permissions = EXCLUDED.permissions;
                     """
             );
 
-            statement.setLong(1, BotPermissions.revoke(getPermissions(user), permission));
-            statement.setLong(2, user.getIdLong());
-
+            statement.setLong(1, role.getIdLong());
+            statement.setLong(2, permissions);
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public boolean hasPermissions(UserSnowflake user, Set<String> permissions) {
+    public boolean hasPermissions(Member member, Set<String> permissions) {
+        log.debug("Checking permissions for member {}", member);
+        return BotPermissions.hasPermissions(permissions, getMemberPermissions(member));
+    }
+
+    public boolean hasPermissions(User user, Set<String> permissions) {
         log.debug("Checking permissions for user {}", user);
-        return BotPermissions.hasPermissions(permissions, getPermissions(user));
+        return BotPermissions.hasPermissions(permissions, getUserPermissions(user));
     }
+
 }

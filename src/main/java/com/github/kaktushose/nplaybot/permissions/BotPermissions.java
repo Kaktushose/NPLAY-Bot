@@ -1,8 +1,6 @@
 package com.github.kaktushose.nplaybot.permissions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BotPermissions {
 
@@ -29,24 +27,42 @@ public class BotPermissions {
     public static int compute(Set<String> permissions) {
         int computedPermissions = 0;
         for (String permission : permissions) {
-            computedPermissions = computedPermissions | permissionMapping.getOrDefault(permission, 0);
+            computedPermissions = computedPermissions | getPermissionValue(permission);
         }
         return computedPermissions;
     }
 
     public static boolean hasPermissions(Set<String> permissions, int userPermission) {
-        if (userPermission == permissionMapping.get(BOT_OWNER)) {
+        if (userPermission == getPermissionValue(BOT_OWNER)) {
             return true;
         }
         return (userPermission & compute(permissions)) != 0;
     }
 
-    public static int grant(int currentPermissions, String permission) {
-        return currentPermissions |= permissionMapping.getOrDefault(permission, 0);
+    public static int combine(Collection<Integer> permissions) {
+        int result = 0;
+        for (int permission : permissions) {
+            result |= permission;
+        }
+        return result;
     }
 
-    public static int revoke(int currentPermissions, String permission) {
-        return currentPermissions &= ~permissionMapping.getOrDefault(permission, 0);
+    public static Map<String, Integer> permissionsMapping() {
+        return new LinkedHashMap<>(permissionMapping);
+    }
+
+    public static int getPermissionValue(String permission) {
+        return permissionMapping.getOrDefault(permission, 0);
+    }
+
+    public static Set<Integer> getRawPermissionsValues(int permissions) {
+        Set<Integer> result = new HashSet<>();
+        permissionMapping.forEach((name, value) -> {
+            if (hasPermissions(Set.of(name), permissions)) {
+                result.add(value);
+            }
+        });
+        return result;
     }
 
     public static String listPermissions(int permissions) {

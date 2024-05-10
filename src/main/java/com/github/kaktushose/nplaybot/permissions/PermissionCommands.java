@@ -4,83 +4,111 @@ import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
+import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
 import com.github.kaktushose.nplaybot.Database;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+
+import java.util.List;
 
 import static com.github.kaktushose.nplaybot.permissions.BotPermissions.*;
 
 @Interaction
 public class PermissionCommands {
 
+    private static final String NONE = "NONE";
     @Inject
     private Database database;
     @Inject
     private EmbedCache embedCache;
+    private Member targetMember;
+    private Role targetRole;
 
     @SlashCommand(value = "permissions list", desc = "Zeigt die Berechtigungen eines Users an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     @Permissions(USER)
     public void onPermissionsList(CommandEvent event, @Optional Member member) {
         var target = member == null ? event.getMember() : member;
 
-        event.reply(embedCache.getEmbed("userPermissions")
-                .injectValue("user", target.getEffectiveName())
-                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getPermissions(target)))
+        event.reply(embedCache.getEmbed("permissionsList")
+                .injectValue("target", target.getEffectiveName())
+                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getMemberPermissions(target)))
         );
     }
 
-    @SlashCommand(value = "permissions grant", desc = "Fügt einem Nutzer eine Berechtigung hinzu", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "permissions user edit", desc = "Bearbeitet die Berechtigungen von einem Nutzer. Hat keinen Einfluss auf die Rollen-Berechtigungen", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     @Permissions(MODIFY_USER_PERMISSIONS)
-    public void onPermissionsGrant(CommandEvent event,
-                                   Member member,
-                                   @Param("Die Berechtigung die hinzugefügt werden soll")
-                                   @Choices({USER, MODIFY_USER_BALANCE, MODIFY_RANK_SETTINGS, MANAGE_EVENTS, MODIFY_USER_PERMISSIONS, BOT_ADMINISTRATOR})
-                                   String permission) {
-        database.getPermissionsService().grantPermissions(member, permission);
+    public void onPermissionsUserEdit(CommandEvent event, Member member) {
+        targetMember = member;
 
-        event.reply(embedCache.getEmbed("userPermissions")
-                .injectValue("user", member.getEffectiveName())
-                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getPermissions(member)))
+        var permissionsMap = BotPermissions.permissionsMapping();
+        permissionsMap.put(NONE, 0);
+        permissionsMap.remove(BOT_OWNER);
+
+        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
+                event.getJdaCommands().getSelectMenu(
+                        "PermissionCommands.onPermissionsUserSelect",
+                        event.getContext().getRuntime().getRuntimeId())
+        ).createCopy();
+        menu.getOptions().clear();
+        menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
+
+        permissionsMap.forEach((label, value) -> menu.addOption(label, String.valueOf(value)));
+        var permissions = database.getPermissionsService().getUserPermissions(member.getUser());
+        menu.setDefaultValues(BotPermissions.getRawPermissionsValues(permissions).stream().map(String::valueOf).toList());
+
+        event.getReplyContext().getBuilder().addActionRow(menu.build());
+        event.reply(embedCache.getEmbed("permissionsEdit").injectValue("target", targetMember.getEffectiveName()));
+    }
+
+    @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
+    @SelectOption(label = "dummy option", value = "dummy option")
+    @Permissions(MODIFY_USER_PERMISSIONS)
+    public void onPermissionsUserSelect(ComponentEvent event, List<String> selection) {
+        database.getPermissionsService().setUserPermissions(targetMember, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));
+
+        event.keepComponents(false).reply(embedCache.getEmbed("permissionsList")
+                .injectValue("target", targetMember.getEffectiveName())
+                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getUserPermissions(targetMember.getUser())))
         );
     }
 
-    @SlashCommand(value = "permissions revoke", desc = "Entzieht einem Nutzer eine Berechtigung", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "permissions role edit", desc = "Bearbeitet die Berechtigungen von einer Rolle", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     @Permissions(MODIFY_USER_PERMISSIONS)
-    public void onPermissionsRevoke(CommandEvent event,
-                                    Member member,
-                                    @Param("Die Berechtigung die entzogen werden soll")
-                                    @Choices({USER, MODIFY_USER_BALANCE, MODIFY_RANK_SETTINGS, MANAGE_EVENTS, MODIFY_USER_PERMISSIONS, BOT_ADMINISTRATOR})
-                                    String permission) {
-        database.getPermissionsService().revokePermissions(member, permission);
+    public void onPermissionsRoleEdit(CommandEvent event, Role role) {
+        targetRole = role;
 
-        event.reply(embedCache.getEmbed("userPermissions")
-                .injectValue("user", member.getEffectiveName())
-                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getPermissions(member)))
+        var permissionsMap = BotPermissions.permissionsMapping();
+        permissionsMap.put(NONE, 0);
+        permissionsMap.remove(USER);
+        permissionsMap.remove(BOT_OWNER);
+
+        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
+                event.getJdaCommands().getSelectMenu(
+                        "PermissionCommands.onPermissionsRoleSelect",
+                        event.getContext().getRuntime().getRuntimeId())
+        ).createCopy();
+        menu.getOptions().clear();
+        menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
+
+        permissionsMap.forEach((label, value) -> menu.addOption(label, String.valueOf(value)));
+        var permissions = database.getPermissionsService().getRolePermissions(List.of(targetRole));
+        menu.setDefaultValues(BotPermissions.getRawPermissionsValues(permissions).stream().map(String::valueOf).toList());
+
+        event.getReplyContext().getBuilder().addActionRow(menu.build());
+        event.reply(embedCache.getEmbed("permissionsEdit").injectValue("target", targetRole.getName()));
+    }
+
+    @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
+    @SelectOption(label = "dummy option", value = "dummy option")
+    @Permissions(MODIFY_USER_PERMISSIONS)
+    public void onPermissionsRoleSelect(ComponentEvent event, List<String> selection) {
+        database.getPermissionsService().setRolePermissions(targetRole, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));
+
+        event.keepComponents(false).reply(embedCache.getEmbed("permissionsList")
+                .injectValue("target", targetRole.getName())
+                .injectValue("permissions", BotPermissions.listPermissions(database.getPermissionsService().getRolePermissions(List.of(targetRole))))
         );
-    }
-
-    @SlashCommand(value = "permissions bulk grant", desc = "Fügt allen Nutzern mit der angegebenen Rolle eine Berechtigung hinzu", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    @Permissions(MODIFY_USER_PERMISSIONS)
-    public void onPermissionsBulkGrant(CommandEvent event,
-                                       Role role,
-                                       @Param("Die Berechtigung die hinzugefügt werden soll")
-                                       @Choices({USER, MODIFY_USER_BALANCE, MODIFY_RANK_SETTINGS, MANAGE_EVENTS, MODIFY_USER_PERMISSIONS, BOT_ADMINISTRATOR})
-                                       String permission) {
-        event.getGuild().getMembersWithRoles(role).forEach(member -> database.getPermissionsService().grantPermissions(member, permission));
-
-        event.reply(embedCache.getEmbed("permissionsBulkEdit"));
-    }
-
-    @SlashCommand(value = "permissions bulk revoke", desc = "Entzieht allen Nutzern mit der angegebenen Rolle eine Berechtigung", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    @Permissions(MODIFY_USER_PERMISSIONS)
-    public void onPermissionsBulkRevoke(CommandEvent event,
-                                        Role role,
-                                        @Param("Die Berechtigung die entzogen werden soll")
-                                        @Choices({USER, MODIFY_USER_BALANCE, MODIFY_RANK_SETTINGS, MANAGE_EVENTS, MODIFY_USER_PERMISSIONS, BOT_ADMINISTRATOR})
-                                        String permission) {
-        event.getGuild().getMembersWithRoles(role).forEach(member -> database.getPermissionsService().revokePermissions(member, permission));
-
-        event.reply(embedCache.getEmbed("permissionsBulkEdit"));
     }
 }
