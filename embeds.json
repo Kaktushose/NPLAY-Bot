@@ -222,7 +222,7 @@
   },
   "collectLootChanceUpdate": {
     "title": "Erfolg",
-    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loo-Drops wurde auf {chance} gesetzt"
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt"
   },
   "collectLootDropClaimed": {
     "title": "Glückwunsch :tada:",
