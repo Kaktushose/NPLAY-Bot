@@ -9,7 +9,6 @@ import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 @Interaction

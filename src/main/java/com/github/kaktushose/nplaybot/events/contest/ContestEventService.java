@@ -16,6 +16,7 @@ public class ContestEventService {
 
     private static final Logger log = LoggerFactory.getLogger(ContestEventService.class);
     private final DataSource dataSource;
+
     public ContestEventService(DataSource dataSource) {
         this.dataSource = dataSource;
     }

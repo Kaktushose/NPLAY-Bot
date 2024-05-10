@@ -9,7 +9,9 @@ import com.github.kaktushose.jda.commands.dispatching.interactions.modals.ModalE
 import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Mentions;
 import net.dv8tion.jda.api.entities.Role;
@@ -24,13 +26,13 @@ import java.util.Optional;
 @Permissions(BotPermissions.MANAGE_EVENTS)
 public class CollectRewardCommands {
 
+    private static final Gson gson = new Gson();
+    private static final String ROLE_REWARD = "Rolle";
+    private static final String XP_REWARD = "XP";
     @Inject
     private EmbedCache embedCache;
     @Inject
     private Database database;
-    private static final Gson gson = new Gson();
-    private static final String ROLE_REWARD = "Rolle";
-    private static final String XP_REWARD = "XP";
     private String name;
     private String rewardType;
     private Role role;

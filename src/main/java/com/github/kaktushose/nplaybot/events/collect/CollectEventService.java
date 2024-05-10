@@ -134,9 +134,6 @@ public class CollectEventService {
         }
     }
 
-    public record CollectCurrency(String name, String emoji) {
-    }
-
     public CollectCurrency getCollectCurrency(Guild guild) {
         log.debug("Querying collect currency emoji");
         try (Connection connection = dataSource.getConnection()) {
@@ -155,9 +152,6 @@ public class CollectEventService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, String embed) {
     }
 
     public List<CollectReward> getCollectRewards() {
@@ -217,5 +211,11 @@ public class CollectEventService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public record CollectCurrency(String name, String emoji) {
+    }
+
+    public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, String embed) {
     }
 }

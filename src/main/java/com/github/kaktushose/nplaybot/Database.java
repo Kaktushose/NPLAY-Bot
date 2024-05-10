@@ -7,7 +7,6 @@ import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.dv8tion.jda.api.entities.Role;
 
 public class Database {
 
