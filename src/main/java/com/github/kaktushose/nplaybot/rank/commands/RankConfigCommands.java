@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 @Interaction
-@Permissions(BotPermissions.MODIFY_RANK_SETTINGS)
+@Permissions(BotPermissions.MANAGE_RANK_SETTINGS)
 public class RankConfigCommands {
 
     @Inject

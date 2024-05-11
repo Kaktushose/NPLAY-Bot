@@ -87,7 +87,7 @@ public class RankService {
         log.debug("Querying user info for user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT xp, rank_id, message_count, start_xp
+                    SELECT xp, rank_id, message_count, start_xp, karma_points
                     FROM users
                     WHERE user_id = ?
                     """
@@ -105,7 +105,8 @@ public class RankService {
                     currentRank,
                     nextRank,
                     result.getInt("message_count"),
-                    result.getInt("xp") - result.getInt("start_xp")
+                    result.getInt("xp") - result.getInt("start_xp"),
+                    result.getInt("karma_points")
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -450,7 +451,7 @@ public class RankService {
         log.debug("Querying daily rank infos");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT user_id, xp, rank_id, message_count, start_xp
+                    SELECT user_id, xp, rank_id, message_count, start_xp, karma_points
                     FROM users
                     WHERE daily_message = true
                     """
@@ -466,7 +467,8 @@ public class RankService {
                         currentRank,
                         nextRank,
                         result.getInt("message_count"),
-                        result.getInt("xp") - result.getInt("start_xp")
+                        result.getInt("xp") - result.getInt("start_xp"),
+                        result.getInt("karma_points")
                 ));
             }
             return users;

@@ -6,9 +6,10 @@ public class BotPermissions {
 
     public static final String USER = "USER";
     public static final String MODIFY_USER_BALANCE = "MODIFY_USER_BALANCE";
-    public static final String MODIFY_RANK_SETTINGS = "MODIFY_RANK_SETTINGS";
+    public static final String MANAGE_RANK_SETTINGS = "MANAGE_RANK_SETTINGS";
+    public static final String MANAGE_KARMA_SETTINGS = "MANAGE_KARMA_SETTINGS";
     public static final String MANAGE_EVENTS = "MANAGE_EVENTS";
-    public static final String MODIFY_USER_PERMISSIONS = "MODIFY_USER_PERMISSIONS";
+    public static final String MANAGE_USER_PERMISSIONS = "MANAGE_USER_PERMISSIONS";
     public static final String BOT_ADMINISTRATOR = "BOT_ADMINISTRATOR";
     public static final String BOT_OWNER = "BOT_OWNER";
 
@@ -16,9 +17,10 @@ public class BotPermissions {
     private static final Map<String, Integer> permissionMapping = new LinkedHashMap<>() {{
         put(USER, 1 << 0);
         put(MODIFY_USER_BALANCE, 1 << 1);
-        put(MODIFY_RANK_SETTINGS, 1 << 2);
+        put(MANAGE_RANK_SETTINGS, 1 << 2);
+        put(MANAGE_KARMA_SETTINGS, 1 << 6);
         put(MANAGE_EVENTS, 1 << 3);
-        put(MODIFY_USER_PERMISSIONS, 1 << 4);
+        put(MANAGE_USER_PERMISSIONS, 1 << 4);
         put(BOT_ADMINISTRATOR, 1 << 5);
         put(BOT_OWNER, 1 << 8);
     }};

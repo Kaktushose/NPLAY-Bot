@@ -2,6 +2,7 @@ package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.nplaybot.events.collect.CollectEventService;
 import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
+import com.github.kaktushose.nplaybot.karma.KarmaService;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
@@ -16,6 +17,7 @@ public class Database {
     private final ContestEventService contestEventService;
     private final CollectEventService collectEventService;
     private final PermissionsService permissionsService;
+    private final KarmaService karmaService;
 
     public Database() {
         var config = new HikariConfig();
@@ -32,6 +34,7 @@ public class Database {
         contestEventService = new ContestEventService(dataSource);
         collectEventService = new CollectEventService(dataSource);
         permissionsService = new PermissionsService(dataSource);
+        karmaService = new KarmaService(dataSource);
     }
 
     public void closeDataSource() {
@@ -56,5 +59,9 @@ public class Database {
 
     public PermissionsService getPermissionsService() {
         return permissionsService;
+    }
+
+    public KarmaService getKarmaService() {
+        return karmaService;
     }
 }

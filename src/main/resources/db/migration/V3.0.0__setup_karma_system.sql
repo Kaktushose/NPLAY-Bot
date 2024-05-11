@@ -1,0 +1,18 @@
+ALTER TABLE users
+ADD COLUMN karma_points INT NOT NULL DEFAULT 0,
+ADD COLUMN karma_tokens INT NOT NULL DEFAULT 5;
+
+CREATE TABLE karma_settings(
+   guild_id BIGINT NOT NULL PRIMARY KEY,
+   VALID_EMOJIS VARCHAR[] NOT NULL,
+   default_tokens INT NOT NULL DEFAULT 5
+);
+
+CREATE TABLE karma_rewards (
+    reward_id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL DEFAULT 0,
+    threshold INT NOT NULL,
+    xp INT NOT NULL DEFAULT 0,
+    role_id BIGINT NOT NULL DEFAULT 0,
+    embed JSONB NOT NULL
+);

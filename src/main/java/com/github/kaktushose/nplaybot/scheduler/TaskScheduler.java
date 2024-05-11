@@ -74,7 +74,7 @@ public class TaskScheduler {
     private Runnable execute(Method method) {
         return () -> {
             try {
-                log.debug("Invoking task: {}.{}", method.getDeclaringClass().getSimpleName(), method.getName());
+                log.info("Invoking task: {}.{}", method.getDeclaringClass().getSimpleName(), method.getName());
                 method.invoke(method.getDeclaringClass().getConstructors()[0].newInstance(), bot);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 log.error("Exception in scheduled task!", e);

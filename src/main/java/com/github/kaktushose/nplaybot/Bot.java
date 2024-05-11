@@ -5,6 +5,7 @@ import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.events.collect.CollectEventListener;
 import com.github.kaktushose.nplaybot.events.contest.ContestListener;
+import com.github.kaktushose.nplaybot.karma.KarmaListener;
 import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
 import com.github.kaktushose.nplaybot.rank.JoinLeaveListener;
 import com.github.kaktushose.nplaybot.rank.RankListener;
@@ -49,7 +50,8 @@ public class Bot {
                         new RankListener(database, embedCache),
                         new JoinLeaveListener(database.getRankService()),
                         new ContestListener(database.getContestEventService()),
-                        new CollectEventListener(database, embedCache)
+                        new CollectEventListener(database, embedCache),
+                        new KarmaListener(database, embedCache)
                 )
                 .build().awaitReady();
 

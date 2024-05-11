@@ -50,6 +50,10 @@
         "value": ":star2: {currentXp}"
       },
       {
+        "name": "Aktuelles Karma",
+        "value": ":thumbs_up: {karma}"
+      },
+      {
         "name": "XP-Zuwachs (24h):",
         "value": ":chart_with_upwards_trend: {xpGain}"
       },
@@ -74,6 +78,10 @@
       {
         "name": "Aktuelle XP",
         "value": ":star2: {currentXp}"
+      },
+      {
+        "name": "Aktuelles Karma",
+        "value": ":thumbs_up: {karma}"
       },
       {
         "name": "XP-Zuwachs (24h):",
@@ -126,7 +134,7 @@
     "color": "#67c94f"
   },
   "rankConfig": {
-    "title": "Rank Configuration",
+    "title": "Rank Konfiguration",
     "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot Wahrscheinlichkeit: `{lootChance}%`\n",
     "color": "#67c94f"
 
@@ -163,7 +171,7 @@
   },
   "rewardCreateInvalidEmbed": {
     "title": "Belohnung: {name}",
-    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/?single=true&data=e30=)",
+    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/?data=e30=)",
     "color": "#ffc926"
   },
   "rewardCreateSummarize": {
@@ -228,5 +236,25 @@
     "title": "Glückwunsch :tada:",
     "description": "{user} hat 1 {name} gefunden",
     "color": "#67c94f"
+  },
+  "setKarmaResult": {
+    "title": "Erfolg",
+    "description": "Die Karma Punkte von {user} wurden auf {karma} Karma gesetzt",
+    "color": "#67c94f"
+  },
+  "addKarmaResult": {
+    "title": "Erfolg",
+    "description": "{user} wurden {karma} Karma hinzugefügt",
+    "color": "#67c94f"
+  },
+  "karmaConfig": {
+    "title": "Karma Konfiguration",
+    "description": "Erlaubte Emojis: {emojis}\nKarma Tokens pro Nutzer: `{tokens}`",
+    "color": "#67c94f"
+  },
+  "karmaRewardRemove": {
+    "title": "Achtung",
+    "description": "Lieber {user},\ndu hast in letzter Zeit zu viel Karma verloren und somit wurden dir deine Belohnungen wieder abgezogen",
+    "color": "#ffc926"
   }
 }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain) {
+public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain, int karma) {
 
     public Map<String, Object> getEmbedValues(User user) {
         var result = new HashMap<String, Object>() {{
@@ -15,6 +15,7 @@ public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> n
             put("avatarUrl", user.getEffectiveAvatarUrl());
             put("currentRank", currentRank.name());
             put("currentXp", currentXp);
+            put("karma", karma);
             put("xpGain", xpGain);
             put("messageCount", messageCount);
         }};

@@ -178,7 +178,7 @@ public class CollectEventService {
     }
 
     public void deleteCollectReward(int rewardId) {
-        log.debug("Deleting reward with id {}", rewardId);
+        log.debug("Deleting collect reward with id {}", rewardId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM collect_rewards WHERE reward_id = ?");
             statement.setInt(1, rewardId);

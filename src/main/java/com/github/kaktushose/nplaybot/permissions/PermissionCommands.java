@@ -38,7 +38,7 @@ public class PermissionCommands {
     }
 
     @SlashCommand(value = "permissions user edit", desc = "Bearbeitet die Berechtigungen von einem Nutzer. Hat keinen Einfluss auf die Rollen-Berechtigungen", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    @Permissions(MODIFY_USER_PERMISSIONS)
+    @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsUserEdit(CommandEvent event, Member member) {
         targetMember = member;
 
@@ -64,7 +64,7 @@ public class PermissionCommands {
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
     @SelectOption(label = "dummy option", value = "dummy option")
-    @Permissions(MODIFY_USER_PERMISSIONS)
+    @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsUserSelect(ComponentEvent event, List<String> selection) {
         database.getPermissionsService().setUserPermissions(targetMember, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));
 
@@ -75,7 +75,7 @@ public class PermissionCommands {
     }
 
     @SlashCommand(value = "permissions role edit", desc = "Bearbeitet die Berechtigungen von einer Rolle", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    @Permissions(MODIFY_USER_PERMISSIONS)
+    @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsRoleEdit(CommandEvent event, Role role) {
         targetRole = role;
 
@@ -102,7 +102,7 @@ public class PermissionCommands {
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
     @SelectOption(label = "dummy option", value = "dummy option")
-    @Permissions(MODIFY_USER_PERMISSIONS)
+    @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsRoleSelect(ComponentEvent event, List<String> selection) {
         database.getPermissionsService().setRolePermissions(targetRole, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));
 
