@@ -16,7 +16,7 @@ public class MaintenanceCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "reload embeds", desc = "Aktualisiert den EmbedCache", enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "maintenance reload embeds", desc = "Aktualisiert den EmbedCache", enabledFor = Permission.BAN_MEMBERS)
     public void onReload(CommandEvent event) {
         embedCache.loadEmbeds();
         event.reply(embedCache.getEmbed("embedCacheReload"));

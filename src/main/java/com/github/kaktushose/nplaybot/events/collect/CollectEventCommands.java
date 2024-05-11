@@ -22,7 +22,7 @@ public class CollectEventCommands {
     @Inject
     private Database database;
 
-    @SlashCommand(value = "collect event start", desc = "Startet ein Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "events collect-event start", desc = "Startet ein Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onCollectEventStart(CommandEvent event,
                                     @Param("Der Name des Events") String eventName,
                                     @Param("Der Name der Währung die gesammelt werden soll, z.B. \"Schneemänner\"") String currencyName,
@@ -35,13 +35,13 @@ public class CollectEventCommands {
         event.reply(embedCache.getEmbed("collectEventStart").injectValue("name", eventName));
     }
 
-    @SlashCommand(value = "collect event stop", desc = "Stoppt das aktuelle Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "events collect-event stop", desc = "Stoppt das aktuelle Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onCollectEventStop(CommandEvent event) {
         database.getCollectEventService().stopCollectEvent(event.getGuild());
         event.reply(embedCache.getEmbed("collectEventStop"));
     }
 
-    @SlashCommand(value = "set collect-loot chance", desc = "Legt die Wahrscheinlichkeit für zufällige Collect-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "events set collect-loot-chance", desc = "Legt die Wahrscheinlichkeit für zufällige Collect-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
         database.getCollectEventService().updateCollectLootChance(event.getGuild(), chance);
         event.reply(embedCache.getEmbed("collectLootChanceUpdate").injectValue("chance", chance));

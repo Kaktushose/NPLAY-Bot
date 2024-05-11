@@ -29,7 +29,7 @@ public class ModifyXpCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "add xp", desc = "Fügt einem User XP hinzu", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @SlashCommand(value = "balance add xp", desc = "Fügt einem User XP hinzu", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     public void onAddXp(CommandEvent event, Member target, @Min(1) @Max(Integer.MAX_VALUE) int amount) {
         var result = database.getRankService().addXp(target, amount);
 
@@ -41,7 +41,7 @@ public class ModifyXpCommands {
         checkRankUpdate(result, target, event.getGuild());
     }
 
-    @SlashCommand(value = "set xp", desc = "Setzt die XP von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @SlashCommand(value = "balance set xp", desc = "Setzt die XP von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     public void onSetXp(CommandEvent event, Member target, @Min(0) @Max(Integer.MAX_VALUE) int value) {
         var result = database.getRankService().setXp(target, value);
 

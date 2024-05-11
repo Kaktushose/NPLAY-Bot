@@ -40,7 +40,7 @@ public class KarmaRewardCommands {
     private int threshold;
     private String embed;
 
-    @SlashCommand(value = "karma reward create", desc = "Erstellt eine Belohnung für das Karma System", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "karma-config reward create", desc = "Erstellt eine Belohnung für das Karma System", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") int threshold) {
         this.name = name;
         this.threshold = threshold;
@@ -129,7 +129,7 @@ public class KarmaRewardCommands {
         event.removeComponents();
     }
 
-    @SlashCommand(value = "karma reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Karma System", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "karma-config reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Karma System", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onRewardDelete(CommandEvent event) {
         var rewards = database.getKarmaService().getKarmaRewards();
 

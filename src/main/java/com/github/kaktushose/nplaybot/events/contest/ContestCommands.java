@@ -24,7 +24,7 @@ public class ContestCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "contest event start", desc = "Startet ein Contest-Event", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @SlashCommand(value = "events contest-event start", desc = "Startet ein Contest-Event", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     public void onContestEventStart(CommandEvent event,
                                     @Param("Der Textkanal, in dem das Contest-Event stattfinden soll") TextChannel channel,
                                     @Param("Der Emoji, mit dem abgestimmt werden soll") String emoji) {
@@ -32,7 +32,7 @@ public class ContestCommands {
         event.reply(embedCache.getEmbed("contestEventStart").injectValue("channel", channel.getAsMention()));
     }
 
-    @SlashCommand(value = "contest event stop", desc = "Stoppt das aktuelle Contest-Event und zeigt die Gewinner an", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @SlashCommand(value = "events contest-event stop", desc = "Stoppt das aktuelle Contest-Event und zeigt die Gewinner an", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     public void onContestEventStop(CommandEvent event) {
         var result = database.getContestEventService().stopContestEvent(event.getGuild());
         StringBuilder builder = new StringBuilder();

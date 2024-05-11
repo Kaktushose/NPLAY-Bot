@@ -40,7 +40,7 @@ public class CollectRewardCommands {
     private int threshold;
     private String embed;
 
-    @SlashCommand(value = "collect reward create", desc = "Erstellt eine Belohnung für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "events collect-reward create", desc = "Erstellt eine Belohnung für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") int threshold) {
         this.name = name;
         this.threshold = threshold;
@@ -129,7 +129,7 @@ public class CollectRewardCommands {
         event.removeComponents();
     }
 
-    @SlashCommand(value = "collect reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "events collect-reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onRewardDelete(CommandEvent event) {
         var rewards = database.getCollectEventService().getCollectRewards();
 
