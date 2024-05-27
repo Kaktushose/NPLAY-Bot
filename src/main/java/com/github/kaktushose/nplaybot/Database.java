@@ -6,6 +6,7 @@ import com.github.kaktushose.nplaybot.karma.KarmaService;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
+import com.github.kaktushose.nplaybot.starboard.StarboardService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -18,6 +19,7 @@ public class Database {
     private final CollectEventService collectEventService;
     private final PermissionsService permissionsService;
     private final KarmaService karmaService;
+    private final StarboardService starboardService;
 
     public Database() {
         var config = new HikariConfig();
@@ -35,6 +37,7 @@ public class Database {
         collectEventService = new CollectEventService(dataSource);
         permissionsService = new PermissionsService(dataSource);
         karmaService = new KarmaService(dataSource);
+        starboardService = new StarboardService(dataSource);
     }
 
     public void closeDataSource() {
@@ -63,5 +66,9 @@ public class Database {
 
     public KarmaService getKarmaService() {
         return karmaService;
+    }
+
+    public StarboardService getStarboardService() {
+        return starboardService;
     }
 }

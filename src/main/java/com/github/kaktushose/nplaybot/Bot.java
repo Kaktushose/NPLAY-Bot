@@ -10,6 +10,7 @@ import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
 import com.github.kaktushose.nplaybot.rank.JoinLeaveListener;
 import com.github.kaktushose.nplaybot.rank.RankListener;
 import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
+import com.github.kaktushose.nplaybot.starboard.StarboardListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -51,7 +52,8 @@ public class Bot {
                         new JoinLeaveListener(database.getRankService()),
                         new ContestListener(database.getContestEventService()),
                         new CollectEventListener(database, embedCache),
-                        new KarmaListener(database, embedCache)
+                        new KarmaListener(database, embedCache),
+                        new StarboardListener(database, embedCache)
                 )
                 .build().awaitReady();
 

@@ -69,7 +69,7 @@ public class KarmaListener extends ListenerAdapter {
         });
     }
 
-    private void onKarmaIncrease(int oldKarma, int newKarma, Member member, Guild guild) {
+    public void onKarmaIncrease(int oldKarma, int newKarma, Member member, Guild guild) {
         var rewards = karmaService.getKarmaRewards();
         var optional = rewards.stream()
                 .filter(it -> it.threshold() > oldKarma)
