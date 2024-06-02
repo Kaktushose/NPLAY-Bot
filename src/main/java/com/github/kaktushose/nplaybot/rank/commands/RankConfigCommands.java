@@ -23,7 +23,7 @@ public class RankConfigCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "rank-config show", desc = "Zeigt die Einstellungen für das Rank System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @SlashCommand(value = "rank-config display", desc = "Zeigt die Einstellungen für das Rank System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onGetRankConfig(CommandEvent event) {
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig(event.getGuild())));
     }

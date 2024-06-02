@@ -46,10 +46,9 @@ public class PermissionCommands {
         permissionsMap.put(NONE, 0);
         permissionsMap.remove(BOT_OWNER);
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
-                event.getJdaCommands().getSelectMenu(
-                        "PermissionCommands.onPermissionsUserSelect",
-                        event.getContext().getRuntime().getRuntimeId())
+        var menu = event.getSelectMenu(
+                "PermissionCommands.onPermissionsUserSelect",
+                net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
         ).createCopy();
         menu.getOptions().clear();
         menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
@@ -84,10 +83,9 @@ public class PermissionCommands {
         permissionsMap.remove(USER);
         permissionsMap.remove(BOT_OWNER);
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
-                event.getJdaCommands().getSelectMenu(
-                        "PermissionCommands.onPermissionsRoleSelect",
-                        event.getContext().getRuntime().getRuntimeId())
+        var menu = event.getSelectMenu(
+                "PermissionCommands.onPermissionsRoleSelect",
+                net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
         ).createCopy();
         menu.getOptions().clear();
         menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
