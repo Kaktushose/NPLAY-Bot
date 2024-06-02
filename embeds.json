@@ -137,7 +137,6 @@
     "title": "Rank Konfiguration",
     "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot Wahrscheinlichkeit: `{lootChance}%`\n",
     "color": "#67c94f"
-
   },
   "validChannels": {
     "title": "Gewertete Textkanäle",
@@ -256,5 +255,30 @@
     "title": "Achtung",
     "description": "Lieber {user},\ndu hast in letzter Zeit zu viel Karma verloren und somit wurden dir deine Belohnungen wieder abgezogen",
     "color": "#ffc926"
+  },
+  "itemRemoveSelect": {
+    "title": "Items entfernen",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer entfernen möchtest",
+    "color": "#67c94f"
+  },
+  "itemDelete": {
+    "title": "Erfolg",
+    "description": "Die Items wurden dem Nutzer entfernt",
+    "color": "#67c94f"
+  },
+  "noOptions": {
+    "title": "Fehler",
+    "description": "Es existieren keine {type} die ausgewählt werden könnten",
+    "color": "#ffc926"
+  },
+  "itemAddSelect": {
+    "title": "Items hinzufügen",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer hinzufügen möchtest",
+    "color": "#67c94f"
+  },
+  "itemAdd": {
+    "title": "Erfolg",
+    "description": "Die Items wurden dem Nutzer hinzugefügt",
+    "color": "#67c94f"
   }
 }

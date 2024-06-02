@@ -44,6 +44,19 @@ public class RankInfoCommand {
             var points = database.getCollectEventService().getCollectPoints(user);
             embed.addField(currency.name(), String.format("%s %d", currency.emoji(), points), false);
         }
+
+        var transactions = database.getItemService().getTransactions(user);
+        if (!transactions.isEmpty()) {
+            var items = new StringBuilder();
+            transactions.forEach(it ->
+                    items.append(database.getItemService().getTypeEmoji(it.typeId()))
+                            .append(" ")
+                            .append(it.name())
+                            .append("\n")
+            );
+            embed.addField("Items", items.toString(), false);
+        }
+
         event.reply(embed);
     }
 

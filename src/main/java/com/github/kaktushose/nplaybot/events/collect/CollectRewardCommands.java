@@ -133,6 +133,11 @@ public class CollectRewardCommands {
     public void onRewardDelete(CommandEvent event) {
         var rewards = database.getCollectEventService().getCollectRewards();
 
+        if (rewards.isEmpty()) {
+            event.reply(embedCache.getEmbed("noOptions").injectValue("type", "Belohnungen"));
+            return;
+        }
+
         var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
                 event.getJdaCommands().getSelectMenu("CollectRewardCommands.onRewardDeleteSelect")).createCopy();
         menu.getOptions().clear();

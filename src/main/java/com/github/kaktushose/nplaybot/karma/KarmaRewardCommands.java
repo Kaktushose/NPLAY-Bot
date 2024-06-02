@@ -133,6 +133,11 @@ public class KarmaRewardCommands {
     public void onRewardDelete(CommandEvent event) {
         var rewards = database.getKarmaService().getKarmaRewards();
 
+        if (rewards.isEmpty()) {
+            event.reply(embedCache.getEmbed("noOptions").injectValue("type", "Belohnungen"));
+            return;
+        }
+
         var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
                 event.getJdaCommands().getSelectMenu("KarmaRewardCommands.onRewardDeleteSelect")).createCopy();
         menu.getOptions().clear();

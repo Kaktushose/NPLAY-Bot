@@ -134,7 +134,9 @@ public class StarboardListener extends ListenerAdapter {
         if (!event.getReaction().getEmoji().equals(Emoji.fromUnicode("⭐"))) {
             return;
         }
-        removeEntry(event);
+        if (starboardService.entryExists(event.getMessageIdLong())) {
+            removeEntry(event);
+        }
     }
 
     @Override
@@ -146,7 +148,9 @@ public class StarboardListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        removeEntry(event);
+        if (starboardService.entryExists(event.getMessageIdLong())) {
+            removeEntry(event);
+        }
     }
 
     private MessageCreateData buildMessage(Message message, int count) {
