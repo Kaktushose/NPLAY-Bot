@@ -57,3 +57,31 @@ $$ LANGUAGE plpgsql;
 ALTER TABLE ranks ADD COLUMN lootbox_reward BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE ranks ADD COLUMN item_reward_id INT NOT NULL DEFAULT -1;
+
+CREATE TABLE lootbox_rewards (
+    reward_id SERIAL NOT NULL PRIMARY KEY,
+    xp_reward INT NOT NULL DEFAULT -1,
+    karma_reward INT NOT NULL DEFAULT -1,
+    item_reward INT REFERENCES items(item_id),
+    chance INT NOT NULL DEFAULT 0
+);
+
+CREATE FUNCTION get_random_lootbox()
+RETURNS INT AS
+$$
+DECLARE
+	result_row RECORD;
+	box_chance INT;
+	chance_sum INT;
+BEGIN
+	box_chance := floor(random() * 100) + 1;
+	chance_sum := 0;
+	FOR result_row IN SELECT * FROM lootbox_rewards
+	LOOP
+		chance_sum := chance_sum + result_row.chance;
+		IF chance_sum >= box_chance THEN
+			RETURN result_row.reward_id;
+		END IF;
+	END LOOP;
+END;
+$$ LANGUAGE plpgsql;

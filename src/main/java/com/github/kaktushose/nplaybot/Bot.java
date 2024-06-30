@@ -33,7 +33,7 @@ public class Bot {
     @SuppressWarnings("DataFlowIssue")
     private Bot(long guildId) throws InterruptedException, RuntimeException {
         try {
-            database = new Database();
+            database = new Database(this);
         } catch (Exception e) {
             throw new RuntimeException("Unable to connect to database!", e);
         }
@@ -50,7 +50,7 @@ public class Bot {
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .addEventListeners(
-                        new RankListener(database, embedCache),
+                        new RankListener(database, embedCache, this),
                         new JoinLeaveListener(database.getRankService()),
                         new ContestListener(database.getContestEventService()),
                         new CollectEventListener(database, embedCache),

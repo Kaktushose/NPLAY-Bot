@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -13,20 +14,25 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class RankListener extends ListenerAdapter {
 
+    private static final int LOOTBOX_CHANCE = 70;
+    private static final int LOOTBOX_RETRIEVE_LIMIT = 30;
     private static final Logger log = LoggerFactory.getLogger(RankListener.class);
     private final RankService rankService;
     private final SettingsService settingsService;
     private final EmbedCache embedCache;
+    private final Bot bot;
     private final Map<Long, Integer> xpLootDrops;
 
-    public RankListener(Database database, EmbedCache embedCache) {
+    public RankListener(Database database, EmbedCache embedCache, Bot bot) {
         this.rankService = database.getRankService();
         this.settingsService = database.getSettingsService();
         this.embedCache = embedCache;
+        this.bot = bot;
         xpLootDrops = new HashMap<>();
     }
 
@@ -52,12 +58,25 @@ public class RankListener extends ListenerAdapter {
 
         onXpLootDrop(event);
 
+        onCheckForLootbox(event);
+
         if (!rankService.isValidMessage(event.getMessage())) {
             log.debug("Message doesn't meet rank criteria");
             return;
         }
 
         onAddRegularXp(event);
+    }
+
+    private void onCheckForLootbox(MessageReceivedEvent event) {
+        if (ThreadLocalRandom.current().nextInt(100) >= LOOTBOX_CHANCE) {
+            return;
+        }
+        event.getChannel().getHistory().retrievePast(LOOTBOX_RETRIEVE_LIMIT).queue(messages -> {
+            var message = messages.get(ThreadLocalRandom.current().nextInt(LOOTBOX_RETRIEVE_LIMIT));
+            var lootbox = rankService.getRandomLootbox();
+            LootboxListener.newListener(bot, lootbox, event.getMember(), message);
+        });
     }
 
     private void onAddRegularXp(MessageReceivedEvent event) {

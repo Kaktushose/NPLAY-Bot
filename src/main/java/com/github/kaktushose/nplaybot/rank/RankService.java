@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
 import com.github.kaktushose.nplaybot.rank.model.RankConfig;
@@ -14,7 +15,6 @@ import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
-import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +28,12 @@ public class RankService {
     private static final Logger log = LoggerFactory.getLogger(RankService.class);
     private final DataSource dataSource;
     private final ItemService itemService;
+    private final Bot bot;
 
-    public RankService(DataSource dataSource, ItemService itemService) {
+    public RankService(DataSource dataSource, ItemService itemService, Bot bot) {
         this.dataSource = dataSource;
         this.itemService = itemService;
+        this.bot = bot;
     }
 
     public void createUser(UserSnowflake user) {
@@ -359,21 +361,49 @@ public class RankService {
         }
         log.debug("Applying changes. New rank: {}", result.currentRank());
 
+        Optional<Lootbox> lootbox;
+        String reward = "";
         if (result.currentRank().lootboxReward()) {
-            // TODO trigger lootbox
+            lootbox = Optional.of(getRandomLootbox());
+            reward = "\uD83C\uDF81 eine Lootbox";
+        } else {
+            lootbox = Optional.empty();
         }
 
         if (result.currentRank().itemRewardId() > 0) {
             itemService.createTransaction(member, result.currentRank().itemRewardId(), guild);
+            reward = itemService.getItem(result.currentRank().itemRewardId()).name();
         }
 
         var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
         var message = new MessageCreateBuilder().addContent(member.getAsMention())
-                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
+                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).injectValue("reward", reward).toMessageEmbed())
                 .build();
 
-        getBotChannel(guild).sendMessage(message).queue();
+        getBotChannel(guild).sendMessage(message).queue(msg -> lootbox.ifPresent(it ->  LootboxListener.newListener(bot, it, member, msg)));
     }
+
+    public Lootbox getRandomLootbox() {
+        try (Connection connection = dataSource.getConnection()) {
+            var result = connection.prepareStatement("SELECT * FROM get_random_lootbox()").executeQuery();
+            result.next();
+
+            var statement = connection.prepareStatement("SELECT * FROM lootbox_rewards WHERE reward_id = ?");
+            statement.setInt(1, result.getInt(1));
+            result = statement.executeQuery();
+            result.next();
+            return new Lootbox(
+                    result.getInt("reward_id"),
+                    result.getInt("xp_reward"),
+                    result.getInt("karma_reward"),
+                    result.getObject("item_reward") == null ? -1 : result.getInt("item_reward")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public record Lootbox(int id, int xpReward, int karmaReward, int itemId){}
 
     private TextChannel getBotChannel(Guild guild) {
         log.debug("Querying bot channel");

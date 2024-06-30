@@ -11,6 +11,10 @@
       {
         "name": "Nächste Stufe:",
         "value": ":dart: {nextRank} (noch {xp} XP)"
+      },
+      {
+        "name": "Belohnung",
+        "value": "{reward}"
       }
     ]
   },
@@ -26,6 +30,10 @@
       {
         "name": "Herzlichen Glückwunsch",
         "value": ":confetti_ball: Du hast hiermit die maximale Stufe erreicht"
+      },
+      {
+        "name": "Belohnung",
+        "value": "{reward}"
       }
     ]
   },
@@ -294,6 +302,21 @@
   "playActivityRenew": {
     "title": "Glückwunsch",
     "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle weiterhin zu behalten",
+    "color": "#67c94f"
+  },
+  "onLootboxXp": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {xp} XP erhalten",
+    "color": "#67c94f"
+  },
+  "onLootboxKarma": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {karma} Karma erhalten",
+    "color": "#67c94f"
+  },
+  "onLootboxItem": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {item} erhalten",
     "color": "#67c94f"
   }
 }

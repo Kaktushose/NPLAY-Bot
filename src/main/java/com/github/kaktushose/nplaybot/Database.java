@@ -10,6 +10,7 @@ import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.github.kaktushose.nplaybot.starboard.StarboardService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import net.dv8tion.jda.api.JDA;
 
 public class Database {
 
@@ -23,7 +24,7 @@ public class Database {
     private final StarboardService starboardService;
     private final ItemService itemService;
 
-    public Database() {
+    public Database(Bot bot) {
         var config = new HikariConfig();
 
         config.setJdbcUrl(System.getenv("POSTGRES_URL"));
@@ -35,7 +36,7 @@ public class Database {
 
         settingsService = new SettingsService(dataSource);
         itemService = new ItemService(dataSource);
-        rankService = new RankService(dataSource, itemService);
+        rankService = new RankService(dataSource, itemService, bot);
         contestEventService = new ContestEventService(dataSource);
         collectEventService = new CollectEventService(dataSource);
         permissionsService = new PermissionsService(dataSource);
