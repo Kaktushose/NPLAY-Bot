@@ -10,11 +10,8 @@ import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
-import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +35,7 @@ public class ModifyXpCommands {
                 .injectValue("xp", amount)
         );
 
-        checkRankUpdate(result, target, event.getGuild());
+        database.getRankService().onXpChange(result, event.getMember(), event.getGuild(), embedCache);
     }
 
     @SlashCommand(value = "balance set xp", desc = "Setzt die XP von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
@@ -50,23 +47,6 @@ public class ModifyXpCommands {
                 .injectValue("xp", value)
         );
 
-        checkRankUpdate(result, target, event.getGuild());
-    }
-
-    private void checkRankUpdate(XpChangeResult result, Member member, Guild guild) {
-        log.debug("Checking for rank up: {}", member);
-        database.getRankService().updateRankRoles(member, guild, result);
-
-        if (!result.rankChanged()) {
-            log.debug("Rank hasn't changed");
-            return;
-        }
-        log.debug("Applying changes. New rank: {}", result.currentRank());
-
-        var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
-        var messageData = new MessageCreateBuilder().addContent(member.getAsMention())
-                .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member.getUser())).toMessageEmbed())
-                .build();
-        database.getSettingsService().getBotChannel(guild).sendMessage(messageData).queue();
+        database.getRankService().onXpChange(result, event.getMember(), event.getGuild(), embedCache);
     }
 }

@@ -31,13 +31,13 @@ public class StarboardListener extends ListenerAdapter {
     private final StarboardService starboardService;
     private final KarmaService karmaService;
     private final RankService rankService;
-    private final KarmaListener karmaListener;
+    private final EmbedCache embedCache;
 
     public StarboardListener(Database database, EmbedCache embedCache) {
         this.starboardService = database.getStarboardService();
         this.karmaService = database.getKarmaService();
         this.rankService = database.getRankService();
-        this.karmaListener = new KarmaListener(database, embedCache);
+        this.embedCache = embedCache;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class StarboardListener extends ListenerAdapter {
                 var oldKarma = rankService.getUserInfo(event.getUser()).karma();
                 karmaService.addKarma(UserSnowflake.fromId(event.getMessageAuthorIdLong()), starboardService.getKarmaReward(event.getGuild()));
                 var newKarma = rankService.getUserInfo(event.getUser()).karma();
-                karmaListener.onKarmaIncrease(oldKarma, newKarma, event.getMember(), event.getGuild());
+                karmaService.onKarmaIncrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
             }
 
             var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId(event.getGuild()));

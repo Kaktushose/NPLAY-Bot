@@ -24,7 +24,16 @@ public class KarmaConfigCommands {
     @SlashCommand(value = "balance add karma", desc = "Fügt einem User Karma hinzu", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MODIFY_USER_BALANCE)
     public void onAddKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) int amount) {
+        var oldKarma = database.getRankService().getUserInfo(target).karma();
+        var newKarma = oldKarma + amount;
+
         database.getKarmaService().addKarma(target, amount);
+
+        if (newKarma > oldKarma) {
+            database.getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
+        } else if (newKarma < oldKarma) {
+            database.getKarmaService().onKarmaDecrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
+        }
 
         event.reply(embedCache.getEmbed("addKarmaResult")
                 .injectValue("user", target.getAsMention())
@@ -35,7 +44,14 @@ public class KarmaConfigCommands {
     @SlashCommand(value = "balance set karma", desc = "Setzt die Karma Punkte von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MODIFY_USER_BALANCE)
     public void onSetKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) int value) {
+        var oldKarma = database.getRankService().getUserInfo(target).karma();
         database.getKarmaService().setKarma(target, value);
+
+        if (value > oldKarma) {
+            database.getKarmaService().onKarmaIncrease(oldKarma, value, event.getMember(), event.getGuild(), embedCache);
+        } else if (value < oldKarma) {
+            database.getKarmaService().onKarmaDecrease(oldKarma, value, event.getMember(), event.getGuild(), embedCache);
+        }
 
         event.reply(embedCache.getEmbed("setKarmaResult")
                 .injectValue("user", target.getAsMention())

@@ -34,13 +34,13 @@ public class Database {
         dataSource = new HikariDataSource(config);
 
         settingsService = new SettingsService(dataSource);
-        rankService = new RankService(dataSource);
+        itemService = new ItemService(dataSource);
+        rankService = new RankService(dataSource, itemService);
         contestEventService = new ContestEventService(dataSource);
         collectEventService = new CollectEventService(dataSource);
         permissionsService = new PermissionsService(dataSource);
-        karmaService = new KarmaService(dataSource);
+        karmaService = new KarmaService(dataSource, rankService, itemService);
         starboardService = new StarboardService(dataSource);
-        itemService = new ItemService(dataSource);
     }
 
     public void closeDataSource() {

@@ -1,11 +1,15 @@
 package com.github.kaktushose.nplaybot.karma;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.UserSnowflake;
+import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.items.ItemService;
+import com.github.kaktushose.nplaybot.rank.RankService;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
+import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +20,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.kaktushose.nplaybot.items.ItemExpirationTask.PLAY_ACTIVITY_KARMA_THRESHOLD;
+
 public class KarmaService {
 
     private static final Logger log = LoggerFactory.getLogger(KarmaService.class);
     private final DataSource dataSource;
+    private final RankService rankService;
+    private final ItemService itemService;
 
-    public KarmaService(DataSource dataSource) {
+    public KarmaService(DataSource dataSource, RankService rankService, ItemService itemService) {
         this.dataSource = dataSource;
+        this.rankService = rankService;
+        this.itemService = itemService;
     }
 
     public void setKarma(UserSnowflake user, int karma) {
@@ -54,6 +64,100 @@ public class KarmaService {
             statement.setLong(2, user.getIdLong());
 
             statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void onKarmaIncrease(int oldKarma, int newKarma, Member member, Guild guild, EmbedCache embedCache) {
+        // play activity role
+        var rankInfo = rankService.getUserInfo(member);
+        if (newKarma - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
+            if (itemService.getTransactions(member).stream().anyMatch(ItemService.Transaction::isPlayActivity)) {
+                return;
+            }
+
+            itemService.addPlayActivity(member, guild);
+            itemService.updateLastKarma(member);
+
+            var builder = new MessageCreateBuilder().addContent(member.getAsMention())
+                    .addEmbeds(embedCache.getEmbed("playActivityAdd").toMessageEmbed())
+                    .build();
+            getBotChannel(guild).sendMessage(builder).queue();
+        }
+
+        // karma rewards
+        var rewards = getKarmaRewards();
+        var optional = rewards.stream()
+                .filter(it -> it.threshold() > oldKarma)
+                .filter(it -> it.threshold() <= newKarma)
+                .findFirst();
+
+        if (optional.isEmpty()) {
+            return;
+        }
+        var reward = optional.get();
+
+        if (reward.xp() > 0) {
+            var xpChangeResult = rankService.addXp(member, reward.xp());
+            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
+        }
+
+        if (reward.roleId() > 0) {
+            guild.addRoleToMember(member, guild.getRoleById(reward.roleId())).queue();
+        }
+
+        var builder = new MessageCreateBuilder().addContent(member.getAsMention())
+                .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
+                .build();
+        getBotChannel(guild).sendMessage(builder).queue();
+    }
+
+    public void onKarmaDecrease(int oldKarma, int newKarma, Member member, Guild guild, EmbedCache embedCache) {
+        var rewards = getKarmaRewards();
+        var optional = rewards.stream()
+                .filter(it -> it.threshold() < oldKarma)
+                .filter(it -> it.threshold() >= newKarma)
+                .findFirst();
+
+        if (optional.isEmpty()) {
+            return;
+        }
+        var reward = optional.get();
+
+        if (reward.xp() > 0) {
+            var xpChangeResult = rankService.addXp(member, -reward.xp());
+            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
+        }
+
+        if (reward.roleId() > 0) {
+            guild.removeRoleFromMember(member, guild.getRoleById(reward.roleId())).queue();
+        }
+
+        var builder = new MessageCreateBuilder()
+                .addContent(member.getAsMention())
+                .addEmbeds(embedCache.getEmbed("karmaRewardRemove")
+                        .injectValue("user", member.getAsMention())
+                        .toEmbedBuilder()
+                        .build()
+                ).build();
+        getBotChannel(guild).sendMessage(builder).queue();
+    }
+
+    private TextChannel getBotChannel(Guild guild) {
+        log.debug("Querying bot channel");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT bot_channel_id
+                    FROM guild_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return guild.getTextChannelById(result.getLong(1));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

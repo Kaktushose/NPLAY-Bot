@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
@@ -27,6 +28,7 @@ public class Bot {
     private final Database database;
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
+    private final Guild guild;
 
     @SuppressWarnings("DataFlowIssue")
     private Bot(long guildId) throws InterruptedException, RuntimeException {
@@ -65,6 +67,8 @@ public class Bot {
 
         taskScheduler = new TaskScheduler(this);
 
+        guild = jda.getGuildById(guildId);
+
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
     }
 
@@ -96,5 +100,9 @@ public class Bot {
     @Produces(skipIndexing = true)
     public EmbedCache getEmbedCache() {
         return embedCache;
+    }
+
+    public Guild getGuild() {
+        return guild;
     }
 }

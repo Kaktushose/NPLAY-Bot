@@ -80,9 +80,7 @@ public class CollectEventListener extends ListenerAdapter {
 
         if (reward.xp() > 0) {
             var xpChangeResult = rankService.addXp(member, reward.xp());
-            rankService.onXpChange(xpChangeResult, member, guild, embedCache).ifPresent(it ->
-                    settingsService.getBotChannel(guild).sendMessage(it).queue()
-            );
+            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
         }
 
         if (reward.roleId() > 0) {

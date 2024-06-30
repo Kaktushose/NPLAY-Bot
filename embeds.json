@@ -278,7 +278,22 @@
   },
   "itemAdd": {
     "title": "Erfolg",
-    "description": "Die Items wurden dem Nutzer hinzugefügt",
+    "description": "Das Item wurde dem Nutzer hinzugefügt",
+    "color": "#67c94f"
+  },
+  "itemExpired": {
+    "title": "Item abgelaufen!",
+    "description": "Dein {item} ist abgelaufen!",
+    "color": "#f4cd53"
+  },
+  "playActivityAdd": {
+    "title": "Glückwunsch",
+    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle zu erhalten",
+    "color": "#67c94f"
+  },
+  "playActivityRenew": {
+    "title": "Glückwunsch",
+    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle weiterhin zu behalten",
     "color": "#67c94f"
   }
 }

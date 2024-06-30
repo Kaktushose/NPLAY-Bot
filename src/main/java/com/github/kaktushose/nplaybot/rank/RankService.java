@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.rank.leaderboard.LeaderboardPage;
 import com.github.kaktushose.nplaybot.rank.model.RankConfig;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -25,9 +27,11 @@ public class RankService {
 
     private static final Logger log = LoggerFactory.getLogger(RankService.class);
     private final DataSource dataSource;
+    private final ItemService itemService;
 
-    public RankService(DataSource dataSource) {
+    public RankService(DataSource dataSource, ItemService itemService) {
         this.dataSource = dataSource;
+        this.itemService = itemService;
     }
 
     public void createUser(UserSnowflake user) {
@@ -60,7 +64,7 @@ public class RankService {
         log.debug("Querying rank info for rank: {}", rankId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT role_id, name, color, bound
+                    SELECT *
                     FROM ranks
                     WHERE rank_id = ?
                     """
@@ -74,7 +78,9 @@ public class RankService {
                         result.getLong("role_id"),
                         result.getString("name"),
                         result.getString("color"),
-                        result.getInt("bound")
+                        result.getInt("bound"),
+                        result.getBoolean("lootbox_reward"),
+                        result.getInt("item_reward_id")
                 ));
             }
             return Optional.empty();
@@ -87,7 +93,7 @@ public class RankService {
         log.debug("Querying user info for user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT xp, rank_id, message_count, start_xp, karma_points
+                    SELECT *
                     FROM users
                     WHERE user_id = ?
                     """
@@ -106,7 +112,8 @@ public class RankService {
                     nextRank,
                     result.getInt("message_count"),
                     result.getInt("xp") - result.getInt("start_xp"),
-                    result.getInt("karma_points")
+                    result.getInt("karma_points"),
+                    result.getInt("last_karma")
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -342,20 +349,49 @@ public class RankService {
         }
     }
 
-    public Optional<MessageCreateData> onXpChange(XpChangeResult result, Member member, Guild guild, EmbedCache embedCache) {
+    public void onXpChange(XpChangeResult result, Member member, Guild guild, EmbedCache embedCache) {
         log.debug("Checking for rank up: {}", member);
         updateRankRoles(member, guild, result);
 
         if (!result.rankChanged()) {
             log.debug("Rank hasn't changed");
-            return Optional.empty();
+            return;
         }
         log.debug("Applying changes. New rank: {}", result.currentRank());
 
+        if (result.currentRank().lootboxReward()) {
+            // TODO trigger lootbox
+        }
+
+        if (result.currentRank().itemRewardId() > 0) {
+            itemService.createTransaction(member, result.currentRank().itemRewardId(), guild);
+        }
+
         var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
-        return Optional.of(new MessageCreateBuilder().addContent(member.getAsMention())
+        var message = new MessageCreateBuilder().addContent(member.getAsMention())
                 .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
-                .build());
+                .build();
+
+        getBotChannel(guild).sendMessage(message).queue();
+    }
+
+    private TextChannel getBotChannel(Guild guild) {
+        log.debug("Querying bot channel");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT bot_channel_id
+                    FROM guild_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return guild.getTextChannelById(result.getLong(1));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void updateRankRoles(Member member, Guild guild, XpChangeResult result) {
@@ -468,7 +504,8 @@ public class RankService {
                         nextRank,
                         result.getInt("message_count"),
                         result.getInt("xp") - result.getInt("start_xp"),
-                        result.getInt("karma_points")
+                        result.getInt("karma_points"),
+                        result.getInt("last_karma")
                 ));
             }
             return users;

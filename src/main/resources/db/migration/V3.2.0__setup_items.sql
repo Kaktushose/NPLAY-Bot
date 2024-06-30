@@ -16,7 +16,8 @@ CREATE TABLE transactions(
     transaction_id SERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     item_id SERIAL NOT NULL REFERENCES items(item_id),
-    expires_at BIGINT NOT NULL
+    expires_at BIGINT NOT NULL,
+    is_play_activity BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 ALTER TABLE users ADD COLUMN last_karma INT NOT NULL DEFAULT 0;
@@ -52,3 +53,7 @@ BEGIN
 	RETURN NEXT;
 END;
 $$ LANGUAGE plpgsql;
+
+ALTER TABLE ranks ADD COLUMN lootbox_reward BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE ranks ADD COLUMN item_reward_id INT NOT NULL DEFAULT -1;

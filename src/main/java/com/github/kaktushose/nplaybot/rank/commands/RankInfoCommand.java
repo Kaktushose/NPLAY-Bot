@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
+import java.util.concurrent.TimeUnit;
+
 @Interaction
 @Permissions(BotPermissions.USER)
 public class RankInfoCommand {
@@ -52,7 +54,9 @@ public class RankInfoCommand {
                     items.append(database.getItemService().getTypeEmoji(it.typeId()))
                             .append(" ")
                             .append(it.name())
-                            .append("\n")
+                            .append(" (läuft ab ")
+                            .append(String.format("<t:%d:R>", TimeUnit.MILLISECONDS.toSeconds(it.expiresAt())))
+                            .append(")\n")
             );
             embed.addField("Items", items.toString(), false);
         }

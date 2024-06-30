@@ -64,9 +64,7 @@ public class RankListener extends ListenerAdapter {
         rankService.updateValidMessage(event.getAuthor());
         var result = rankService.addRandomXp(event.getAuthor());
 
-        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache).ifPresent(it ->
-                settingsService.getBotChannel(event.getGuild()).sendMessage(it).queue()
-        );
+        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache);
     }
 
     private void onXpLootDrop(MessageReceivedEvent event) {
@@ -99,9 +97,7 @@ public class RankListener extends ListenerAdapter {
 
         var xp = xpLootDrops.get(messageId);
         var result = rankService.addXp(event.getMember(), xp);
-        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache).ifPresent(it ->
-                settingsService.getBotChannel(event.getGuild()).sendMessage(it).queue()
-        );
+        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache);
         xpLootDrops.remove(messageId);
 
         event.retrieveMessage().queue(message -> {
