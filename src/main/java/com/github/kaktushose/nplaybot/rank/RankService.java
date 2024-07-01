@@ -62,7 +62,7 @@ public class RankService {
         guild.loadMembers(member -> createUser(member.getUser()));
     }
 
-    private Optional<RankInfo> getRankInfo(int rankId) {
+    public Optional<RankInfo> getRankInfo(int rankId) {
         log.debug("Querying rank info for rank: {}", rankId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -77,6 +77,7 @@ public class RankService {
 
             if (result.next()) {
                 return Optional.of(new RankInfo(
+                        result.getInt("rank_id"),
                         result.getLong("role_id"),
                         result.getString("name"),
                         result.getString("color"),
@@ -302,6 +303,7 @@ public class RankService {
             log.debug("New xp: {}", result.getInt("current_xp"));
             return new XpChangeResult(
                     result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("previous_rank")),
                     getRankInfo(result.getInt("current_rank")).orElseThrow(),
                     getRankInfo(result.getInt("next_rank")),
                     result.getInt("current_xp")
@@ -322,6 +324,7 @@ public class RankService {
             result.next();
             return new XpChangeResult(
                     result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("previous_rank")),
                     getRankInfo(result.getInt("current_rank")).orElseThrow(),
                     getRankInfo(result.getInt("next_rank")),
                     result.getInt("current_xp")
@@ -342,6 +345,7 @@ public class RankService {
             result.next();
             return new XpChangeResult(
                     result.getBoolean("rank_changed"),
+                    getRankInfo(result.getInt("previous_rank")),
                     getRankInfo(result.getInt("current_rank")).orElseThrow(),
                     getRankInfo(result.getInt("next_rank")),
                     value
@@ -360,6 +364,17 @@ public class RankService {
             return;
         }
         log.debug("Applying changes. New rank: {}", result.currentRank());
+
+        if (result.previousRank().isPresent()) {
+            if (result.currentRank().rankId() < result.previousRank().get().rankId()) {
+                var embed = getRankInfo(result.currentRank().rankId() - 1).isPresent() ? "rankDecrease" : "rankDecreaseMax";
+                var message = new MessageCreateBuilder().addContent(member.getAsMention())
+                        .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
+                        .build();
+                getBotChannel(guild).sendMessage(message).queue();
+                return;
+            }
+        }
 
         Optional<Lootbox> lootbox;
         String reward = "";
@@ -398,6 +413,20 @@ public class RankService {
                     result.getInt("karma_reward"),
                     result.getObject("item_reward") == null ? -1 : result.getInt("item_reward")
             );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<RankInfo> getRankByXp(int xp) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM ranks WHERE ? >= bound ORDER BY bound DESC LIMIT 1");
+            statement.setInt(1, xp);
+            var result = statement.executeQuery();
+            if (!result.next()) {
+                return Optional.empty();
+            }
+            return getRankInfo(result.getInt("rank_id"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

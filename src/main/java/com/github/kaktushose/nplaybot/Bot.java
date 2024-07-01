@@ -65,11 +65,11 @@ public class Bot {
         jdaCommands.getDependencyInjector().registerProvider(this);
         jdaCommands.getImplementationRegistry().setPermissionsProvider(new CustomPermissionsProvider(database));
 
-        taskScheduler = new TaskScheduler(this);
-
         guild = jda.getGuildById(guildId);
 
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
+
+        taskScheduler = new TaskScheduler(this);
     }
 
     public static Bot start(long guildId) throws InterruptedException {

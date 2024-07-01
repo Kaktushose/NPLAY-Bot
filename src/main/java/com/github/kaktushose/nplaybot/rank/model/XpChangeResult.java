@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record XpChangeResult(boolean rankChanged, RankInfo currentRank, Optional<RankInfo> nextRank, int currentXp) {
+public record XpChangeResult(boolean rankChanged, Optional<RankInfo> previousRank, RankInfo currentRank, Optional<RankInfo> nextRank, int currentXp) {
 
     public Map<String, Object> getEmbedValues(UserSnowflake user) {
         var result = new HashMap<String, Object>() {{

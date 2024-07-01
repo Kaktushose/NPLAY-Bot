@@ -85,3 +85,53 @@ BEGIN
 	END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
+DROP FUNCTION set_xp;
+DROP FUNCTION add_xp;
+DROP FUNCTION add_random_xp;
+
+CREATE OR REPLACE FUNCTION set_xp(id BIGINT, new_xp INT)
+RETURNS TABLE (rank_changed BOOLEAN, previous_rank int, current_rank int, next_rank int) AS
+$$
+DECLARE
+    old_rank INT;
+    new_rank INT;
+BEGIN
+	SELECT INTO old_rank users.rank_id FROM users WHERE users.user_id = id;
+	IF new_xp < 0 THEN
+	  new_xp := 0;
+	END IF;
+	UPDATE users SET xp = new_xp WHERE users.user_id = id;
+	SELECT INTO new_rank users.rank_id FROM users WHERE users.user_id = id;
+
+
+	SELECT INTO rank_changed old_rank <> new_rank;
+	SELECT INTO previous_rank old_rank;
+	SELECT INTO current_rank new_rank;
+	SELECT INTO next_rank new_rank + 1;
+	RETURN NEXT;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION add_xp(id BIGINT, xp_to_add INT)
+RETURNS TABLE (rank_changed BOOLEAN, previous_rank int, current_rank int, next_rank INT, current_xp INT) AS
+$$
+DECLARE
+BEGIN
+    SELECT xp_to_add + users.xp INTO current_xp FROM users WHERE users.user_id = id;
+    SELECT INTO rank_changed, previous_rank, current_rank, next_rank * FROM set_xp(id, current_xp);
+	RETURN NEXT;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION add_random_xp(id BIGINT)
+RETURNS TABLE (rank_changed BOOLEAN, previous_rank int, current_rank int, next_rank INT, current_xp INT) AS
+$$
+DECLARE
+	xp INT;
+BEGIN
+   SELECT get_random_xp INTO xp FROM get_random_xp();
+	SELECT INTO rank_changed, previous_rank, current_rank, next_rank, current_xp * FROM add_xp(id, xp);
+	RETURN NEXT;
+END;
+$$ LANGUAGE plpgsql;

@@ -318,5 +318,36 @@
     "title": "Glückwunsch",
     "description": "Du hast eine Lootbox gefunden und {item} erhalten",
     "color": "#67c94f"
+  },
+
+  "rankDecrease": {
+    "title": ":arrow_down: Stufenabstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (noch {xp} XP)"
+      }
+    ]
+  },
+  "rankDecreaseMax": {
+    "title": ":arrow_down: Stufenabstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Ups",
+        "value": ":frowning: Du hast die unterste Stufe erreicht.\nAber Kopf hoch, schlimmer wirds nicht :wink:"
+      }
+    ]
   }
 }

@@ -106,14 +106,37 @@ public class ItemService {
 
     public void createTransaction(UserSnowflake user, int itemId, Guild guild) {
         try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\") VALUES(?, ?, ?)");
+            var item = getItem(itemId);
+
+            // check if user already has item of this type
+            var statement = connection.prepareStatement("""
+                    SELECT transaction_id, expires_at FROM transactions
+                    JOIN items ON items.item_id = transactions.item_id
+                    JOIN item_types ON item_types.base_type_id = items.type_id
+                    WHERE user_id = ? AND transactions.item_id = ?
+                    """);
             statement.setLong(1, user.getIdLong());
             statement.setInt(2, itemId);
-            var item = getItem(itemId);
+            var result = statement.executeQuery();
+            // if so just increase the duration of the first item
+            if (result.next()) {
+                statement = connection.prepareStatement("UPDATE transactions SET expires_at = ? WHERE transaction_id = ?");
+                statement.setLong(1,result.getLong("expires_at") + item.duration);
+                statement.setLong(2, result.getInt("transaction_id"));
+                statement.execute();
+                return;
+            }
+
+            statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\") VALUES(?, ?, ?)");
+            statement.setLong(1, user.getIdLong());
+            statement.setInt(2, itemId);
+
             statement.setLong(3, System.currentTimeMillis() + item.duration);
+
             if (item.roleId > 0) {
                 guild.addRoleToMember(user, guild.getRoleById(item.roleId())).queue();
             }
+
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
