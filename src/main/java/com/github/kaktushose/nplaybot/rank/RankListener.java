@@ -50,6 +50,7 @@ public class RankListener extends ListenerAdapter {
             return;
         }
 
+        rankService.updateRankRoles(event.getMember(), event.getGuild(), rankService.getUserInfo(author).currentRank());
         rankService.increaseTotalMessageCount();
 
         if (!rankService.isValidChannel(event.getChannel(), event.getGuild())) {

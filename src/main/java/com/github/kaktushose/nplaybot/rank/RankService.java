@@ -357,7 +357,7 @@ public class RankService {
 
     public void onXpChange(XpChangeResult result, Member member, Guild guild, EmbedCache embedCache) {
         log.debug("Checking for rank up: {}", member);
-        updateRankRoles(member, guild, result);
+        updateRankRoles(member, guild, result.currentRank());
 
         if (!result.rankChanged()) {
             log.debug("Rank hasn't changed");
@@ -453,8 +453,8 @@ public class RankService {
         }
     }
 
-    public void updateRankRoles(Member member, Guild guild, XpChangeResult result) {
-        var validRole = guild.getRoleById(result.currentRank().roleId());
+    public void updateRankRoles(Member member, Guild guild, RankInfo currentRank) {
+        var validRole = guild.getRoleById(currentRank.roleId());
         var invalidRoles = getRankRoleIds().stream()
                 .map(guild::getRoleById)
                 .filter(it -> it != validRole)
