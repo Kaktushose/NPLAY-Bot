@@ -30,7 +30,6 @@ public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> n
             } else {
                 result.put("nextRank", String.format("<@&%d>", rank.roleId()));
             }
-            result.put("nextRank", rank.name());
             result.put("missingXp", rank.xpBound() - currentXp);
         });
         return result;
