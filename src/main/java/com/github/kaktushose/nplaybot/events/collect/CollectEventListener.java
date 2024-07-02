@@ -94,6 +94,10 @@ public class CollectEventListener extends ListenerAdapter {
     }
 
     private void onCollectLootDrop(MessageReceivedEvent event) {
+        if (!eventService.isCollectEventActive()) {
+            return;
+        }
+
         var points = eventService.getCollectLootDrop(event.getMessage());
 
         if (points < 1) {

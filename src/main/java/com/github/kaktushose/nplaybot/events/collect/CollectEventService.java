@@ -27,7 +27,7 @@ public class CollectEventService {
         this.guild = bot.getGuild();
     }
 
-    public boolean isActive() {
+    public boolean isCollectEventActive() {
         log.debug("Querying collect event active flag for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""

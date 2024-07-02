@@ -27,7 +27,7 @@ public class CollectEventCommands {
                                     @Param("Der Name des Events") String eventName,
                                     @Param("Der Name der Währung die gesammelt werden soll, z.B. \"Schneemänner\"") String currencyName,
                                     @Param("Die Emoji-Repräsentation der Währung, die gesammelt werden soll") String emoji) {
-        if (database.getCollectEventService().isActive()) {
+        if (database.getCollectEventService().isCollectEventActive()) {
             event.reply(embedCache.getEmbed("collectEventStartError"));
             return;
         }
