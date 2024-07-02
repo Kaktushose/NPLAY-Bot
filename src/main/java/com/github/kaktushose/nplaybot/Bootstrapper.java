@@ -15,7 +15,7 @@ public class Bootstrapper {
         try {
             log.info("Starting NPLAY-Bot...");
 
-            var bot = Bot.start(Long.parseLong(System.getenv("BOT_GUILD")));
+            var bot = Bot.start(Long.parseLong(System.getenv("BOT_GUILD")), System.getenv("BOT_TOKEN"));
             Thread.setDefaultUncaughtExceptionHandler((t, e) -> log.error("An uncaught exception has occurred!", e));
             Runtime.getRuntime().addShutdownHook(new Thread(bot::shutdown));
 

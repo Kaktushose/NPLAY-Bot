@@ -31,7 +31,7 @@ public class Bot {
     private final Guild guild;
 
     @SuppressWarnings("DataFlowIssue")
-    private Bot(long guildId) throws InterruptedException, RuntimeException {
+    private Bot(long guildId, String token) throws InterruptedException, RuntimeException {
         try {
             database = new Database(this);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class Bot {
 
         embedCache = new EmbedCache("embeds.json");
 
-        jda = JDABuilder.createDefault(database.getSettingsService().getBotToken(guildId))
+        jda = JDABuilder.createDefault(token)
                 .enableIntents(
                         GatewayIntent.GUILD_MEMBERS,
                         GatewayIntent.GUILD_PRESENCES,
@@ -59,21 +59,21 @@ public class Bot {
                 )
                 .build().awaitReady();
 
-        database.getRankService().indexMembers(jda.getGuildById(guildId));
+        guild = jda.getGuildById(guildId);
+
+        database.getRankService().indexMembers(guild);
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
         jdaCommands.getDependencyInjector().registerProvider(this);
         jdaCommands.getImplementationRegistry().setPermissionsProvider(new CustomPermissionsProvider(database));
-
-        guild = jda.getGuildById(guildId);
 
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
 
         taskScheduler = new TaskScheduler(this);
     }
 
-    public static Bot start(long guildId) throws InterruptedException {
-        return new Bot(guildId);
+    public static Bot start(long guildId, String token) throws InterruptedException {
+        return new Bot(guildId, token);
     }
 
     public void shutdown() {
