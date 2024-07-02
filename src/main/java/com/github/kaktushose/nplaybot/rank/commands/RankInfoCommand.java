@@ -22,10 +22,11 @@ public class RankInfoCommand {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "rank", isGuildOnly = true, desc = "Zeigt die Kontoinformationen zu einem User an")
+    @SlashCommand(value = "info", isGuildOnly = true, desc = "Zeigt die Kontoinformationen zu einem User an")
     public void onRankInfo(CommandEvent event, @Optional Member member) {
         var target = member == null ? event.getMember() : member;
         UserInfo userInfo = database.getRankService().getUserInfo(target);
+        database.getRankService().updateRankRoles(target, userInfo.currentRank());
         sendReply(userInfo, target.getUser(), event);
     }
 
