@@ -13,10 +13,10 @@ public record XpChangeResult(boolean rankChanged, Optional<RankInfo> previousRan
         var result = new HashMap<String, Object>() {{
             put("user", String.format("<@%d>", user.getIdLong()));
             put("color", currentRank.color());
-            put("currentRank", String.format("<@&%d>", currentRank.roleId()));
+            put("currentRank", currentRank.name());
         }};
         nextRank.ifPresent(rank -> {
-            result.put("nextRank", String.format("<@&%d>", rank.roleId()));
+            result.put("nextRank", rank.name());
             result.put("xp", rank.xpBound() - currentXp);
         });
         return result;

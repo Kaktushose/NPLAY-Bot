@@ -26,7 +26,7 @@ public class SettingsService {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT bot_channel_id
-                    FROM guild_settings
+                    FROM bot_settings
                     WHERE guild_id = ?
                     """
             );

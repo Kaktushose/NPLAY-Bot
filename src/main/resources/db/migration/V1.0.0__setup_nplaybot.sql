@@ -409,7 +409,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- items
-INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (1, 'Punkte-Booster', ':moneybag:', -1);
+INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (1, 'Punkte-Booster', ':green_circle:', -1);
 INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (2, 'Premium', ':star:', -1);
 
 INSERT INTO items(item_id, type_id, name, duration) VALUES(1, 1, 'Punkte-Booster 7 Tage', 604800000);

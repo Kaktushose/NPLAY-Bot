@@ -75,7 +75,7 @@ public class RankListener extends ListenerAdapter {
         event.getChannel().getHistory().retrievePast(lootboxQueryLimit).queue(messages -> {
             var message = messages.get(ThreadLocalRandom.current().nextInt(lootboxQueryLimit));
             var lootbox = rankService.getRandomLootbox();
-            LootboxListener.newListener(bot, lootbox, event.getMember(), message);
+            LootboxListener.newListener(bot, lootbox, event.getMember(), message, false);
         });
     }
 
@@ -125,7 +125,7 @@ public class RankListener extends ListenerAdapter {
                             .injectValue("user", event.getMember().getAsMention())
                             .injectValue("xp", xp)
                             .toMessageCreateData()
-            ).mentionRepliedUser(false).queue(it -> it.delete().queueAfter(10, TimeUnit.SECONDS));
+            ).mentionRepliedUser(false).queue(it -> it.delete().queueAfter(1, TimeUnit.MINUTES));
             message.clearReactions().queue();
         });
     }

@@ -399,7 +399,7 @@ public class RankService {
                 .build();
 
         bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue(msg ->
-                lootbox.ifPresent(it -> LootboxListener.newListener(bot, it, member, msg))
+                lootbox.ifPresent(it -> LootboxListener.newListener(bot, it, member, msg, true))
         );
     }
 

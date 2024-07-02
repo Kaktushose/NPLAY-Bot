@@ -116,10 +116,10 @@ public class ItemService {
                     SELECT transaction_id, expires_at FROM transactions
                     JOIN items ON items.item_id = transactions.item_id
                     JOIN item_types ON item_types.base_type_id = items.type_id
-                    WHERE user_id = ? AND transactions.item_id = ?
+                    WHERE user_id = ? AND item_types.base_type_id = ?
                     """);
             statement.setLong(1, user.getIdLong());
-            statement.setInt(2, itemId);
+            statement.setInt(2, item.typeId);
             var result = statement.executeQuery();
             // if so just increase the duration of the first item
             if (result.next()) {

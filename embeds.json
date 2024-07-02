@@ -10,10 +10,10 @@
       },
       {
         "name": "Nächste Stufe:",
-        "value": ":dart: {nextRank} (noch {xp} XP)"
+        "value": ":dart: {nextRank} (noch {xp} PLAY-Punkte)"
       },
       {
-        "name": "Belohnung",
+        "name": "Deine einmalige Belohnung:",
         "value": "{reward}"
       }
     ]
@@ -29,16 +29,16 @@
       },
       {
         "name": "Herzlichen Glückwunsch",
-        "value": ":confetti_ball: Du hast hiermit die maximale Stufe erreicht"
+        "value": ":confetti_ball: Du bist nun unser Silage-König und hast die maximale Stufe erreicht."
       },
       {
-        "name": "Belohnung",
+        "name": "Deine einmalige Belohnung:",
         "value": "{reward}"
       }
     ]
   },
   "rankInfo": {
-    "title": ":information_source: Kontoinformation für",
+    "title": ":information_source: Stufeninformation für",
     "description": "{user}",
     "color": "{color}",
     "thumbnail": {
@@ -46,23 +46,23 @@
     },
     "fields": [
       {
-        "name": "Stufe",
+        "name": "Deine Stufe:",
         "value": ":level_slider: {currentRank}"
       },
       {
-        "name": "Nächste Stufe",
-        "value": ":dart: {nextRank} (noch {missingXp} XP)"
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (noch {missingXp} PLAY-Punkte)"
       },
       {
-        "name": "Aktuelle XP",
-        "value": ":star2: {currentXp}"
+        "name": "Deine PLAY-Punkte:",
+        "value": ":green_circle: {currentXp}"
       },
       {
-        "name": "Aktuelles Karma",
-        "value": ":thumbs_up: {karma}"
+        "name": "Dein PLAY-Prestige:",
+        "value": ":star2: {karma}"
       },
       {
-        "name": "XP-Zuwachs (24h):",
+        "name": "Punkte-Zuwachs (24h):",
         "value": ":chart_with_upwards_trend: {xpGain}"
       },
       {
@@ -72,7 +72,7 @@
     ]
   },
   "rankInfoMax": {
-    "title": ":information_source: Kontoinformation für",
+    "title": ":information_source: Stufeninformation für",
     "description": "{user}",
     "color": "{color}",
     "thumbnail": {
@@ -80,19 +80,19 @@
     },
     "fields": [
       {
-        "name": "Stufe",
+        "name": "Deine Stufe:",
         "value": ":level_slider: {currentRank}"
       },
       {
-        "name": "Aktuelle XP",
-        "value": ":star2: {currentXp}"
+        "name": "Deine PLAY-Punkte:",
+        "value": ":green_circle: {currentXp}"
       },
       {
-        "name": "Aktuelles Karma",
-        "value": ":thumbs_up: {karma}"
+        "name": "Dein PLAY-Prestige:",
+        "value": " :star2: {karma}"
       },
       {
-        "name": "XP-Zuwachs (24h):",
+        "name": "Punkte-Zuwachs (24h):",
         "value": ":chart_with_upwards_trend: {xpGain}"
       },
       {
@@ -103,37 +103,37 @@
   },
   "embedCacheReload": {
     "title": "Erfolg",
-    "description": "Der EmbedCache wurde aktualisiert",
+    "description": "Der EmbedCache wurde aktualisiert.",
     "color": "#67c94f"
   },
   "setXpResult": {
     "title": "Erfolg",
-    "description": "Die XP von {user} wurden auf {xp} XP gesetzt",
+    "description": "Die PLAY-Punkte von {user} wurden auf {xp} Punkte gesetzt.",
     "color": "#67c94f"
   },
   "addXpResult": {
     "title": "Erfolg",
-    "description": "{user} wurden {xp} XP hinzugefügt",
+    "description": "{user} wurden {xp} PLAY-Punkte hinzugefügt.",
     "color": "#67c94f"
   },
   "leaderboard": {
-    "title": "Leaderboard",
+    "title": "Rangliste",
     "description": "{leaderboard}",
     "color": "#67c94f"
   },
   "switchDaily": {
     "title": "Erfolg",
-    "description": "Die tägliche Kontoinformation wurde {switch}",
+    "description": "Dein tägliches Update zum Levelfortschritt wurde {switch}.",
     "color": "#67c94f"
   },
   "xpLootDropClaimed": {
-    "title": "Glückwunsch :tada:",
-    "description": "{user} hat {xp} XP :star2: gefunden!",
+    "title": "Herzlichen Glückwunsch! :tada:",
+    "description": "{user} hat {xp} PLAY-Punkte :green_circle: aufgesammelt!",
     "color": "#67c94f"
   },
   "contestEventStart": {
     "title": "Okay",
-    "description": "Das Content-Event wurde in {channel} gestartet",
+    "description": "Das Contest-Event wurde im Kanal {channel} gestartet.",
     "color": "#67c94f"
   },
   "contestEventStop": {
@@ -143,7 +143,7 @@
   },
   "rankConfig": {
     "title": "Rank Konfiguration",
-    "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot Wahrscheinlichkeit: `{lootChance}%`\n",
+    "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot-Wahrscheinlichkeit: `{lootChance}%`\n",
     "color": "#67c94f"
   },
   "validChannels": {
@@ -153,7 +153,7 @@
   },
   "permissionsEdit": {
     "title": "Berechtigungen von {target}",
-    "description": "Bearbeite die Berechtigungen, indem du sie im Select Menü an- oder abwählst",
+    "description": "Bearbeite die Berechtigungen, indem du sie im Select Menü an- oder abwählst.",
     "color": "#67c94f"
   },
   "permissionsList": {
@@ -163,17 +163,17 @@
   },
   "rewardCreateSelectType": {
     "title": "Belohnung: {name}",
-    "description": "Bitte wähle die Belohnungsart aus, mit der der Nutzer belohnt werden soll",
+    "description": "Bitte wähle die Belohnungsart aus, mit der der Nutzer belohnt werden soll.",
     "color": "#67c94f"
   },
   "rewardCreateSelectRole": {
     "title": "Belohnung: {name}",
-    "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll",
+    "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll.",
     "color": "#67c94f"
   },
   "rewardCreateInvalidXp": {
     "title": "Belohnung: {name}",
-    "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an",
+    "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an.",
     "color": "#ffc926"
   },
   "rewardCreateInvalidEmbed": {
@@ -183,7 +183,7 @@
   },
   "rewardCreateSummarize": {
     "title": "Belohnung: {name}",
-    "description": "Du hast folgende Belohnung konfiguriert",
+    "description": "Du hast folgende Belohnung konfiguriert:",
     "fields": [
       {
         "name": "Typ",
@@ -202,56 +202,56 @@
   },
   "rewardCreateConfirm": {
     "title": "Erfolg",
-    "description": "Die Belohnung `{name}` wurde erstellt",
+    "description": "Die Belohnung `{name}` wurde erstellt.",
     "color": "#67c94f"
   },
   "rewardCreateCancel": {
     "title": "Okay",
-    "description": "Die Erstellung einer Belohnung wurde abgebrochen",
+    "description": "Die Erstellung einer Belohnung wurde abgebrochen.",
     "color": "#67c94f"
   },
   "collectEventStart": {
     "title": "Erfolg",
-    "description": "Das Collect Event `{name}` wurde gestartet",
+    "description": "Das Collect-Event `{name}` wurde gestartet.",
     "color": "#67c94f"
   },
   "collectEventStartError": {
     "title": "Fehler",
-    "description": "Es ist aktuell bereits ein Collect Event aktiv. Beende dies zuerst, bevor du ein neues starten kannst!",
+    "description": "Es ist bereits ein Collect-Event aktiv. Beende dies zuerst, bevor du ein neues starten kannst!",
     "color": "#ff0000"
   },
   "collectEventStop": {
     "title": "Erfolg",
-    "description": "Das aktuelle Collect Event wurde beendet",
+    "description": "Das aktuelle Collect-Event wurde beendet.",
     "color": "#67c94f"
   },
   "rewardDeleteSelect": {
     "title": "Belohnungen löschen",
-    "description": "Wähle eine oder mehrere Belohnungen aus, die du löschen möchtest",
+    "description": "Wähle eine oder mehrere Belohnungen aus, die du löschen möchtest.",
     "color": "#67c94f"
   },
   "rewardDelete": {
     "title": "Erfolg",
-    "description": "Die Belohnung(en) wurden gelöscht",
+    "description": "Die Belohnung(en) wurden gelöscht.",
     "color": "#67c94f"
   },
   "collectLootChanceUpdate": {
     "title": "Erfolg",
-    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt"
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt."
   },
   "collectLootDropClaimed": {
-    "title": "Glückwunsch :tada:",
-    "description": "{user} hat 1 {name} gefunden",
+    "title": "Herzlichen Glückwunsch! :tada:",
+    "description": "{user} hat 1 {name} aufgesammelt.",
     "color": "#67c94f"
   },
   "setKarmaResult": {
     "title": "Erfolg",
-    "description": "Die Karma Punkte von {user} wurden auf {karma} Karma gesetzt",
+    "description": "Die PLAY-Prestige von {user} wurde auf {karma} gesetzt.",
     "color": "#67c94f"
   },
   "addKarmaResult": {
     "title": "Erfolg",
-    "description": "{user} wurden {karma} Karma hinzugefügt",
+    "description": "{user} wurde {karma} PLAY-Prestige hinzugefügt.",
     "color": "#67c94f"
   },
   "karmaConfig": {
@@ -261,32 +261,32 @@
   },
   "karmaRewardRemove": {
     "title": "Achtung",
-    "description": "Lieber {user},\ndu hast in letzter Zeit zu viel Karma verloren und somit wurden dir deine Belohnungen wieder abgezogen",
+    "description": "Lieber {user},\ndu hast in letzter Zeit zu viel PLAY-Prestige verloren- Daher wurden dir deine zusätzlichen Belohnungen wieder entfernt.",
     "color": "#ffc926"
   },
   "itemRemoveSelect": {
     "title": "Items entfernen",
-    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer entfernen möchtest",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer entfernen möchtest:",
     "color": "#67c94f"
   },
   "itemDelete": {
     "title": "Erfolg",
-    "description": "Die Items wurden dem Nutzer entfernt",
+    "description": "Die Items wurden dem Nutzer entfernt.",
     "color": "#67c94f"
   },
   "noOptions": {
     "title": "Fehler",
-    "description": "Es existieren keine {type} die ausgewählt werden könnten",
+    "description": "Es existieren keine {type}, die ausgewählt werden könnten.",
     "color": "#ffc926"
   },
   "itemAddSelect": {
     "title": "Items hinzufügen",
-    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer hinzufügen möchtest",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer hinzufügen möchtest.",
     "color": "#67c94f"
   },
   "itemAdd": {
     "title": "Erfolg",
-    "description": "Das Item wurde dem Nutzer hinzugefügt",
+    "description": "Das Item wurde dem Nutzer hinzugefügt.",
     "color": "#67c94f"
   },
   "itemExpired": {
@@ -295,28 +295,28 @@
     "color": "#f4cd53"
   },
   "playActivityAdd": {
-    "title": "Glückwunsch",
-    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle zu erhalten",
+    "title": "Glückwunsch :tada:!",
+    "description": "Du hast in den letzten 30 Tagen jede Menge PLAY-Prestige gesammelt. Als Dankeschön erhälst Du nun **30 Tage** unsere **PREMIUM-Rolle** :star:.",
     "color": "#67c94f"
   },
   "playActivityRenew": {
-    "title": "Glückwunsch",
-    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle weiterhin zu behalten",
+    "title": "Weiter so :tada:!",
+    "description": "Du hast in den letzten 30 Tagen erneut genug PLAY-Prestige gesammelt, um Dir unsere **PREMIUM-Rolle** für weitere **30 Tage** zu sichern.",
     "color": "#67c94f"
   },
   "onLootboxXp": {
-    "title": "Glückwunsch",
-    "description": "Du hast eine Lootbox gefunden und {xp} XP erhalten",
+    "title": "Du Glückspilz! :dizzy:",
+    "description": "Du hast eine Lootbox :coin: gefunden. Darin verstecken sich {xp} PLAY-Punkte :green_circle:.",
     "color": "#67c94f"
   },
   "onLootboxKarma": {
-    "title": "Glückwunsch",
-    "description": "Du hast eine Lootbox gefunden und {karma} Karma erhalten",
+    "title": "Du Glückspilz! :dizzy:",
+    "description": "Du hast eine Lootbox :coin: gefunden. Du hast darin {karma} zusätzliches PLAY-Prestige :star2: gezogen!",
     "color": "#67c94f"
   },
   "onLootboxItem": {
     "title": "Glückwunsch",
-    "description": "Du hast eine Lootbox gefunden und {item} erhalten",
+    "description": "Du hast eine Lootbox :coin: gefunden und einen besonders wertvollen Inhalt gezogen: {item}",
     "color": "#67c94f"
   },
 
@@ -331,7 +331,7 @@
       },
       {
         "name": "Nächste Stufe:",
-        "value": ":dart: {nextRank} (noch {xp} XP)"
+        "value": ":dart: {nextRank} (noch {xp} PLAY-Punkte)"
       }
     ]
   },
@@ -345,8 +345,8 @@
         "value": ":level_slider: {currentRank}"
       },
       {
-        "name": "Ups",
-        "value": ":frowning: Du hast die unterste Stufe erreicht.\nAber Kopf hoch, schlimmer wirds nicht :wink:"
+        "name": "Hoppla!",
+        "value": ":frowning: Weiter bergab geht es nicht mehr.\nAlso Kopf hoch, schlimmer wird es nicht :wink:."
       }
     ]
   }

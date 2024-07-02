@@ -137,7 +137,7 @@ public class CollectEventListener extends ListenerAdapter {
                             .injectValue("user", event.getMember().getAsMention())
                             .injectValue("name", currency.name())
                             .toMessageCreateData()
-            ).mentionRepliedUser(false).queue(it -> it.delete().queueAfter(10, TimeUnit.SECONDS));
+            ).mentionRepliedUser(false).queue(it -> it.delete().queueAfter(1, TimeUnit.MINUTES));
             message.clearReactions().queue();
         });
     }
