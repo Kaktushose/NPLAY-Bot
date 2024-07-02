@@ -30,11 +30,11 @@ public class RankDecayTask {
                 if (newRank.get().rankId() < startDecayRankId) {
                     var minimumRank = bot.getDatabase().getRankService().getRankInfo(startDecayRankId);
                     result = bot.getDatabase().getRankService().setXp(member, minimumRank.orElseThrow().xpBound());
-                // if we don't fall under the minimum rank just remove all xp as planned
+                    // if we don't fall under the minimum rank just remove all xp as planned
                 } else {
                     result = bot.getDatabase().getRankService().setXp(member, userXpAfterDecay);
                 }
-            // if new rank isn't present we went too far and also set xp to lower bound
+                // if new rank isn't present we went too far and also set xp to lower bound
             } else {
                 var minimumRank = bot.getDatabase().getRankService().getRankInfo(startDecayRankId);
                 result = bot.getDatabase().getRankService().setXp(member, minimumRank.orElseThrow().xpBound());

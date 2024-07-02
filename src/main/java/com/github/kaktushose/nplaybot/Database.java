@@ -10,8 +10,6 @@ import com.github.kaktushose.nplaybot.settings.SettingsService;
 import com.github.kaktushose.nplaybot.starboard.StarboardService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.Connection;
 import java.sql.SQLException;

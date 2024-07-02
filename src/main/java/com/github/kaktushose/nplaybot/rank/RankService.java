@@ -399,7 +399,7 @@ public class RankService {
                 .build();
 
         bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue(msg ->
-                lootbox.ifPresent(it ->  LootboxListener.newListener(bot, it, member, msg))
+                lootbox.ifPresent(it -> LootboxListener.newListener(bot, it, member, msg))
         );
     }
 
@@ -436,8 +436,6 @@ public class RankService {
             throw new RuntimeException(e);
         }
     }
-
-    public record Lootbox(int id, int xpReward, int karmaReward, int itemId){}
 
     public void updateRankRoles(Member member, RankInfo currentRank) {
         var validRole = guild.getRoleById(currentRank.roleId());
@@ -678,6 +676,9 @@ public class RankService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public record Lootbox(int id, int xpReward, int karmaReward, int itemId) {
     }
 
 }

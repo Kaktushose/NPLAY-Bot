@@ -6,7 +6,6 @@ import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 import net.dv8tion.jda.api.utils.data.DataObject;

@@ -3,7 +3,6 @@ package com.github.kaktushose.nplaybot.rank;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
-import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;

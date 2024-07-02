@@ -62,8 +62,8 @@ To make the bot work properly, you now have to populate the Database correctly.
 1. Update the role ids inside the `item_types` and `ranks` table
 2. Update the channel ids inside the `bot_settings` table
 3. Add your karma vote emojis (e.g. 👍) inside the `karma_settings` table
-3. Use the `/rank-config valid-channels add` command to whitelist  channels for the xp system
-4. Manage the permissions with the `/permissions role edit` and `/permissions user edit` commands
+4. Use the `/rank-config valid-channels add` command to whitelist  channels for the xp system
+5. Manage the permissions with the `/permissions role edit` and `/permissions user edit` commands
 
 That's it. The bot is now fully functional. 
 

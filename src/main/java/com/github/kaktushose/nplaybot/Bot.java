@@ -30,7 +30,6 @@ public class Bot {
     private final TaskScheduler taskScheduler;
     private final Guild guild;
 
-    @SuppressWarnings("DataFlowIssue")
     private Bot(long guildId, String token) throws InterruptedException, RuntimeException {
         embedCache = new EmbedCache("embeds.json");
 

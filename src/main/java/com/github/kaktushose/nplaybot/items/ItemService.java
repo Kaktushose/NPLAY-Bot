@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ItemService {
 
-    private final DataSource dataSource;
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
+    private final DataSource dataSource;
     private final Guild guild;
 
     public ItemService(DataSource dataSource, Bot bot) {
@@ -124,7 +124,7 @@ public class ItemService {
             // if so just increase the duration of the first item
             if (result.next()) {
                 statement = connection.prepareStatement("UPDATE transactions SET expires_at = ? WHERE transaction_id = ?");
-                statement.setLong(1,result.getLong("expires_at") + item.duration);
+                statement.setLong(1, result.getLong("expires_at") + item.duration);
                 statement.setLong(2, result.getInt("transaction_id"));
                 statement.execute();
                 return;
