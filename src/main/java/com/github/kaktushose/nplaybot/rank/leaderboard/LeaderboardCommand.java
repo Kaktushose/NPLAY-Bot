@@ -35,7 +35,7 @@ public class LeaderboardCommand {
     private List<LeaderboardPage> leaderboard;
     private Guild guild;
 
-    @SlashCommand(value = "leaderboard", desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP", isGuildOnly = true)
+    @SlashCommand(value = "rangliste", desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP", isGuildOnly = true)
     public void onCommand(CommandEvent event) {
         guild = event.getGuild();
         leaderboard = database.getRankService().getLeaderboard();

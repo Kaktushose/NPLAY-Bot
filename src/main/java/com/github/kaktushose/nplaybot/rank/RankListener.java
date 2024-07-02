@@ -23,6 +23,7 @@ public class RankListener extends ListenerAdapter {
     private final EmbedCache embedCache;
     private final Bot bot;
     private final Map<Long, Integer> xpLootDrops;
+    private static final String XP_LOOT_DROP_EMOJI = "\uD83D\uDFE2";
 
     public RankListener(Database database, EmbedCache embedCache, Bot bot) {
         this.rankService = database.getRankService();
@@ -94,7 +95,7 @@ public class RankListener extends ListenerAdapter {
         }
 
         xpLootDrops.put(event.getMessageIdLong(), xp);
-        event.getMessage().addReaction(Emoji.fromUnicode("\uD83C\uDF1F")).queue();
+        event.getMessage().addReaction(Emoji.fromUnicode(XP_LOOT_DROP_EMOJI)).queue();
     }
 
     @Override
@@ -107,7 +108,7 @@ public class RankListener extends ListenerAdapter {
         if (!xpLootDrops.containsKey(messageId)) {
             return;
         }
-        if (!event.getEmoji().equals(Emoji.fromUnicode("\uD83C\uDF1F"))) {
+        if (!event.getEmoji().equals(Emoji.fromUnicode(XP_LOOT_DROP_EMOJI))) {
             return;
         }
 

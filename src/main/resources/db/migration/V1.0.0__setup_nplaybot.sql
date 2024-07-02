@@ -1,4 +1,3 @@
-DELIMITER //
 -- clear old database
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
@@ -410,11 +409,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- items
-INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (1, 'XP-Booster', ':moneybag:', -1);
+INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (1, 'Punkte-Booster', ':moneybag:', -1);
 INSERT INTO item_types(base_type_id, name, emoji, role_id) VALUES (2, 'Premium', ':star:', -1);
 
-INSERT INTO items(item_id, type_id, name, duration) VALUES(1, 1, 'XP-Booster 7 Tage', 604800000);
-INSERT INTO items(item_id, type_id, name, duration) VALUES(2, 1, 'XP-Booster 14 Tage', 1209600000);
+INSERT INTO items(item_id, type_id, name, duration) VALUES(1, 1, 'Punkte-Booster 7 Tage', 604800000);
+INSERT INTO items(item_id, type_id, name, duration) VALUES(2, 1, 'Punkte-Booster 14 Tage', 1209600000);
 INSERT INTO items(item_id, type_id, name, duration) VALUES(3, 2, 'Premium 1 Tag', 86400000);
 INSERT INTO items(item_id, type_id, name, duration) VALUES(4, 2, 'Premium 3 Tage', 259200000);
 INSERT INTO items(item_id, type_id, name, duration) VALUES(5, 2, 'Premium 7 Tage', 604800000);
