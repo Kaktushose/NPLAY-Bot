@@ -16,7 +16,7 @@ public class DailyMessageTask {
                         .flatMap(channel ->
                                 channel.sendMessage(
                                         bot.getEmbedCache().getEmbed(userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
-                                                .injectValues(userInfo.getEmbedValues(channel.getUser())).toMessageCreateData()
+                                                .injectValues(userInfo.getEmbedValues(channel.getUser(), true)).toMessageCreateData()
                                 )
                         ).queue()
         );

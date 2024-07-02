@@ -16,6 +16,7 @@ public class JoinLeaveListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         rankService.createUser(event.getUser());
+        rankService.updateRankRoles(event.getMember(), rankService.getUserInfo(event.getMember()).currentRank());
     }
 
     @Override

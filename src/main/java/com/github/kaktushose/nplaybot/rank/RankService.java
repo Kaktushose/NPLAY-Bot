@@ -37,12 +37,13 @@ public class RankService {
         this.guild = bot.getGuild();
     }
 
-    public void createUser(UserSnowflake user) {
+    public boolean createUser(UserSnowflake user) {
         log.debug("Inserting user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("INSERT INTO users VALUES(?) ON CONFLICT DO NOTHING");
+            var statement = connection.prepareStatement("INSERT INTO users VALUES(?) ON CONFLICT DO NOTHING RETURNING user_id");
             statement.setLong(1, user.getIdLong());
-            statement.execute();
+            var result = statement.executeQuery();
+            return result.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +61,10 @@ public class RankService {
     }
 
     public void indexMembers() {
-        guild.loadMembers(member -> createUser(member.getUser()));
+        guild.loadMembers(member -> {
+            createUser(member.getUser());
+            updateRankRoles(member, getUserInfo(member).currentRank());
+        });
     }
 
     public Optional<RankInfo> getRankInfo(int rankId) {

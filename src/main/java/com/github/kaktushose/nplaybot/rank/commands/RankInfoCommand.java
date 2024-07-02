@@ -38,7 +38,7 @@ public class RankInfoCommand {
 
     private void sendReply(UserInfo userInfo, User user, CommandEvent event) {
         var embed = embedCache.getEmbed(userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
-                .injectValues(userInfo.getEmbedValues(user))
+                .injectValues(userInfo.getEmbedValues(user, false))
                 .toEmbedBuilder();
 
         if (database.getCollectEventService().isCollectEventActive()) {
