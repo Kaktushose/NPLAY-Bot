@@ -387,7 +387,9 @@ public class RankService {
 
         if (result.currentRank().itemRewardId() > 0) {
             itemService.createTransaction(member, result.currentRank().itemRewardId(), guild);
-            reward = itemService.getItem(result.currentRank().itemRewardId()).name();
+            var item = itemService.getItem(result.currentRank().itemRewardId());
+            var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
+            reward = String.format("%s %s", emoji, item.name());
         }
 
         var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
