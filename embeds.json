@@ -1,0 +1,353 @@
+{
+  "rankIncrease": {
+    "title": ":arrow_up: Stufenaufstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (noch {xp} XP)"
+      },
+      {
+        "name": "Belohnung",
+        "value": "{reward}"
+      }
+    ]
+  },
+  "rankIncreaseMax": {
+    "title": ":arrow_up: Stufenaufstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Herzlichen Glückwunsch",
+        "value": ":confetti_ball: Du hast hiermit die maximale Stufe erreicht"
+      },
+      {
+        "name": "Belohnung",
+        "value": "{reward}"
+      }
+    ]
+  },
+  "rankInfo": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe",
+        "value": ":dart: {nextRank} (noch {missingXp} XP)"
+      },
+      {
+        "name": "Aktuelle XP",
+        "value": ":star2: {currentXp}"
+      },
+      {
+        "name": "Aktuelles Karma",
+        "value": ":thumbs_up: {karma}"
+      },
+      {
+        "name": "XP-Zuwachs (24h):",
+        "value": ":chart_with_upwards_trend: {xpGain}"
+      },
+      {
+        "name": "Gewertete Nachrichten:",
+        "value": ":bar_chart: {messageCount}"
+      }
+    ]
+  },
+  "rankInfoMax": {
+    "title": ":information_source: Kontoinformation für",
+    "description": "{user}",
+    "color": "{color}",
+    "thumbnail": {
+      "url": "{avatarUrl}"
+    },
+    "fields": [
+      {
+        "name": "Stufe",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Aktuelle XP",
+        "value": ":star2: {currentXp}"
+      },
+      {
+        "name": "Aktuelles Karma",
+        "value": ":thumbs_up: {karma}"
+      },
+      {
+        "name": "XP-Zuwachs (24h):",
+        "value": ":chart_with_upwards_trend: {xpGain}"
+      },
+      {
+        "name": "Gewertete Nachrichten:",
+        "value": ":bar_chart: {messageCount}"
+      }
+    ]
+  },
+  "embedCacheReload": {
+    "title": "Erfolg",
+    "description": "Der EmbedCache wurde aktualisiert",
+    "color": "#67c94f"
+  },
+  "setXpResult": {
+    "title": "Erfolg",
+    "description": "Die XP von {user} wurden auf {xp} XP gesetzt",
+    "color": "#67c94f"
+  },
+  "addXpResult": {
+    "title": "Erfolg",
+    "description": "{user} wurden {xp} XP hinzugefügt",
+    "color": "#67c94f"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "description": "{leaderboard}",
+    "color": "#67c94f"
+  },
+  "switchDaily": {
+    "title": "Erfolg",
+    "description": "Die tägliche Kontoinformation wurde {switch}",
+    "color": "#67c94f"
+  },
+  "xpLootDropClaimed": {
+    "title": "Glückwunsch :tada:",
+    "description": "{user} hat {xp} XP :star2: gefunden!",
+    "color": "#67c94f"
+  },
+  "contestEventStart": {
+    "title": "Okay",
+    "description": "Das Content-Event wurde in {channel} gestartet",
+    "color": "#67c94f"
+  },
+  "contestEventStop": {
+    "title": "Leaderboard",
+    "description": "{leaderboard}",
+    "color": "#67c94f"
+  },
+  "rankConfig": {
+    "title": "Rank Konfiguration",
+    "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot Wahrscheinlichkeit: `{lootChance}%`\n",
+    "color": "#67c94f"
+  },
+  "validChannels": {
+    "title": "Gewertete Textkanäle",
+    "description": "{channels}",
+    "color": "#67c94f"
+  },
+  "permissionsEdit": {
+    "title": "Berechtigungen von {target}",
+    "description": "Bearbeite die Berechtigungen, indem du sie im Select Menü an- oder abwählst",
+    "color": "#67c94f"
+  },
+  "permissionsList": {
+    "title": "Berechtigungen von {target}",
+    "description": "{permissions}",
+    "color": "#67c94f"
+  },
+  "rewardCreateSelectType": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte wähle die Belohnungsart aus, mit der der Nutzer belohnt werden soll",
+    "color": "#67c94f"
+  },
+  "rewardCreateSelectRole": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll",
+    "color": "#67c94f"
+  },
+  "rewardCreateInvalidXp": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an",
+    "color": "#ffc926"
+  },
+  "rewardCreateInvalidEmbed": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/?data=e30=)",
+    "color": "#ffc926"
+  },
+  "rewardCreateSummarize": {
+    "title": "Belohnung: {name}",
+    "description": "Du hast folgende Belohnung konfiguriert",
+    "fields": [
+      {
+        "name": "Typ",
+        "value": "{type}"
+      },
+      {
+        "name": "Grenze",
+        "value": "{threshold}"
+      },
+      {
+        "name": "{type}",
+        "value": "{reward}"
+      }
+    ],
+    "color": "#ffc926"
+  },
+  "rewardCreateConfirm": {
+    "title": "Erfolg",
+    "description": "Die Belohnung `{name}` wurde erstellt",
+    "color": "#67c94f"
+  },
+  "rewardCreateCancel": {
+    "title": "Okay",
+    "description": "Die Erstellung einer Belohnung wurde abgebrochen",
+    "color": "#67c94f"
+  },
+  "collectEventStart": {
+    "title": "Erfolg",
+    "description": "Das Collect Event `{name}` wurde gestartet",
+    "color": "#67c94f"
+  },
+  "collectEventStartError": {
+    "title": "Fehler",
+    "description": "Es ist aktuell bereits ein Collect Event aktiv. Beende dies zuerst, bevor du ein neues starten kannst!",
+    "color": "#ff0000"
+  },
+  "collectEventStop": {
+    "title": "Erfolg",
+    "description": "Das aktuelle Collect Event wurde beendet",
+    "color": "#67c94f"
+  },
+  "rewardDeleteSelect": {
+    "title": "Belohnungen löschen",
+    "description": "Wähle eine oder mehrere Belohnungen aus, die du löschen möchtest",
+    "color": "#67c94f"
+  },
+  "rewardDelete": {
+    "title": "Erfolg",
+    "description": "Die Belohnung(en) wurden gelöscht",
+    "color": "#67c94f"
+  },
+  "collectLootChanceUpdate": {
+    "title": "Erfolg",
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt"
+  },
+  "collectLootDropClaimed": {
+    "title": "Glückwunsch :tada:",
+    "description": "{user} hat 1 {name} gefunden",
+    "color": "#67c94f"
+  },
+  "setKarmaResult": {
+    "title": "Erfolg",
+    "description": "Die Karma Punkte von {user} wurden auf {karma} Karma gesetzt",
+    "color": "#67c94f"
+  },
+  "addKarmaResult": {
+    "title": "Erfolg",
+    "description": "{user} wurden {karma} Karma hinzugefügt",
+    "color": "#67c94f"
+  },
+  "karmaConfig": {
+    "title": "Karma Konfiguration",
+    "description": "Erlaubte Emojis: {emojis}\nKarma Tokens pro Nutzer: `{tokens}`",
+    "color": "#67c94f"
+  },
+  "karmaRewardRemove": {
+    "title": "Achtung",
+    "description": "Lieber {user},\ndu hast in letzter Zeit zu viel Karma verloren und somit wurden dir deine Belohnungen wieder abgezogen",
+    "color": "#ffc926"
+  },
+  "itemRemoveSelect": {
+    "title": "Items entfernen",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer entfernen möchtest",
+    "color": "#67c94f"
+  },
+  "itemDelete": {
+    "title": "Erfolg",
+    "description": "Die Items wurden dem Nutzer entfernt",
+    "color": "#67c94f"
+  },
+  "noOptions": {
+    "title": "Fehler",
+    "description": "Es existieren keine {type} die ausgewählt werden könnten",
+    "color": "#ffc926"
+  },
+  "itemAddSelect": {
+    "title": "Items hinzufügen",
+    "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer hinzufügen möchtest",
+    "color": "#67c94f"
+  },
+  "itemAdd": {
+    "title": "Erfolg",
+    "description": "Das Item wurde dem Nutzer hinzugefügt",
+    "color": "#67c94f"
+  },
+  "itemExpired": {
+    "title": "Item abgelaufen!",
+    "description": "Dein {item} ist abgelaufen!",
+    "color": "#f4cd53"
+  },
+  "playActivityAdd": {
+    "title": "Glückwunsch",
+    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle zu erhalten",
+    "color": "#67c94f"
+  },
+  "playActivityRenew": {
+    "title": "Glückwunsch",
+    "description": "Du hast in den letzten 30 Tagen genug Karma gesammelt um die :star: Premium 30 Tage Rolle weiterhin zu behalten",
+    "color": "#67c94f"
+  },
+  "onLootboxXp": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {xp} XP erhalten",
+    "color": "#67c94f"
+  },
+  "onLootboxKarma": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {karma} Karma erhalten",
+    "color": "#67c94f"
+  },
+  "onLootboxItem": {
+    "title": "Glückwunsch",
+    "description": "Du hast eine Lootbox gefunden und {item} erhalten",
+    "color": "#67c94f"
+  },
+
+  "rankDecrease": {
+    "title": ":arrow_down: Stufenabstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Nächste Stufe:",
+        "value": ":dart: {nextRank} (noch {xp} XP)"
+      }
+    ]
+  },
+  "rankDecreaseMax": {
+    "title": ":arrow_down: Stufenabstieg!",
+    "description": "{user}",
+    "color": "{color}",
+    "fields": [
+      {
+        "name": "Neue Stufe:",
+        "value": ":level_slider: {currentRank}"
+      },
+      {
+        "name": "Ups",
+        "value": ":frowning: Du hast die unterste Stufe erreicht.\nAber Kopf hoch, schlimmer wirds nicht :wink:"
+      }
+    ]
+  }
+}
