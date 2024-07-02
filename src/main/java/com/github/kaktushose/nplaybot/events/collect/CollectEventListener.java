@@ -52,7 +52,7 @@ public class CollectEventListener extends ListenerAdapter {
             return;
         }
 
-        if (!rankService.isValidChannel(event.getChannel(), event.getGuild())) {
+        if (!rankService.isValidChannel(event.getChannel())) {
             return;
         }
 
@@ -80,7 +80,7 @@ public class CollectEventListener extends ListenerAdapter {
 
         if (reward.xp() > 0) {
             var xpChangeResult = rankService.addXp(member, reward.xp());
-            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
+            rankService.onXpChange(xpChangeResult, member, embedCache);
         }
 
         if (reward.roleId() > 0) {
@@ -90,7 +90,7 @@ public class CollectEventListener extends ListenerAdapter {
         var builder = new MessageCreateBuilder().addContent(member.getAsMention())
                 .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
                 .build();
-        settingsService.getBotChannel(guild).sendMessage(builder).queue();
+        settingsService.getBotChannel().sendMessage(builder).queue();
     }
 
     private void onCollectLootDrop(MessageReceivedEvent event) {
@@ -102,7 +102,7 @@ public class CollectEventListener extends ListenerAdapter {
         }
 
         collectLootDrops.add(event.getMessageIdLong());
-        event.getMessage().addReaction(Emoji.fromUnicode(eventService.getCollectCurrency(event.getGuild()).emoji())).queue();
+        event.getMessage().addReaction(Emoji.fromUnicode(eventService.getCollectCurrency().emoji())).queue();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class CollectEventListener extends ListenerAdapter {
         if (!collectLootDrops.contains(messageId)) {
             return;
         }
-        var currency = eventService.getCollectCurrency(event.getGuild());
+        var currency = eventService.getCollectCurrency();
         if (!event.getEmoji().equals(Emoji.fromUnicode(currency.emoji()))) {
             return;
         }

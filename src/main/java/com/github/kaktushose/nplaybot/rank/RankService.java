@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.UserSnowflake;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
@@ -29,11 +28,13 @@ public class RankService {
     private final DataSource dataSource;
     private final ItemService itemService;
     private final Bot bot;
+    private final Guild guild;
 
     public RankService(DataSource dataSource, ItemService itemService, Bot bot) {
         this.dataSource = dataSource;
         this.itemService = itemService;
         this.bot = bot;
+        this.guild = bot.getGuild();
     }
 
     public void createUser(UserSnowflake user) {
@@ -58,7 +59,7 @@ public class RankService {
         }
     }
 
-    public void indexMembers(Guild guild) {
+    public void indexMembers() {
         guild.loadMembers(member -> createUser(member.getUser()));
     }
 
@@ -123,7 +124,7 @@ public class RankService {
         }
     }
 
-    public RankConfig getRankConfig(Guild guild) {
+    public RankConfig getRankConfig() {
         log.debug("Querying rank config for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -147,7 +148,7 @@ public class RankService {
         }
     }
 
-    public void updateCooldown(Guild guild, int cooldown) {
+    public void updateCooldown(int cooldown) {
         log.debug("Updating cooldown for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -165,7 +166,7 @@ public class RankService {
         }
     }
 
-    public void updateMinMessageLength(Guild guild, int length) {
+    public void updateMinMessageLength(int length) {
         log.debug("Updating minimum message length for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -183,7 +184,7 @@ public class RankService {
         }
     }
 
-    public void updateXpLootChance(Guild guild, double chance) {
+    public void updateXpLootChance(double chance) {
         log.debug("Updating xp loot chance for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -201,7 +202,7 @@ public class RankService {
         }
     }
 
-    public Set<Long> getValidChannels(Guild guild) {
+    public Set<Long> getValidChannels() {
         log.debug("Querying valid channels for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -220,7 +221,7 @@ public class RankService {
         }
     }
 
-    public void updateValidChannels(Guild guild, Set<Long> validChannels) {
+    public void updateValidChannels(Set<Long> validChannels) {
         log.debug("Querying valid channels for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -355,9 +356,9 @@ public class RankService {
         }
     }
 
-    public void onXpChange(XpChangeResult result, Member member, Guild guild, EmbedCache embedCache) {
+    public void onXpChange(XpChangeResult result, Member member, EmbedCache embedCache) {
         log.debug("Checking for rank up: {}", member);
-        updateRankRoles(member, guild, result.currentRank());
+        updateRankRoles(member, result.currentRank());
 
         if (!result.rankChanged()) {
             log.debug("Rank hasn't changed");
@@ -371,13 +372,13 @@ public class RankService {
                 var message = new MessageCreateBuilder().addContent(member.getAsMention())
                         .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
                         .build();
-                getBotChannel(guild).sendMessage(message).queue();
+                bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue();
                 return;
             }
         }
 
         Optional<Lootbox> lootbox;
-        String reward = "";
+        String reward = "keine Belohnung";
         if (result.currentRank().lootboxReward()) {
             lootbox = Optional.of(getRandomLootbox());
             reward = "\uD83C\uDF81 eine Lootbox";
@@ -386,7 +387,7 @@ public class RankService {
         }
 
         if (result.currentRank().itemRewardId() > 0) {
-            itemService.createTransaction(member, result.currentRank().itemRewardId(), guild);
+            itemService.createTransaction(member, result.currentRank().itemRewardId());
             var item = itemService.getItem(result.currentRank().itemRewardId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             reward = String.format("%s %s", emoji, item.name());
@@ -397,7 +398,9 @@ public class RankService {
                 .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).injectValue("reward", reward).toMessageEmbed())
                 .build();
 
-        getBotChannel(guild).sendMessage(message).queue(msg -> lootbox.ifPresent(it ->  LootboxListener.newListener(bot, it, member, msg)));
+        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue(msg ->
+                lootbox.ifPresent(it ->  LootboxListener.newListener(bot, it, member, msg))
+        );
     }
 
     public Lootbox getRandomLootbox() {
@@ -436,26 +439,7 @@ public class RankService {
 
     public record Lootbox(int id, int xpReward, int karmaReward, int itemId){}
 
-    private TextChannel getBotChannel(Guild guild) {
-        log.debug("Querying bot channel");
-        try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("""
-                    SELECT bot_channel_id
-                    FROM guild_settings
-                    WHERE guild_id = ?
-                    """
-            );
-            statement.setLong(1, guild.getIdLong());
-
-            var result = statement.executeQuery();
-            result.next();
-            return guild.getTextChannelById(result.getLong(1));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void updateRankRoles(Member member, Guild guild, RankInfo currentRank) {
+    public void updateRankRoles(Member member, RankInfo currentRank) {
         var validRole = guild.getRoleById(currentRank.roleId());
         var invalidRoles = getRankRoleIds().stream()
                 .map(guild::getRoleById)
@@ -591,7 +575,7 @@ public class RankService {
         }
     }
 
-    public boolean isValidChannel(MessageChannelUnion channel, Guild guild) {
+    public boolean isValidChannel(MessageChannelUnion channel) {
         log.debug("Checking channel: {}", channel);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -623,4 +607,77 @@ public class RankService {
             throw new RuntimeException(e);
         }
     }
+
+    public int getStartDecayRankId() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT rank_decay_start
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getDecayXp() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT rank_decay_xp_loss
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getLootboxChance() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT lootbox_chance
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getLootboxQueryLimit() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT lootbox_query_limit
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

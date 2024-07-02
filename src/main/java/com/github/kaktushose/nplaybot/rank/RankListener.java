@@ -19,18 +19,14 @@ import java.util.concurrent.TimeUnit;
 
 public class RankListener extends ListenerAdapter {
 
-    private static final int LOOTBOX_CHANCE = 70;
-    private static final int LOOTBOX_RETRIEVE_LIMIT = 30;
     private static final Logger log = LoggerFactory.getLogger(RankListener.class);
     private final RankService rankService;
-    private final SettingsService settingsService;
     private final EmbedCache embedCache;
     private final Bot bot;
     private final Map<Long, Integer> xpLootDrops;
 
     public RankListener(Database database, EmbedCache embedCache, Bot bot) {
         this.rankService = database.getRankService();
-        this.settingsService = database.getSettingsService();
         this.embedCache = embedCache;
         this.bot = bot;
         xpLootDrops = new HashMap<>();
@@ -50,10 +46,10 @@ public class RankListener extends ListenerAdapter {
             return;
         }
 
-        rankService.updateRankRoles(event.getMember(), event.getGuild(), rankService.getUserInfo(author).currentRank());
+        rankService.updateRankRoles(event.getMember(), rankService.getUserInfo(author).currentRank());
         rankService.increaseTotalMessageCount();
 
-        if (!rankService.isValidChannel(event.getChannel(), event.getGuild())) {
+        if (!rankService.isValidChannel(event.getChannel())) {
             return;
         }
 
@@ -70,11 +66,14 @@ public class RankListener extends ListenerAdapter {
     }
 
     private void onCheckForLootbox(MessageReceivedEvent event) {
-        if (ThreadLocalRandom.current().nextInt(100) >= LOOTBOX_CHANCE) {
+        var lootboxChance = rankService.getLootboxChance();
+        var lootboxQueryLimit = rankService.getLootboxQueryLimit();
+
+        if (ThreadLocalRandom.current().nextDouble(100) >= lootboxChance) {
             return;
         }
-        event.getChannel().getHistory().retrievePast(LOOTBOX_RETRIEVE_LIMIT).queue(messages -> {
-            var message = messages.get(ThreadLocalRandom.current().nextInt(LOOTBOX_RETRIEVE_LIMIT));
+        event.getChannel().getHistory().retrievePast(lootboxQueryLimit).queue(messages -> {
+            var message = messages.get(ThreadLocalRandom.current().nextInt(lootboxQueryLimit));
             var lootbox = rankService.getRandomLootbox();
             LootboxListener.newListener(bot, lootbox, event.getMember(), message);
         });
@@ -84,7 +83,7 @@ public class RankListener extends ListenerAdapter {
         rankService.updateValidMessage(event.getAuthor());
         var result = rankService.addRandomXp(event.getAuthor());
 
-        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache);
+        rankService.onXpChange(result, event.getMember(), embedCache);
     }
 
     private void onXpLootDrop(MessageReceivedEvent event) {
@@ -117,7 +116,7 @@ public class RankListener extends ListenerAdapter {
 
         var xp = xpLootDrops.get(messageId);
         var result = rankService.addXp(event.getMember(), xp);
-        rankService.onXpChange(result, event.getMember(), event.getGuild(), embedCache);
+        rankService.onXpChange(result, event.getMember(), embedCache);
         xpLootDrops.remove(messageId);
 
         event.retrieveMessage().queue(message -> {

@@ -34,7 +34,7 @@ public class ContestCommands {
 
     @SlashCommand(value = "events contest-event stop", desc = "Stoppt das aktuelle Contest-Event und zeigt die Gewinner an", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     public void onContestEventStop(CommandEvent event) {
-        var result = database.getContestEventService().stopContestEvent(event.getGuild());
+        var result = database.getContestEventService().stopContestEvent();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < result.size(); i++) {
             var row = result.get(i);

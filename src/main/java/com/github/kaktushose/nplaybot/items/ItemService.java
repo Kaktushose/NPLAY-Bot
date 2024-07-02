@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
+import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 
@@ -14,9 +15,11 @@ public class ItemService {
 
     private final DataSource dataSource;
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
+    private final Guild guild;
 
-    public ItemService(DataSource dataSource) {
+    public ItemService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
+        this.guild = bot.getGuild();
     }
 
     public List<Item> getAllItems() {
@@ -104,7 +107,7 @@ public class ItemService {
         }
     }
 
-    public void createTransaction(UserSnowflake user, int itemId, Guild guild) {
+    public void createTransaction(UserSnowflake user, int itemId) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
 
@@ -143,7 +146,7 @@ public class ItemService {
         }
     }
 
-    public void deleteTransaction(UserSnowflake user, int transactionId, Guild guild) {
+    public void deleteTransaction(UserSnowflake user, int transactionId) {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT item_id FROM transactions WHERE transaction_id = ?");
             statement.setInt(1, transactionId);
@@ -185,7 +188,7 @@ public class ItemService {
     }
 
 
-    public void addPlayActivity(UserSnowflake user, Guild guild) {
+    public void addPlayActivity(UserSnowflake user) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(PLAY_ACTIVITY_ITEM_ID);
             var statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\", \"is_play_activity\") VALUES(?, ?, ?, true)");

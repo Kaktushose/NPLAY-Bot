@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.events.collect;
 
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -19,12 +20,14 @@ public class CollectEventService {
 
     private static final Logger log = LoggerFactory.getLogger(ContestEventService.class);
     private final DataSource dataSource;
+    private final Guild guild;
 
-    public CollectEventService(DataSource dataSource) {
+    public CollectEventService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
+        this.guild = bot.getGuild();
     }
 
-    public boolean isActive(Guild guild) {
+    public boolean isActive() {
         log.debug("Querying collect event active flag for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -43,7 +46,7 @@ public class CollectEventService {
         }
     }
 
-    public void startCollectEvent(Guild guild, String eventName, String currencyName, String emoji) {
+    public void startCollectEvent(String eventName, String currencyName, String emoji) {
         log.debug("Starting new collect event [{}, {}, {}] for guild {}", eventName, currencyName, emoji, guild);
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("UPDATE users SET collect_points = 0").execute();
@@ -69,7 +72,7 @@ public class CollectEventService {
         }
     }
 
-    public void stopCollectEvent(Guild guild) {
+    public void stopCollectEvent() {
         log.debug("Stopping collect event for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -101,7 +104,7 @@ public class CollectEventService {
         }
     }
 
-    public void updateCollectLootChance(Guild guild, double chance) {
+    public void updateCollectLootChance(double chance) {
         log.debug("Updating collect loot chance for guild: {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -134,7 +137,7 @@ public class CollectEventService {
         }
     }
 
-    public CollectCurrency getCollectCurrency(Guild guild) {
+    public CollectCurrency getCollectCurrency() {
         log.debug("Querying collect currency emoji");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""

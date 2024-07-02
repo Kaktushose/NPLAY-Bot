@@ -40,9 +40,8 @@ public class RankInfoCommand {
                 .injectValues(userInfo.getEmbedValues(user))
                 .toEmbedBuilder();
 
-        var guild = event.getGuild();
-        if (database.getCollectEventService().isActive(guild)) {
-            var currency = database.getCollectEventService().getCollectCurrency(guild);
+        if (database.getCollectEventService().isActive()) {
+            var currency = database.getCollectEventService().getCollectCurrency();
             var points = database.getCollectEventService().getCollectPoints(user);
             embed.addField(currency.name(), String.format("%s %d", currency.emoji(), points), false);
         }

@@ -51,7 +51,7 @@ public class LootboxListener extends ListenerAdapter {
 
         if (lootbox.xpReward() > 0) {
             var result = bot.getDatabase().getRankService().addXp(user, lootbox.xpReward());
-            bot.getDatabase().getRankService().onXpChange(result, event.getMember(), bot.getGuild(), bot.getEmbedCache());
+            bot.getDatabase().getRankService().onXpChange(result, event.getMember(), bot.getEmbedCache());
             event.getChannel().sendMessage(user.getAsMention())
                     .and(event.getChannel().sendMessage(bot.getEmbedCache().getEmbed("onLootboxXp").injectValue("xp", lootbox.xpReward()).toMessageCreateData()))
                     .queue();
@@ -62,7 +62,7 @@ public class LootboxListener extends ListenerAdapter {
             var oldKarma = bot.getDatabase().getRankService().getUserInfo(user).karma();
             var newKarma = oldKarma + lootbox.karmaReward();
             bot.getDatabase().getKarmaService().addKarma(user, lootbox.karmaReward());
-            bot.getDatabase().getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), bot.getGuild(), bot.getEmbedCache());
+            bot.getDatabase().getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), bot.getEmbedCache());
             event.getChannel().sendMessage(user.getAsMention())
                     .and(event.getChannel().sendMessage(bot.getEmbedCache().getEmbed("onLootboxKarma").injectValue("karma", lootbox.karmaReward()).toMessageCreateData()))
                     .queue();
@@ -70,7 +70,7 @@ public class LootboxListener extends ListenerAdapter {
         }
 
         if (lootbox.itemId() >= 0) {
-            bot.getDatabase().getItemService().createTransaction(user, lootbox.itemId(), bot.getGuild());
+            bot.getDatabase().getItemService().createTransaction(user, lootbox.itemId());
             var item = bot.getDatabase().getItemService().getItem(lootbox.itemId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             event.getChannel().sendMessage(user.getAsMention())

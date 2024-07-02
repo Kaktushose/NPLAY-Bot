@@ -50,7 +50,7 @@ public class RemoveItemCommand {
     @StringSelectMenu("Wähle ein oder mehrere Items aus")
     @SelectOption(label = "dummy option", value = "dummy option")
     public void onItemRemoveSelect(ComponentEvent event, List<String> selection) {
-        selection.forEach(id -> database.getItemService().deleteTransaction(target, Integer.parseInt(id), event.getGuild()));
+        selection.forEach(id -> database.getItemService().deleteTransaction(target, Integer.parseInt(id)));
         event.reply(embedCache.getEmbed("itemDelete"));
         event.removeComponents();
     }

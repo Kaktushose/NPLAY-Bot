@@ -11,6 +11,10 @@ import com.github.kaktushose.nplaybot.starboard.StarboardService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Database {
 
@@ -34,14 +38,53 @@ public class Database {
 
         dataSource = new HikariDataSource(config);
 
-        settingsService = new SettingsService(dataSource);
-        itemService = new ItemService(dataSource);
+        initialSetup(bot.getGuild().getIdLong());
+
+        settingsService = new SettingsService(dataSource, bot);
+        itemService = new ItemService(dataSource, bot);
         rankService = new RankService(dataSource, itemService, bot);
-        contestEventService = new ContestEventService(dataSource);
-        collectEventService = new CollectEventService(dataSource);
-        permissionsService = new PermissionsService(dataSource);
-        karmaService = new KarmaService(dataSource, rankService, itemService);
-        starboardService = new StarboardService(dataSource);
+        contestEventService = new ContestEventService(dataSource, bot);
+        collectEventService = new CollectEventService(dataSource, bot);
+        permissionsService = new PermissionsService(dataSource, bot);
+        karmaService = new KarmaService(dataSource, rankService, itemService, bot);
+        starboardService = new StarboardService(dataSource, bot);
+    }
+
+    private void initialSetup(long guildId) {
+        try (Connection connection = dataSource.getConnection()) {
+            // try to query bot_settings for current guild
+            var statement = connection.prepareStatement("SELECT * FROM bot_settings WHERE guild_id = ?");
+            statement.setLong(1, guildId);
+            var result = statement.executeQuery();
+
+            // if present, guild is already setup
+            if (result.next()) {
+                return;
+            }
+
+            //initialize all settings table with default values
+            statement = connection.prepareStatement("INSERT INTO bot_settings VALUES(?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, guildId);
+            statement.execute();
+
+            statement = connection.prepareStatement("INSERT INTO rank_settings VALUES(?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, guildId);
+            statement.execute();
+
+            statement = connection.prepareStatement("INSERT INTO event_settings VALUES(?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, guildId);
+            statement.execute();
+
+            statement = connection.prepareStatement("INSERT INTO karma_settings VALUES(?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, guildId);
+            statement.execute();
+
+            statement = connection.prepareStatement("INSERT INTO starboard_settings VALUES(?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, guildId);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void closeDataSource() {

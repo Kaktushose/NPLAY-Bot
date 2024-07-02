@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.starboard;
 
+import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,11 @@ public class StarboardService {
 
     private static final Logger log = LoggerFactory.getLogger(StarboardService.class);
     private final DataSource dataSource;
+    private final Guild guild;
 
-    public StarboardService(DataSource dataSource) {
+    public StarboardService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
+        this.guild = bot.getGuild();
     }
 
     public boolean entryExists(long messageId) {
@@ -110,7 +113,7 @@ public class StarboardService {
         }
     }
 
-    public int getThreshold(Guild guild) {
+    public int getThreshold() {
         log.debug("Querying starboard threshold");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -128,7 +131,7 @@ public class StarboardService {
         }
     }
 
-    public int getKarmaReward(Guild guild) {
+    public int getKarmaReward() {
         log.debug("Querying starboard karma reward");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -146,7 +149,7 @@ public class StarboardService {
         }
     }
 
-    public long getStarboardChannelId(Guild guild) {
+    public long getStarboardChannelId() {
         log.debug("Querying starboard channel id");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""

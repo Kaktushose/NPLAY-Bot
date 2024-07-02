@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.events.contest;
 
+import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -16,12 +17,14 @@ public class ContestEventService {
 
     private static final Logger log = LoggerFactory.getLogger(ContestEventService.class);
     private final DataSource dataSource;
+    private final Guild guild;
 
-    public ContestEventService(DataSource dataSource) {
+    public ContestEventService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
+        this.guild = bot.getGuild();
     }
 
-    public long getContestEventChannel(Guild guild) {
+    public long getContestEventChannel() {
         log.debug("Querying contest event channel");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -40,7 +43,7 @@ public class ContestEventService {
         }
     }
 
-    public String getVoteEmoji(Guild guild) {
+    public String getVoteEmoji() {
         log.debug("Querying vote emoji");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -81,7 +84,7 @@ public class ContestEventService {
         }
     }
 
-    public List<ContestLeaderboardRow> stopContestEvent(Guild guild) {
+    public List<ContestLeaderboardRow> stopContestEvent() {
         log.debug("Stopping current contest event");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""

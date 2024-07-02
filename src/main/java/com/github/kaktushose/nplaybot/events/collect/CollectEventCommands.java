@@ -27,23 +27,23 @@ public class CollectEventCommands {
                                     @Param("Der Name des Events") String eventName,
                                     @Param("Der Name der Währung die gesammelt werden soll, z.B. \"Schneemänner\"") String currencyName,
                                     @Param("Die Emoji-Repräsentation der Währung, die gesammelt werden soll") String emoji) {
-        if (database.getCollectEventService().isActive(event.getGuild())) {
+        if (database.getCollectEventService().isActive()) {
             event.reply(embedCache.getEmbed("collectEventStartError"));
             return;
         }
-        database.getCollectEventService().startCollectEvent(event.getGuild(), eventName, currencyName, emoji);
+        database.getCollectEventService().startCollectEvent(eventName, currencyName, emoji);
         event.reply(embedCache.getEmbed("collectEventStart").injectValue("name", eventName));
     }
 
     @SlashCommand(value = "events collect-event stop", desc = "Stoppt das aktuelle Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onCollectEventStop(CommandEvent event) {
-        database.getCollectEventService().stopCollectEvent(event.getGuild());
+        database.getCollectEventService().stopCollectEvent();
         event.reply(embedCache.getEmbed("collectEventStop"));
     }
 
     @SlashCommand(value = "events set collect-loot-chance", desc = "Legt die Wahrscheinlichkeit für zufällige Collect-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
-        database.getCollectEventService().updateCollectLootChance(event.getGuild(), chance);
+        database.getCollectEventService().updateCollectLootChance(chance);
         event.reply(embedCache.getEmbed("collectLootChanceUpdate").injectValue("chance", chance));
     }
 

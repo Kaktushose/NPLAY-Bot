@@ -27,16 +27,12 @@ public class ItemExpirationTask {
 
         for (var transaction : transactions) {
             executor.schedule(() -> {
-                bot.getDatabase().getItemService().deleteTransaction(
-                        UserSnowflake.fromId(transaction.userId()),
-                        transaction.transactionId(),
-                        bot.getGuild()
-                );
+                bot.getDatabase().getItemService().deleteTransaction(UserSnowflake.fromId(transaction.userId()), transaction.transactionId());
 
                 if (transaction.isPlayActivity()) {
                     var rankInfo = bot.getDatabase().getRankService().getUserInfo(UserSnowflake.fromId(transaction.userId()));
                     if (rankInfo.karma() - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
-                        bot.getDatabase().getItemService().addPlayActivity(UserSnowflake.fromId(transaction.userId()), bot.getGuild());
+                        bot.getDatabase().getItemService().addPlayActivity(UserSnowflake.fromId(transaction.userId()));
                         bot.getDatabase().getItemService().updateLastKarma(UserSnowflake.fromId(transaction.userId()));
 
                         messageUser(transaction, bot.getEmbedCache().getEmbed("playActivityRenew").toEmbedBuilder(), bot);
@@ -60,7 +56,7 @@ public class ItemExpirationTask {
         var user = bot.getJda().getUserById(transaction.userId());
         user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed.build()))
                 .queue(null, new ErrorHandler().handle(ErrorResponse.CANNOT_SEND_TO_USER, exception -> {
-                    TextChannel channel = bot.getDatabase().getSettingsService().getBotChannel(bot.getGuild());
+                    TextChannel channel = bot.getDatabase().getSettingsService().getBotChannel();
                     channel.sendMessage(user.getAsMention()).and(channel.sendMessageEmbeds(embed.build())).queue();
                 }));
     }

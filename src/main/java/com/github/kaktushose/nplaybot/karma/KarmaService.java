@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.karma;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -26,13 +27,17 @@ public class KarmaService {
 
     private static final Logger log = LoggerFactory.getLogger(KarmaService.class);
     private final DataSource dataSource;
+    private final Bot bot;
     private final RankService rankService;
     private final ItemService itemService;
+    private final Guild guild;
 
-    public KarmaService(DataSource dataSource, RankService rankService, ItemService itemService) {
+    public KarmaService(DataSource dataSource, RankService rankService, ItemService itemService, Bot bot) {
         this.dataSource = dataSource;
+        this.bot = bot;
         this.rankService = rankService;
         this.itemService = itemService;
+        this.guild = bot.getGuild();
     }
 
     public void setKarma(UserSnowflake user, int karma) {
@@ -69,7 +74,7 @@ public class KarmaService {
         }
     }
 
-    public void onKarmaIncrease(int oldKarma, int newKarma, Member member, Guild guild, EmbedCache embedCache) {
+    public void onKarmaIncrease(int oldKarma, int newKarma, Member member, EmbedCache embedCache) {
         // play activity role
         var rankInfo = rankService.getUserInfo(member);
         if (newKarma - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
@@ -77,13 +82,13 @@ public class KarmaService {
                 return;
             }
 
-            itemService.addPlayActivity(member, guild);
+            itemService.addPlayActivity(member);
             itemService.updateLastKarma(member);
 
             var builder = new MessageCreateBuilder().addContent(member.getAsMention())
                     .addEmbeds(embedCache.getEmbed("playActivityAdd").toMessageEmbed())
                     .build();
-            getBotChannel(guild).sendMessage(builder).queue();
+            bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
         }
 
         // karma rewards
@@ -100,7 +105,7 @@ public class KarmaService {
 
         if (reward.xp() > 0) {
             var xpChangeResult = rankService.addXp(member, reward.xp());
-            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
+            rankService.onXpChange(xpChangeResult, member, embedCache);
         }
 
         if (reward.roleId() > 0) {
@@ -110,10 +115,10 @@ public class KarmaService {
         var builder = new MessageCreateBuilder().addContent(member.getAsMention())
                 .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
                 .build();
-        getBotChannel(guild).sendMessage(builder).queue();
+        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
     }
 
-    public void onKarmaDecrease(int oldKarma, int newKarma, Member member, Guild guild, EmbedCache embedCache) {
+    public void onKarmaDecrease(int oldKarma, int newKarma, Member member, EmbedCache embedCache) {
         var rewards = getKarmaRewards();
         var optional = rewards.stream()
                 .filter(it -> it.threshold() < oldKarma)
@@ -127,7 +132,7 @@ public class KarmaService {
 
         if (reward.xp() > 0) {
             var xpChangeResult = rankService.addXp(member, -reward.xp());
-            rankService.onXpChange(xpChangeResult, member, guild, embedCache);
+            rankService.onXpChange(xpChangeResult, member, embedCache);
         }
 
         if (reward.roleId() > 0) {
@@ -141,26 +146,7 @@ public class KarmaService {
                         .toEmbedBuilder()
                         .build()
                 ).build();
-        getBotChannel(guild).sendMessage(builder).queue();
-    }
-
-    private TextChannel getBotChannel(Guild guild) {
-        log.debug("Querying bot channel");
-        try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("""
-                    SELECT bot_channel_id
-                    FROM guild_settings
-                    WHERE guild_id = ?
-                    """
-            );
-            statement.setLong(1, guild.getIdLong());
-
-            var result = statement.executeQuery();
-            result.next();
-            return guild.getTextChannelById(result.getLong(1));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
     }
 
     public void resetTokens() {
@@ -244,7 +230,7 @@ public class KarmaService {
         }
     }
 
-    public int getDefaultTokens(Guild guild) {
+    public int getDefaultTokens() {
         log.debug("Querying default karma tokens for guild {}", guild);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -263,7 +249,7 @@ public class KarmaService {
         }
     }
 
-    public void setDefaultTokens(Guild guild, int value) {
+    public void setDefaultTokens(int value) {
         log.debug("Setting default karma tokens for guild {}", guild);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -281,7 +267,7 @@ public class KarmaService {
         }
     }
 
-    public List<UnicodeEmoji> getValidEmojis(Guild guild) {
+    public List<UnicodeEmoji> getValidEmojis() {
         log.debug("Querying valid karma emojis for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""

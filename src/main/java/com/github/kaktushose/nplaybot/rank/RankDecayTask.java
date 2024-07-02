@@ -8,27 +8,27 @@ import java.util.concurrent.TimeUnit;
 
 public class RankDecayTask {
 
-    private static final int START_DECAY_RANK_ID = 2;
-    private static final int DECAY_XP_AMOUNT = 150;
-
     @ScheduledTask(period = 7, unit = TimeUnit.DAYS)
     public void accept(Bot bot) {
+        var startDecayRankId = bot.getDatabase().getRankService().getStartDecayRankId();
+        var decayXp = bot.getDatabase().getRankService().getDecayXp();
+
         bot.getGuild().loadMembers(member -> {
             var currentRank = bot.getDatabase().getRankService().getUserInfo(member);
 
-            if (currentRank.currentRank().rankId() < START_DECAY_RANK_ID) {
+            if (currentRank.currentRank().rankId() < startDecayRankId) {
                 return;
             }
 
-            var userXpAfterDecay = currentRank.currentXp() - DECAY_XP_AMOUNT;
+            var userXpAfterDecay = currentRank.currentXp() - decayXp;
             var newRank = bot.getDatabase().getRankService().getRankByXp(userXpAfterDecay);
 
             XpChangeResult result;
             // if new rank is present
             if (newRank.isPresent()) {
                 // check if we fall under the minimum rank and set xp to lower bound
-                if (newRank.get().rankId() < START_DECAY_RANK_ID) {
-                    var minimumRank = bot.getDatabase().getRankService().getRankInfo(START_DECAY_RANK_ID);
+                if (newRank.get().rankId() < startDecayRankId) {
+                    var minimumRank = bot.getDatabase().getRankService().getRankInfo(startDecayRankId);
                     result = bot.getDatabase().getRankService().setXp(member, minimumRank.orElseThrow().xpBound());
                 // if we don't fall under the minimum rank just remove all xp as planned
                 } else {
@@ -36,11 +36,10 @@ public class RankDecayTask {
                 }
             // if new rank isn't present we went too far and also set xp to lower bound
             } else {
-                var minimumRank = bot.getDatabase().getRankService().getRankInfo(START_DECAY_RANK_ID);
+                var minimumRank = bot.getDatabase().getRankService().getRankInfo(startDecayRankId);
                 result = bot.getDatabase().getRankService().setXp(member, minimumRank.orElseThrow().xpBound());
             }
-            bot.getDatabase().getRankService().onXpChange(result, member, bot.getGuild(), bot.getEmbedCache());
+            bot.getDatabase().getRankService().onXpChange(result, member, bot.getEmbedCache());
         });
     }
-
 }

@@ -32,12 +32,6 @@ public class Bot {
 
     @SuppressWarnings("DataFlowIssue")
     private Bot(long guildId, String token) throws InterruptedException, RuntimeException {
-        try {
-            database = new Database(this);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to connect to database!", e);
-        }
-
         embedCache = new EmbedCache("embeds.json");
 
         jda = JDABuilder.createDefault(token)
@@ -49,19 +43,26 @@ public class Bot {
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
-                .addEventListeners(
-                        new RankListener(database, embedCache, this),
-                        new JoinLeaveListener(database.getRankService()),
-                        new ContestListener(database.getContestEventService()),
-                        new CollectEventListener(database, embedCache),
-                        new KarmaListener(database, embedCache),
-                        new StarboardListener(database, embedCache)
-                )
                 .build().awaitReady();
 
         guild = jda.getGuildById(guildId);
 
-        database.getRankService().indexMembers(guild);
+        try {
+            database = new Database(this);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to connect to database!", e);
+        }
+
+        jda.addEventListener(
+                new RankListener(database, embedCache, this),
+                new JoinLeaveListener(database.getRankService()),
+                new ContestListener(database.getContestEventService()),
+                new CollectEventListener(database, embedCache),
+                new KarmaListener(database, embedCache),
+                new StarboardListener(database, embedCache)
+        );
+
+        database.getRankService().indexMembers();
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
         jdaCommands.getDependencyInjector().registerProvider(this);

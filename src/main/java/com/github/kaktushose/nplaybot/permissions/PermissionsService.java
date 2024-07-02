@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.permissions;
 
+import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class PermissionsService {
     private static final Logger log = LoggerFactory.getLogger(PermissionsService.class);
     private final DataSource dataSource;
 
-    public PermissionsService(DataSource dataSource) {
+    public PermissionsService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
     }
 

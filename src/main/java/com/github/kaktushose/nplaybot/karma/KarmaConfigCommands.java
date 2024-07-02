@@ -30,9 +30,9 @@ public class KarmaConfigCommands {
         database.getKarmaService().addKarma(target, amount);
 
         if (newKarma > oldKarma) {
-            database.getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
+            database.getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), embedCache);
         } else if (newKarma < oldKarma) {
-            database.getKarmaService().onKarmaDecrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
+            database.getKarmaService().onKarmaDecrease(oldKarma, newKarma, event.getMember(), embedCache);
         }
 
         event.reply(embedCache.getEmbed("addKarmaResult")
@@ -48,9 +48,9 @@ public class KarmaConfigCommands {
         database.getKarmaService().setKarma(target, value);
 
         if (value > oldKarma) {
-            database.getKarmaService().onKarmaIncrease(oldKarma, value, event.getMember(), event.getGuild(), embedCache);
+            database.getKarmaService().onKarmaIncrease(oldKarma, value, event.getMember(), embedCache);
         } else if (value < oldKarma) {
-            database.getKarmaService().onKarmaDecrease(oldKarma, value, event.getMember(), event.getGuild(), embedCache);
+            database.getKarmaService().onKarmaDecrease(oldKarma, value, event.getMember(), embedCache);
         }
 
         event.reply(embedCache.getEmbed("setKarmaResult")
@@ -62,19 +62,19 @@ public class KarmaConfigCommands {
     @SlashCommand(value = "karma-config set default-karma-tokens", desc = "Legt die tägliche Anzahl an Karma-Tokens für jeden Nutzer fest", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MANAGE_KARMA_SETTINGS)
     public void onSetKarmaTokens(CommandEvent event, @Min(1) @Max(Integer.MAX_VALUE) int value) {
-        database.getKarmaService().setDefaultTokens(event.getGuild(), value);
+        database.getKarmaService().setDefaultTokens(value);
         onGetKarmaConfig(event);
     }
 
     @SlashCommand(value = "karma-config display", desc = "Zeigt die Einstellungen für das Karma System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     @Permissions(BotPermissions.MANAGE_KARMA_SETTINGS)
     public void onGetKarmaConfig(CommandEvent event) {
-        var emojis = database.getKarmaService().getValidEmojis(event.getGuild());
+        var emojis = database.getKarmaService().getValidEmojis();
         var builder = new StringBuilder();
         emojis.forEach(it -> builder.append(it.getFormatted()).append(" "));
         event.reply(embedCache.getEmbed("karmaConfig")
                 .injectValue("emojis", builder)
-                .injectValue("tokens", database.getKarmaService().getDefaultTokens(event.getGuild()))
+                .injectValue("tokens", database.getKarmaService().getDefaultTokens())
         );
     }
 }

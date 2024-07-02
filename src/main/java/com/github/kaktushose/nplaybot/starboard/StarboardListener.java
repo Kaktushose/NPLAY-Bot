@@ -60,19 +60,19 @@ public class StarboardListener extends ListenerAdapter {
             if (!starboardService.entryExists(messageId)) {
                 starboardService.createEntry(messageId);
             }
-            if (count.get() < starboardService.getThreshold(event.getGuild())) {
+            if (count.get() < starboardService.getThreshold()) {
                 return;
             }
             if (!starboardService.isRewarded(messageId)) {
                 starboardService.setRewarded(messageId);
 
                 var oldKarma = rankService.getUserInfo(event.getUser()).karma();
-                karmaService.addKarma(UserSnowflake.fromId(event.getMessageAuthorIdLong()), starboardService.getKarmaReward(event.getGuild()));
+                karmaService.addKarma(UserSnowflake.fromId(event.getMessageAuthorIdLong()), starboardService.getKarmaReward());
                 var newKarma = rankService.getUserInfo(event.getUser()).karma();
-                karmaService.onKarmaIncrease(oldKarma, newKarma, event.getMember(), event.getGuild(), embedCache);
+                karmaService.onKarmaIncrease(oldKarma, newKarma, event.getMember(), embedCache);
             }
 
-            var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId(event.getGuild()));
+            var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId());
             if (starboardService.isPosted(messageId)) {
                 starboardChannel.retrieveMessageById(starboardService.getPostId(messageId))
                         .flatMap(msg -> msg.editMessage(MessageEditData.fromCreateData(buildMessage(message, count.get()))))
@@ -96,7 +96,7 @@ public class StarboardListener extends ListenerAdapter {
         }
 
         AtomicInteger count = new AtomicInteger(0);
-        var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId(event.getGuild()));
+        var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId());
         event.getChannel().retrieveMessageById(event.getMessageIdLong()).queue(message -> {
             Optional.ofNullable(message.getReaction(Emoji.fromFormatted("⭐"))).ifPresent(
                     it -> count.set(it.getCount())
@@ -119,7 +119,7 @@ public class StarboardListener extends ListenerAdapter {
                 starboardService.createEntry(messageId);
             }
 
-            if (count.get() < starboardService.getThreshold(event.getGuild()) && starboardService.isPosted(messageId)) {
+            if (count.get() < starboardService.getThreshold() && starboardService.isPosted(messageId)) {
                 starboardChannel.retrieveMessageById(starboardService.getPostId(messageId)).flatMap(Message::delete).queue();
                 starboardService.setPostId(messageId, -1);
                 return;
@@ -185,7 +185,7 @@ public class StarboardListener extends ListenerAdapter {
 
     private void removeEntry(GenericMessageEvent event) {
         starboardService.setPostId(event.getMessageIdLong(), -1);
-        event.getGuild().getTextChannelById(starboardService.getStarboardChannelId(event.getGuild()))
+        event.getGuild().getTextChannelById(starboardService.getStarboardChannelId())
                 .retrieveMessageById(starboardService.getPostId(event.getMessageIdLong()))
                 .flatMap(Message::delete)
                 .queue();
