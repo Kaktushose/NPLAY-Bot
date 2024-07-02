@@ -508,7 +508,7 @@ public class RankService {
     public void increaseTotalMessageCount() {
         log.debug("Increasing total message count by one");
         try (Connection connection = dataSource.getConnection()) {
-            connection.prepareStatement("SELECT * FROM increase_total_message_count()").execute();
+            connection.prepareStatement("SELECT * FROM update_total_message_statistics()").execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
