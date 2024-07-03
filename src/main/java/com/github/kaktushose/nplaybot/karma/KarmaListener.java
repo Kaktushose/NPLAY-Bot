@@ -29,15 +29,29 @@ public class KarmaListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
-        if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
-            return;
+
+        if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
+            // prevent Erich abuse
+            if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
+                event.getReaction().removeReaction(event.getUser()).queue();
+                return;
+            }
+
+            int oldKarma = rankService.getUserInfo(UserSnowflake.fromId(event.getMessageAuthorIdLong())).karma();
+            int newKarma = karmaService.onKarmaVoteAdd(event.getUser(), UserSnowflake.fromId(event.getMessageAuthorIdLong()), true);
+
+            event.retrieveMessage().queue(message -> karmaService.onKarmaIncrease(oldKarma, newKarma, message.getMember(), embedCache));
+        } else if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
+            if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
+                event.getReaction().removeReaction(event.getUser()).queue();
+                return;
+            }
+
+            int oldKarma = rankService.getUserInfo(UserSnowflake.fromId(event.getMessageAuthorIdLong())).karma();
+            int newKarma = karmaService.onKarmaVoteRemove(event.getUser(), UserSnowflake.fromId(event.getMessageAuthorIdLong()), true);
+
+            event.retrieveMessage().queue(message -> karmaService.onKarmaIncrease(oldKarma, newKarma, message.getMember(), embedCache));
         }
-        if (!karmaService.getValidEmojis().contains(event.getEmoji())) {
-            return;
-        }
-        int oldKarma = rankService.getUserInfo(UserSnowflake.fromId(event.getMessageAuthorIdLong())).karma();
-        int newKarma = karmaService.onKarmaVoteAdd(event.getUser(), UserSnowflake.fromId(event.getMessageAuthorIdLong()));
-        event.retrieveMessage().queue(message -> karmaService.onKarmaIncrease(oldKarma, newKarma, message.getMember(), embedCache));
     }
 
     @Override
@@ -48,16 +62,19 @@ public class KarmaListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
-        if (!karmaService.getValidEmojis().contains(event.getEmoji())) {
-            return;
-        }
         event.retrieveMessage().queue(message -> {
             if (event.getUser().getIdLong() == message.getAuthor().getIdLong()) {
                 return;
             }
-            int oldKarma = rankService.getUserInfo(message.getAuthor()).karma();
-            int newKarma = karmaService.onKarmaVoteRemove(event.getUser(), message.getAuthor());
-            karmaService.onKarmaDecrease(oldKarma, newKarma, message.getMember(), embedCache);
+            if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
+                int oldKarma = rankService.getUserInfo(message.getAuthor()).karma();
+                int newKarma = karmaService.onKarmaVoteRemove(event.getUser(), message.getAuthor(), false);
+                karmaService.onKarmaDecrease(oldKarma, newKarma, message.getMember(), embedCache);
+            } else if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
+                int oldKarma = rankService.getUserInfo(message.getAuthor()).karma();
+                int newKarma = karmaService.onKarmaVoteAdd(event.getUser(), message.getAuthor(), false);
+                karmaService.onKarmaDecrease(oldKarma, newKarma, message.getMember(), embedCache);
+            }
         });
     }
 }

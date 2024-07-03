@@ -69,7 +69,7 @@ public class KarmaConfigCommands {
     @SlashCommand(value = "karma-config display", desc = "Zeigt die Einstellungen für das Karma System an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
     @Permissions(BotPermissions.MANAGE_KARMA_SETTINGS)
     public void onGetKarmaConfig(CommandEvent event) {
-        var emojis = database.getKarmaService().getValidEmojis();
+        var emojis = database.getKarmaService().getValidUpvoteEmojis();
         var builder = new StringBuilder();
         emojis.forEach(it -> builder.append(it.getFormatted()).append(" "));
         event.reply(embedCache.getEmbed("karmaConfig")
