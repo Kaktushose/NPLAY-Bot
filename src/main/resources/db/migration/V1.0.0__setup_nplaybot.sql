@@ -1,8 +1,3 @@
--- clear old database
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-
-
 -- create tables
 CREATE TABLE bot_settings (
     guild_id BIGINT NOT NULL PRIMARY KEY,
