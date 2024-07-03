@@ -94,7 +94,8 @@ CREATE TABLE role_permissions (
 
 CREATE TABLE karma_settings (
    guild_id BIGINT NOT NULL PRIMARY KEY,
-   VALID_EMOJIS VARCHAR[] NOT NULL DEFAULT ARRAY[]::VARCHAR[],
+   valid_emojis_upvote VARCHAR[] NOT NULL DEFAULT ARRAY[]::VARCHAR[],
+   valid_emojis_downvote VARCHAR[] NOT NULL DEFAULT ARRAY[]::VARCHAR[],
    default_tokens INT NOT NULL DEFAULT 5,
    play_activity_threshold INT NOT NULL DEFAULT 30
 );

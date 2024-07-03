@@ -60,13 +60,6 @@ public class RankService {
         }
     }
 
-    public void indexMembers() {
-        guild.loadMembers(member -> {
-            createUser(member.getUser());
-            updateRankRoles(member, getUserInfo(member).currentRank());
-        });
-    }
-
     public Optional<RankInfo> getRankInfo(int rankId) {
         log.debug("Querying rank info for rank: {}", rankId);
         try (Connection connection = dataSource.getConnection()) {

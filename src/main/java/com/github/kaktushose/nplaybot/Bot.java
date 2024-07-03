@@ -58,10 +58,9 @@ public class Bot {
                 new ContestListener(database.getContestEventService()),
                 new CollectEventListener(database, embedCache),
                 new KarmaListener(database, embedCache),
-                new StarboardListener(database, embedCache)
+                new StarboardListener(database, embedCache),
+                new MemberDatabaseSyncListener(database)
         );
-
-        database.getRankService().indexMembers();
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
         jdaCommands.getDependencyInjector().registerProvider(this);

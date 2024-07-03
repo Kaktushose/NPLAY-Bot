@@ -175,12 +175,15 @@ public class KarmaService {
         }
     }
 
-    public int onKarmaVoteAdd(UserSnowflake author, UserSnowflake target) {
+    public int onKarmaVoteAdd(UserSnowflake author, UserSnowflake target, boolean decreaseTokens) {
         log.debug("Performing karma vote of {} for {}", author, target);
         try (var connection = dataSource.getConnection()) {
             if (getUserTokens(author) > 0) {
                 addKarma(target, 1);
-                decreaseTokens(author, 1);
+
+                if (decreaseTokens) {
+                    decreaseTokens(author, 1);
+                }
             }
 
             var statement = connection.prepareStatement("SELECT karma_points FROM users WHERE user_id = ?");
@@ -194,10 +197,14 @@ public class KarmaService {
         }
     }
 
-    public int onKarmaVoteRemove(User author, User target) {
+    public int onKarmaVoteRemove(UserSnowflake author, UserSnowflake target, boolean decreaseTokens) {
         log.debug("Removing karma vote of {} for {}", author, target);
         try (var connection = dataSource.getConnection()) {
             addKarma(target, -1);
+
+            if (decreaseTokens) {
+                decreaseTokens(author, 1);
+            }
 
             var statement = connection.prepareStatement("SELECT karma_points FROM users WHERE user_id = ?");
             statement.setLong(1, target.getIdLong());
@@ -266,11 +273,31 @@ public class KarmaService {
         }
     }
 
-    public List<UnicodeEmoji> getValidEmojis() {
+    public List<UnicodeEmoji> getValidUpvoteEmojis() {
         log.debug("Querying valid karma emojis for guild {}", guild);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT valid_emojis
+                    SELECT valid_emojis_upvote
+                    FROM karma_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            var emojis = Arrays.asList((String[]) result.getArray(1).getArray());
+            return emojis.stream().map(Emoji::fromUnicode).toList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<UnicodeEmoji> getValidDownvoteEmojis() {
+        log.debug("Querying valid karma emojis for guild {}", guild);
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT valid_emojis_downvote
                     FROM karma_settings
                     WHERE guild_id = ?
                     """

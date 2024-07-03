@@ -34,6 +34,11 @@ public class AddItemCommand {
         var transactions = database.getItemService().getTransactions(target).stream().map(ItemService.Transaction::typeId).toList();
         items = items.stream().filter(it -> !transactions.contains(it.typeId())).toList();
 
+        if (items.isEmpty()) {
+            event.reply(embedCache.getEmbed("allItemsError"));
+            return;
+        }
+
         this.target = target;
 
         var menu = event.getSelectMenu(

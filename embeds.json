@@ -349,5 +349,10 @@
         "value": ":frowning: Weiter bergab geht es nicht mehr.\nAlso Kopf hoch, schlimmer wird es nicht :wink:."
       }
     ]
+  },
+  "allItemsError": {
+    "title": "Fehler",
+    "description": "Der Nutzer hat bereits alle Items",
+    "color": "#ffc926"
   }
 }
