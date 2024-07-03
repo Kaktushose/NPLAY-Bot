@@ -30,7 +30,6 @@ services:
       context: .
       dockerfile: Dockerfile
     image: nplay-bot
-    #image: ghcr.io/kaktushose/nplay-bot/nplaybot:latest
     container_name: nplay-bot
     restart: on-failure
     environment:

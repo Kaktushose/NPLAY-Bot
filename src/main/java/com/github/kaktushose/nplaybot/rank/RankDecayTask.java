@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RankDecayTask {
 
-    @ScheduledTask(period = 7, unit = TimeUnit.DAYS)
+    // @ScheduledTask(period = 7, unit = TimeUnit.DAYS)
     public void accept(Bot bot) {
         var startDecayRankId = bot.getDatabase().getRankService().getStartDecayRankId();
         var decayXp = bot.getDatabase().getRankService().getDecayXp();
