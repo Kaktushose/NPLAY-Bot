@@ -354,5 +354,10 @@
     "title": "Fehler",
     "description": "Der Nutzer hat bereits alle Items",
     "color": "#ffc926"
-  }
+  },
+  "legacyCommandInfo": {
+    "title": "Hinweis",
+    "description": "Text-Befehle wurden deaktiviert. Du kannst stattdessen einfach `/` eingeben, um eine Übersicht über alle Befehle zu erhalten.",
+    "color": "#67c94f"
+}
 }

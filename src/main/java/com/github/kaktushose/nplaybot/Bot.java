@@ -59,7 +59,8 @@ public class Bot {
                 new CollectEventListener(database, embedCache),
                 new KarmaListener(database, embedCache),
                 new StarboardListener(database, embedCache),
-                new MemberDatabaseSyncListener(database)
+                new MemberDatabaseSyncListener(database),
+                new LegacyCommandListener(embedCache)
         );
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");

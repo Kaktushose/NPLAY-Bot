@@ -110,7 +110,7 @@ public class StarboardListener extends ListenerAdapter {
                 if (!starboardService.isPosted(messageId)) {
                     return;
                 }
-                starboardChannel.retrieveMessageById(starboardService.getPostId(messageId)).flatMap(Message::delete).queue();
+                removeEntry(event);
                 return;
             }
 
@@ -118,13 +118,20 @@ public class StarboardListener extends ListenerAdapter {
                 starboardService.createEntry(messageId);
             }
 
-            if (count.get() < starboardService.getThreshold() && starboardService.isPosted(messageId)) {
-                starboardChannel.retrieveMessageById(starboardService.getPostId(messageId)).flatMap(Message::delete).queue();
-                starboardService.setPostId(messageId, -1);
-                return;
+            if (count.get() < starboardService.getThreshold()) {
+                if (!starboardService.isPosted(messageId)) {
+                    return;
+                }
+                removeEntry(event);
+            } else {
+                if (!starboardService.isPosted(messageId)) {
+                    starboardChannel.sendMessage(buildMessage(message, count.get())).queue(msg -> starboardService.setPostId(messageId, msg.getIdLong()));
+                    return;
+                }
+                starboardChannel.retrieveMessageById(starboardService.getPostId(messageId))
+                        .flatMap(msg -> msg.editMessage(MessageEditData.fromCreateData(buildMessage(message, count.get()))))
+                        .queue();
             }
-
-            starboardChannel.sendMessage(buildMessage(message, count.get())).queue(msg -> starboardService.setPostId(messageId, msg.getIdLong()));
         });
     }
 
@@ -183,10 +190,10 @@ public class StarboardListener extends ListenerAdapter {
     }
 
     private void removeEntry(GenericMessageEvent event) {
-        starboardService.setPostId(event.getMessageIdLong(), -1);
         event.getGuild().getTextChannelById(starboardService.getStarboardChannelId())
                 .retrieveMessageById(starboardService.getPostId(event.getMessageIdLong()))
                 .flatMap(Message::delete)
                 .queue();
+        starboardService.setPostId(event.getMessageIdLong(), -1);
     }
 }
