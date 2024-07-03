@@ -111,6 +111,15 @@ public class PermissionsService {
         }
     }
 
+    public boolean hasUserPermissions(Member member) {
+        return hasPermissions(member, BotPermissions.USER);
+    }
+
+    public boolean hasPermissions(Member member, String... permissions) {
+        log.debug("Checking permissions for member {}", member);
+        return hasPermissions(member, Set.of(permissions));
+    }
+
     public boolean hasPermissions(Member member, Set<String> permissions) {
         log.debug("Checking permissions for member {}", member);
         return BotPermissions.hasPermissions(permissions, getMemberPermissions(member));

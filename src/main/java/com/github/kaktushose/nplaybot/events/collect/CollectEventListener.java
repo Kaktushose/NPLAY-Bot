@@ -2,6 +2,7 @@ package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,6 +28,7 @@ public class CollectEventListener extends ListenerAdapter {
     private final RankService rankService;
     private final CollectEventService eventService;
     private final SettingsService settingsService;
+    private final PermissionsService permissionsService;
     private final EmbedCache embedCache;
     private final Set<Long> collectLootDrops;
 
@@ -34,6 +36,7 @@ public class CollectEventListener extends ListenerAdapter {
         this.rankService = database.getRankService();
         this.eventService = database.getCollectEventService();
         this.settingsService = database.getSettingsService();
+        this.permissionsService = database.getPermissionsService();
         this.embedCache = embedCache;
         collectLootDrops = new HashSet<>();
     }
@@ -53,6 +56,10 @@ public class CollectEventListener extends ListenerAdapter {
         }
 
         if (!rankService.isValidChannel(event.getChannel())) {
+            return;
+        }
+
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
             return;
         }
 
@@ -121,6 +128,11 @@ public class CollectEventListener extends ListenerAdapter {
         }
         var currency = eventService.getCollectCurrency();
         if (!event.getEmoji().equals(Emoji.fromUnicode(currency.emoji()))) {
+            return;
+        }
+
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
             return;
         }
 

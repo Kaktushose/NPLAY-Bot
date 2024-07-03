@@ -63,6 +63,11 @@ public class LootboxListener extends ListenerAdapter {
             return;
         }
 
+        if (!bot.getDatabase().getPermissionsService().hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+
         event.getReaction().clearReactions().queue();
 
         if (lootbox.xpReward() > 0) {

@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import java.util.concurrent.TimeUnit;
@@ -40,6 +41,7 @@ public class Bot {
                         GatewayIntent.MESSAGE_CONTENT
                 )
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setChunkingFilter(ChunkingFilter.include(guildId))
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .build().awaitReady();
@@ -55,7 +57,7 @@ public class Bot {
         jda.addEventListener(
                 new RankListener(database, embedCache, this),
                 new JoinLeaveListener(database.getRankService()),
-                new ContestListener(database.getContestEventService()),
+                new ContestListener(database),
                 new CollectEventListener(database, embedCache),
                 new KarmaListener(database, embedCache),
                 new StarboardListener(database, embedCache),

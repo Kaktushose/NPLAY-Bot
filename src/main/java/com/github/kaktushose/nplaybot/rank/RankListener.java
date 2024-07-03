@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot.rank;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
@@ -20,6 +21,7 @@ public class RankListener extends ListenerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(RankListener.class);
     private final RankService rankService;
+    private final PermissionsService permissionsService;
     private final EmbedCache embedCache;
     private final Bot bot;
     private final Map<Long, Integer> xpLootDrops;
@@ -27,6 +29,7 @@ public class RankListener extends ListenerAdapter {
 
     public RankListener(Database database, EmbedCache embedCache, Bot bot) {
         this.rankService = database.getRankService();
+        this.permissionsService = database.getPermissionsService();
         this.embedCache = embedCache;
         this.bot = bot;
         xpLootDrops = new HashMap<>();
@@ -49,19 +52,21 @@ public class RankListener extends ListenerAdapter {
         rankService.updateRankRoles(event.getMember(), rankService.getUserInfo(author).currentRank());
         rankService.increaseTotalMessageCount();
 
-        if (!rankService.isValidChannel(event.getChannel())) {
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
             return;
         }
 
-        onXpLootDrop(event);
-
-        onCheckForLootbox(event);
+        if (!rankService.isValidChannel(event.getChannel())) {
+            return;
+        }
 
         if (!rankService.isValidMessage(event.getMessage())) {
             log.debug("Message doesn't meet rank criteria");
             return;
         }
 
+        onXpLootDrop(event);
+        onCheckForLootbox(event);
         onAddRegularXp(event);
     }
 
@@ -109,6 +114,11 @@ public class RankListener extends ListenerAdapter {
             return;
         }
         if (!event.getEmoji().equals(Emoji.fromUnicode(XP_LOOT_DROP_EMOJI))) {
+            return;
+        }
+
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
             return;
         }
 

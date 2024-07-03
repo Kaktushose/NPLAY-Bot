@@ -1,5 +1,7 @@
 package com.github.kaktushose.nplaybot.events.contest;
 
+import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -16,9 +18,11 @@ public class ContestListener extends ListenerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(ContestListener.class);
     private final ContestEventService eventService;
+    private final PermissionsService permissionsService;
 
-    public ContestListener(ContestEventService eventService) {
-        this.eventService = eventService;
+    public ContestListener(Database database) {
+        this.eventService = database.getContestEventService();
+        this.permissionsService = database.getPermissionsService();
     }
 
     @Override
@@ -30,6 +34,11 @@ public class ContestListener extends ListenerAdapter {
             return;
         }
         if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getMessage().delete().queue();
             return;
         }
 
@@ -55,6 +64,11 @@ public class ContestListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+
         if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
             log.debug("Removing self vote from contest entry");
             event.retrieveMessage().flatMap(message -> message.removeReaction(event.getEmoji(), event.getUser())).queue();
@@ -74,6 +88,9 @@ public class ContestListener extends ListenerAdapter {
             return;
         }
         if (event.getUser().isBot()) {
+            return;
+        }
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
             return;
         }
         if (!event.getEmoji().equals(Emoji.fromFormatted(eventService.getVoteEmoji()))) {

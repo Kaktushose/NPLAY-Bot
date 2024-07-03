@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot.starboard;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.karma.KarmaService;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -30,12 +31,14 @@ public class StarboardListener extends ListenerAdapter {
     private final StarboardService starboardService;
     private final KarmaService karmaService;
     private final RankService rankService;
+    private final PermissionsService permissionsService;
     private final EmbedCache embedCache;
 
     public StarboardListener(Database database, EmbedCache embedCache) {
         this.starboardService = database.getStarboardService();
         this.karmaService = database.getKarmaService();
         this.rankService = database.getRankService();
+        this.permissionsService = database.getPermissionsService();
         this.embedCache = embedCache;
     }
 
@@ -49,8 +52,17 @@ public class StarboardListener extends ListenerAdapter {
             return;
         }
 
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+
         AtomicInteger count = new AtomicInteger(0);
         event.getChannel().retrieveMessageById(event.getMessageIdLong()).queue(message -> {
+            if (!permissionsService.hasUserPermissions(message.getMember())) {
+                return;
+            }
+
             Optional.ofNullable(message.getReaction(Emoji.fromFormatted("⭐"))).ifPresent(
                     it -> count.set(it.getCount())
             );
@@ -94,9 +106,17 @@ public class StarboardListener extends ListenerAdapter {
             return;
         }
 
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            return;
+        }
+
         AtomicInteger count = new AtomicInteger(0);
         var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId());
         event.getChannel().retrieveMessageById(event.getMessageIdLong()).queue(message -> {
+            if (!permissionsService.hasUserPermissions(message.getMember())) {
+                return;
+            }
+
             Optional.ofNullable(message.getReaction(Emoji.fromFormatted("⭐"))).ifPresent(
                     it -> count.set(it.getCount())
             );
@@ -193,7 +213,6 @@ public class StarboardListener extends ListenerAdapter {
         event.getGuild().getTextChannelById(starboardService.getStarboardChannelId())
                 .retrieveMessageById(starboardService.getPostId(event.getMessageIdLong()))
                 .flatMap(Message::delete)
-                .queue();
-        starboardService.setPostId(event.getMessageIdLong(), -1);
+                .queue(success -> starboardService.setPostId(event.getMessageIdLong(), -1));
     }
 }
