@@ -56,7 +56,7 @@ public class Bot {
 
         jda.addEventListener(
                 new RankListener(database, embedCache, this),
-                new JoinLeaveListener(database.getRankService()),
+                new JoinLeaveListener(database),
                 new ContestListener(database),
                 new CollectEventListener(database, embedCache),
                 new KarmaListener(database, embedCache),
