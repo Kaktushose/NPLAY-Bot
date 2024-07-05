@@ -10,13 +10,13 @@ public class DailyMessageTask {
 
     @ScheduledTask(period = 24, unit = TimeUnit.HOURS, startAtMidnight = true)
     public void onSendDailyMessages(Bot bot) {
-        bot.getDatabase().getRankService().getDailyRankInfos().forEach((userId, userInfo) ->
-                bot.getJda().retrieveUserById(userId)
+        bot.getDatabase().getRankService().getDailyRankInfos().forEach(user ->
+                bot.getJda().retrieveUserById(user.id())
                         .flatMap(User::openPrivateChannel)
                         .flatMap(channel ->
                                 channel.sendMessage(
-                                        bot.getEmbedCache().getEmbed(userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
-                                                .injectValues(userInfo.getEmbedValues(channel.getUser(), true)).toMessageCreateData()
+                                        bot.getEmbedCache().getEmbed(user.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
+                                                .injectValues(user.getEmbedValues(channel.getUser(), true)).toMessageCreateData()
                                 )
                         ).queue()
         );

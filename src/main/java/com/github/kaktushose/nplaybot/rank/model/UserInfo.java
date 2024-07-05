@@ -2,12 +2,29 @@ package com.github.kaktushose.nplaybot.rank.model;
 
 import net.dv8tion.jda.api.entities.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record UserInfo(int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain,
-                       int karma, int lastKarma) {
+public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain,
+                       int karma, int lastKarma, long lastValidMessage) {
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static UserInfo fromResultSet(ResultSet result, RankInfo currentRank, Optional<RankInfo> nextRank) throws SQLException {
+        return new UserInfo(
+                result.getLong("user_id"),
+                result.getInt("xp"),
+                currentRank,
+                nextRank,
+                result.getInt("message_count"),
+                result.getInt("xp") - result.getInt("start_xp"),
+                result.getInt("karma_points"),
+                result.getInt("last_karma"),
+                result.getLong("last_valid_message")
+        );
+    }
 
     public Map<String, Object> getEmbedValues(User user, boolean isDM) {
         var result = new HashMap<String, Object>() {{

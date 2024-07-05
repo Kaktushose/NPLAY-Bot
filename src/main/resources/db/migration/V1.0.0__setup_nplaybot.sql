@@ -12,7 +12,9 @@ CREATE TABLE rank_settings (
     valid_channels BIGINT[] NOT NULL DEFAULT ARRAY[]::BIGINT[],
     xp_loot_chance REAL NOT NULL DEFAULT 2.3,
     rank_decay_start INT NOT NULL DEFAULT 8,
-    ranK_decay_xp_loss INT NOT NULL DEFAULT 150,
+    rank_decay_xp_loss INT NOT NULL DEFAULT 150,
+    last_rank_decay BIGINT NOT NULL DEFAULT 0,
+    rank_decay_interval INT NOT NULL DEFAULT 7,
     lootbox_chance REAL NOT NULL DEFAULT 1.0,
     lootbox_query_limit INT NOT NULL DEFAULT 30
 );

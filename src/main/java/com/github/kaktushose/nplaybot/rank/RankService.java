@@ -104,15 +104,7 @@ public class RankService {
             var currentRank = getRankInfo(result.getInt("rank_id")).orElseThrow();
             var nextRank = getRankInfo(result.getInt("rank_id") + 1);
 
-            return new UserInfo(
-                    result.getInt("xp"),
-                    currentRank,
-                    nextRank,
-                    result.getInt("message_count"),
-                    result.getInt("xp") - result.getInt("start_xp"),
-                    result.getInt("karma_points"),
-                    result.getInt("last_karma")
-            );
+            return UserInfo.fromResultSet(result, currentRank, nextRank);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -536,7 +528,7 @@ public class RankService {
         }
     }
 
-    public Map<Long, UserInfo> getDailyRankInfos() {
+    public List<UserInfo> getDailyRankInfos() {
         log.debug("Querying daily rank infos");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
@@ -546,20 +538,12 @@ public class RankService {
                     """
             );
             var result = statement.executeQuery();
-            var users = new HashMap<Long, UserInfo>();
+            var users = new ArrayList<UserInfo>();
             while (result.next()) {
                 var currentRank = getRankInfo(result.getInt("rank_id")).orElseThrow();
                 var nextRank = getRankInfo(result.getInt("rank_id") + 1);
 
-                users.put(result.getLong("user_id"), new UserInfo(
-                        result.getInt("xp"),
-                        currentRank,
-                        nextRank,
-                        result.getInt("message_count"),
-                        result.getInt("xp") - result.getInt("start_xp"),
-                        result.getInt("karma_points"),
-                        result.getInt("last_karma")
-                ));
+                users.add(UserInfo.fromResultSet(result, currentRank, nextRank));
             }
             return users;
         } catch (SQLException e) {
@@ -674,6 +658,81 @@ public class RankService {
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT lootbox_query_limit
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public long getLastDecay() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT last_rank_decay
+                    FROM rank_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return result.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateLastDecay() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    UPDATE rank_settings
+                    SET last_rank_decay = ?
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, System.currentTimeMillis());
+            statement.setLong(2, guild.getIdLong());
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<UserInfo> getUsersForRankDecay() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT users.* FROM users
+                    JOIN rank_settings ON guild_id = ?
+                    WHERE users.rank_id >= rank_settings.rank_decay_start
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+            var resultSet = statement.executeQuery();
+            List<UserInfo> result = new ArrayList<>();
+            while (resultSet.next()) {
+                var currentRank = getRankInfo(resultSet.getInt("rank_id")).orElseThrow();
+                var nextRank = getRankInfo(resultSet.getInt("rank_id") + 1);
+                result.add(UserInfo.fromResultSet(resultSet, currentRank, nextRank));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getRankDecayInterval() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT rank_decay_interval
                     FROM rank_settings
                     WHERE guild_id = ?
                     """
