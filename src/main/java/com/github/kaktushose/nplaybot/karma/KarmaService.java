@@ -200,10 +200,12 @@ public class KarmaService {
     public int onKarmaVoteRemove(UserSnowflake author, UserSnowflake target, boolean decreaseTokens) {
         log.debug("Removing karma vote of {} for {}", author, target);
         try (var connection = dataSource.getConnection()) {
-            addKarma(target, -1);
+            if (getUserTokens(author) > 0) {
+                addKarma(target, -1);
 
-            if (decreaseTokens) {
-                decreaseTokens(author, 1);
+                if (decreaseTokens) {
+                    decreaseTokens(author, 1);
+                }
             }
 
             var statement = connection.prepareStatement("SELECT karma_points FROM users WHERE user_id = ?");
