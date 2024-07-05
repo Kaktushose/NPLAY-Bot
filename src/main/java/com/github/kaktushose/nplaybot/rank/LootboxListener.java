@@ -95,7 +95,9 @@ public class LootboxListener extends ListenerAdapter {
         }
 
         if (lootbox.itemId() >= 0) {
-            bot.getDatabase().getItemService().createTransaction(target, lootbox.itemId());
+            bot.getDatabase().getItemService().createTransaction(target, lootbox.itemId()).ifPresent(role ->
+                    event.getGuild().addRoleToMember(target, role).queue()
+            );
             var item = bot.getDatabase().getItemService().getItem(lootbox.itemId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             var message = new MessageCreateBuilder()

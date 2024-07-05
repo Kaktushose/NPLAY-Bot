@@ -1,19 +1,31 @@
 package com.github.kaktushose.nplaybot;
 
-import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent;
+import com.github.kaktushose.nplaybot.rank.RankService;
+import net.dv8tion.jda.api.events.guild.member.*;
+import net.dv8tion.jda.api.events.guild.member.update.GenericGuildMemberUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MemberDatabaseSyncListener extends ListenerAdapter {
 
-    private final Database database;
+    private static final Logger log = LoggerFactory.getLogger(MemberDatabaseSyncListener.class);
+    private final RankService rankService;
 
     public MemberDatabaseSyncListener(Database database) {
-        this.database = database;
+        this.rankService = database.getRankService();
     }
 
     @Override
-    public void onGenericGuildMember(@NotNull GenericGuildMemberEvent event) {
-        database.getRankService().createUser(event.getMember());
+    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        rankService.createUser(event.getMember());
+    }
+
+    @Override
+    public void onGuildMemberUpdate(@NotNull GuildMemberUpdateEvent event) {
+        log.info("guild member update event fired");
+        rankService.createUser(event.getMember());
+        rankService.updateRankRoles(event.getMember(), rankService.getUserInfo(event.getMember()).currentRank());
     }
 }

@@ -8,10 +8,7 @@ import com.github.kaktushose.nplaybot.rank.model.RankConfig;
 import com.github.kaktushose.nplaybot.rank.model.RankInfo;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import com.github.kaktushose.nplaybot.rank.model.XpChangeResult;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
@@ -355,7 +352,6 @@ public class RankService {
 
     public void onXpChange(XpChangeResult result, Member member, EmbedCache embedCache) {
         log.debug("Checking for rank up: {}", member);
-        updateRankRoles(member, result.currentRank());
 
         if (!result.rankChanged()) {
             log.debug("Rank hasn't changed");
@@ -383,12 +379,15 @@ public class RankService {
             lootbox = Optional.empty();
         }
 
+        Optional<Role> itemRole = Optional.empty();
         if (result.currentRank().itemRewardId() > 0) {
-            itemService.createTransaction(member, result.currentRank().itemRewardId());
+            itemRole = itemService.createTransaction(member, result.currentRank().itemRewardId());
             var item = itemService.getItem(result.currentRank().itemRewardId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             reward = String.format("%s %s", emoji, item.name());
         }
+
+        updateRankRoles(member, result.currentRank(), itemRole);
 
         var embed = result.nextRank().isPresent() ? "rankIncrease" : "rankIncreaseMax";
         var message = new MessageCreateBuilder().addContent(member.getAsMention())
@@ -432,6 +431,20 @@ public class RankService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void updateRankRoles(Member member, RankInfo currentRank, Optional<Role> itemRole) {
+        if (itemRole.isEmpty()) {
+            updateRankRoles(member, currentRank);
+            return;
+        }
+        var validRole = guild.getRoleById(currentRank.roleId());
+        var invalidRoles = getRankRoleIds().stream()
+                .map(guild::getRoleById)
+                .filter(it -> it != validRole)
+                .toList();
+        log.debug("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
+        guild.modifyMemberRoles(member, List.of(validRole, itemRole.get()), invalidRoles).queue();
     }
 
     public void updateRankRoles(Member member, RankInfo currentRank) {

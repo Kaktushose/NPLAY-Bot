@@ -2,6 +2,7 @@ package com.github.kaktushose.nplaybot.items;
 
 import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 
 import javax.sql.DataSource;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class ItemService {
@@ -107,7 +109,7 @@ public class ItemService {
         }
     }
 
-    public void createTransaction(UserSnowflake user, int itemId) {
+    public Optional<Role> createTransaction(UserSnowflake user, int itemId) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
 
@@ -127,7 +129,7 @@ public class ItemService {
                 statement.setLong(1, result.getLong("expires_at") + item.duration);
                 statement.setLong(2, result.getInt("transaction_id"));
                 statement.execute();
-                return;
+                return Optional.empty();
             }
 
             statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\") VALUES(?, ?, ?)");
@@ -136,11 +138,12 @@ public class ItemService {
 
             statement.setLong(3, System.currentTimeMillis() + item.duration);
 
-            if (item.roleId > 0) {
-                guild.addRoleToMember(user, guild.getRoleById(item.roleId())).queue();
-            }
-
             statement.execute();
+
+            if (item.roleId > 0) {
+                return Optional.ofNullable(guild.getRoleById(item.roleId));
+            }
+            return Optional.empty();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
