@@ -50,14 +50,16 @@ public class RankInfoCommand {
         var transactions = database.getItemService().getTransactions(user);
         if (!transactions.isEmpty()) {
             var items = new StringBuilder();
-            transactions.forEach(it ->
-                    items.append(database.getItemService().getTypeEmoji(it.typeId()))
-                            .append(" ")
-                            .append(it.name())
-                            .append(" (läuft ab ")
+            transactions.forEach(it -> {
+                items.append(database.getItemService().getTypeEmoji(it.typeId()))
+                        .append(" ")
+                        .append(it.name());
+                if (it.expiresAt() > 0) {
+                    items.append(" (läuft ab ")
                             .append(String.format("<t:%d:R>", TimeUnit.MILLISECONDS.toSeconds(it.expiresAt())))
-                            .append(")\n")
-            );
+                            .append(")\n");
+                }
+            });
             embed.addField("Items", items.toString(), false);
         }
 

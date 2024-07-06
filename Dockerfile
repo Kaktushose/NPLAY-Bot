@@ -20,5 +20,5 @@ COPY --from=builder /bot/embeds.json .
 
 RUN chmod +x ./wait-for-it.sh ./entrypoint.sh
 
-#ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["java", "-jar", "NPLAY-Bot.jar"]

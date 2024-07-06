@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 public class ItemService {
 
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
+    private static final int PREMIUM_BASE_TYPE_ID = 2;
+    private static final int PREMIUM_UNLIMITED_ITEM_ID = 9;
     private final DataSource dataSource;
     private final Guild guild;
 
@@ -112,6 +114,32 @@ public class ItemService {
     public Optional<Role> createTransaction(UserSnowflake user, int itemId) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
+
+            if (itemId == PREMIUM_UNLIMITED_ITEM_ID) {
+                var statement = connection.prepareStatement("""
+                    SELECT transaction_id FROM transactions
+                    JOIN items ON items.item_id = transactions.item_id
+                    JOIN item_types ON item_types.base_type_id = items.type_id
+                    WHERE user_id = ? AND item_types.base_type_id = ?
+                    """);
+                statement.setLong(1, user.getIdLong());
+                statement.setInt(2, PREMIUM_BASE_TYPE_ID);
+                var result = statement.executeQuery();
+
+                if (result.next()) {
+                    statement = connection.prepareStatement("DELETE FROM transactions WHERE transaction_id = ?");
+                    statement.setInt(1, result.getInt("transaction_id"));
+                    statement.execute();
+                }
+
+                statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\") VALUES(?, ?, -1)");
+                statement.setLong(1, user.getIdLong());
+                statement.setInt(2, itemId);
+
+                statement.execute();
+
+                return Optional.ofNullable(guild.getRoleById(item.roleId));
+            }
 
             // check if user already has item of this type
             var statement = connection.prepareStatement("""
