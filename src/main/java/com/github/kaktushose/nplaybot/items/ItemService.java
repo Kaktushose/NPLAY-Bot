@@ -83,7 +83,7 @@ public class ItemService {
             var transactions = new ArrayList<Transaction>();
 
             var statement = connection.prepareStatement("""
-                    SELECT *
+                    SELECT transaction_id, user_id, items.item_id, items.type_id, item_types.name, duration, expires_at, role_id, is_play_activity
                     FROM transactions
                     JOIN items ON transactions.item_id = items.item_id
                     JOIN item_types ON item_types.base_type_id = items.type_id
