@@ -27,6 +27,7 @@ public class RankInfoCommand {
         var target = member == null ? event.getMember() : member;
         UserInfo userInfo = database.getRankService().getUserInfo(target);
         database.getRankService().updateRankRoles(target, userInfo.currentRank());
+        database.getItemService().updateItemRoles(target);
         sendReply(userInfo, target.getUser(), event);
     }
 

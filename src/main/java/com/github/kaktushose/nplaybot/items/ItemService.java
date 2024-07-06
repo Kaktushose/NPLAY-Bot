@@ -2,6 +2,7 @@ package com.github.kaktushose.nplaybot.items;
 
 import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 
@@ -117,11 +118,11 @@ public class ItemService {
 
             if (itemId == PREMIUM_UNLIMITED_ITEM_ID) {
                 var statement = connection.prepareStatement("""
-                    SELECT transaction_id FROM transactions
-                    JOIN items ON items.item_id = transactions.item_id
-                    JOIN item_types ON item_types.base_type_id = items.type_id
-                    WHERE user_id = ? AND item_types.base_type_id = ?
-                    """);
+                        SELECT transaction_id FROM transactions
+                        JOIN items ON items.item_id = transactions.item_id
+                        JOIN item_types ON item_types.base_type_id = items.type_id
+                        WHERE user_id = ? AND item_types.base_type_id = ?
+                        """);
                 statement.setLong(1, user.getIdLong());
                 statement.setInt(2, PREMIUM_BASE_TYPE_ID);
                 var result = statement.executeQuery();
@@ -270,6 +271,35 @@ public class ItemService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<Role> getAllItemRoles() {
+        try (Connection connection = dataSource.getConnection()) {
+            var result = connection.prepareStatement("SELECT role_id FROM item_types").executeQuery();
+            var roles = new ArrayList<Role>();
+            while (result.next()) {
+                roles.add(guild.getRoleById(result.getLong(1)));
+            }
+            return roles;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateItemRoles(Member member) {
+        var transactions = getTransactions(member);
+
+        member.getRoles().stream().filter(getAllItemRoles()::contains).forEach(role -> {
+            if (!transactions.stream().map(Transaction::roleId).toList().contains(role.getIdLong())) {
+                guild.removeRoleFromMember(member, role).queue();
+            }
+        });
+
+        transactions.forEach(transaction -> {
+            if (transaction.roleId > 0) {
+                guild.addRoleToMember(member, guild.getRoleById(transaction.roleId)).queue();
+            }
+        });
     }
 
     public record Item(int itemId, int typeId, String name, long duration, long roleId) {

@@ -59,7 +59,7 @@ public class Bot {
                 new CollectEventListener(database, embedCache),
                 new KarmaListener(database, embedCache),
                 new StarboardListener(database, embedCache),
-                new MemberDatabaseSyncListener(database),
+                new MemberDatabaseSyncListener(database, guild),
                 new LegacyCommandListener(embedCache)
         );
 
