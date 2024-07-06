@@ -59,7 +59,7 @@
       },
       {
         "name": "Dein PLAY-Prestige:",
-        "value": ":star2: {karma}"
+        "value": ":star2: {karma} {bonusXp}"
       },
       {
         "name": "Punkte-Zuwachs (24h):",
@@ -89,7 +89,7 @@
       },
       {
         "name": "Dein PLAY-Prestige:",
-        "value": " :star2: {karma}"
+        "value": " :star2: {karma} {bonusXp}"
       },
       {
         "name": "Punkte-Zuwachs (24h):",

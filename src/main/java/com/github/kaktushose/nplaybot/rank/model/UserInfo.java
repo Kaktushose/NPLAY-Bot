@@ -38,6 +38,7 @@ public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<Ra
             }
             put("currentXp", currentXp);
             put("karma", karma);
+            put("bonusXp", getBonusXp(karma));
             put("xpGain", xpGain);
             put("messageCount", messageCount);
         }};
@@ -51,4 +52,21 @@ public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<Ra
         });
         return result;
     }
+
+    private String getBonusXp(int karma) {
+        if (karma < 0) {
+            return "(-1 PLAY-Punkte)";
+        }
+        if (karma >= 300) {
+            return "(+3 PLAY-Punkte)";
+        }
+        if (karma >= 200) {
+            return "(+2 PLAY-Punkte)";
+        }
+        if (karma >= 100) {
+            return "(+1 PLAY-Punkte)";
+        }
+        return "";
+    }
+
 }

@@ -15,27 +15,15 @@ public class MemberDatabaseSyncListener extends ListenerAdapter {
     private static final Logger log = LoggerFactory.getLogger(MemberDatabaseSyncListener.class);
     private final RankService rankService;
     private final ItemService itemService;
-    private final Guild guild;
 
-    public MemberDatabaseSyncListener(Database database, Guild guild) {
+    public MemberDatabaseSyncListener(Database database) {
         this.rankService = database.getRankService();
         this.itemService = database.getItemService();
-        this.guild = guild;
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         rankService.createUser(event.getMember());
-    }
-
-    @Override
-    public void onGenericUser(@NotNull GenericUserEvent event) {
-        log.info("GenericUserEvent fired");
-        guild.retrieveMember(event.getUser()).queue(member -> {
-            rankService.createUser(member);
-            rankService.updateRankRoles(member, rankService.getUserInfo(member).currentRank());
-            itemService.updateItemRoles(member);
-        });
     }
 
     @Override
