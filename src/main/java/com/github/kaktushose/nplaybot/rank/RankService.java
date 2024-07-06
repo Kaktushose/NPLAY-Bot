@@ -507,6 +507,15 @@ public class RankService {
         }
     }
 
+    public void updateStatistics() {
+        log.debug("Resetting start_xp for all users");
+        try (Connection connection = dataSource.getConnection()) {
+            connection.prepareStatement("SELECT * FROM update_rank_statistics()").execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void increaseTotalMessageCount() {
         log.debug("Increasing total message count by one");
         try (Connection connection = dataSource.getConnection()) {
