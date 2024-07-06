@@ -61,12 +61,12 @@ public class TaskScheduler {
             }
 
             if (scheduledTask.repeat()) {
-                log.debug("Scheduling repeating task {}.{}. Starts in {} ms. Repeats every {} ms",
+                log.info("Scheduling repeating task {}.{}. Starts in {} ms. Repeats every {} ms",
                         method.getDeclaringClass().getSimpleName(), method.getName(), delay, period);
-                executor.scheduleAtFixedRate(execute(method), delay, period, scheduledTask.unit());
+                executor.scheduleAtFixedRate(execute(method), delay, period, TimeUnit.MILLISECONDS);
             } else {
-                log.debug("Scheduling task {}.{}. Starts in {} ms", method.getDeclaringClass().getSimpleName(), method.getName(), period);
-                executor.schedule(execute(method), delay, scheduledTask.unit());
+                log.info("Scheduling task {}.{}. Starts in {} ms", method.getDeclaringClass().getSimpleName(), method.getName(), period);
+                executor.schedule(execute(method), delay, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -76,7 +76,7 @@ public class TaskScheduler {
             try {
                 log.info("Invoking task: {}.{}", method.getDeclaringClass().getSimpleName(), method.getName());
                 method.invoke(method.getDeclaringClass().getConstructors()[0].newInstance(), bot);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.error("Exception in scheduled task!", e);
             }
         };
