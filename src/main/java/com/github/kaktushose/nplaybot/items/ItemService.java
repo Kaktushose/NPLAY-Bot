@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class ItemService {
 
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
-    private static final int PREMIUM_BASE_TYPE_ID = 2;
-    private static final int PREMIUM_UNLIMITED_ITEM_ID = 9;
+    public static final int PREMIUM_BASE_TYPE_ID = 2;
+    public static final int PREMIUM_UNLIMITED_ITEM_ID = 9;
     private final DataSource dataSource;
     private final Guild guild;
 
@@ -115,6 +115,10 @@ public class ItemService {
     public Optional<Role> createTransaction(UserSnowflake user, int itemId) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
+
+            if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID) && item.typeId == PREMIUM_BASE_TYPE_ID) {
+                return Optional.empty();
+            }
 
             if (itemId == PREMIUM_UNLIMITED_ITEM_ID) {
                 var statement = connection.prepareStatement("""
@@ -221,6 +225,10 @@ public class ItemService {
 
 
     public void addPlayActivity(UserSnowflake user) {
+        if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID)) {
+            return;
+        }
+
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(PLAY_ACTIVITY_ITEM_ID);
             var statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\", \"is_play_activity\") VALUES(?, ?, ?, true)");
@@ -248,10 +256,11 @@ public class ItemService {
                     FROM transactions
                     JOIN items ON transactions.item_id = items.item_id
                     JOIN item_types ON item_types.base_type_id = items.type_id
-                    WHERE expires_at < ?
+                    WHERE expires_at < ? AND NOT transactions.item_id = ?
                     """
             );
             statement.setLong(1, System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24));
+            statement.setInt(2, PREMIUM_UNLIMITED_ITEM_ID);
             var result = statement.executeQuery();
             while (result.next()) {
                 transactions.add(new Transaction(

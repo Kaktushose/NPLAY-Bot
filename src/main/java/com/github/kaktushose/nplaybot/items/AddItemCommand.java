@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;
 
+import static com.github.kaktushose.nplaybot.items.ItemService.PREMIUM_BASE_TYPE_ID;
+import static com.github.kaktushose.nplaybot.items.ItemService.PREMIUM_UNLIMITED_ITEM_ID;
+
 @Interaction
 @Permissions(BotPermissions.MODIFY_USER_BALANCE)
 public class AddItemCommand {
@@ -31,8 +34,13 @@ public class AddItemCommand {
             return;
         }
 
-        var transactions = database.getItemService().getTransactions(target).stream().map(ItemService.Transaction::typeId).toList();
-        items = items.stream().filter(it -> !transactions.contains(it.typeId())).toList();
+        var transactions = database.getItemService().getTransactions(target);
+        items = items.stream().filter(item -> {
+            if (item.typeId() == PREMIUM_BASE_TYPE_ID) {
+                return !transactions.stream().map(ItemService.Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID);
+            }
+            return !transactions.stream().map(ItemService.Transaction::typeId).toList().contains(item.typeId());
+        }).toList();
 
         if (items.isEmpty()) {
             event.reply(embedCache.getEmbed("allItemsError"));
