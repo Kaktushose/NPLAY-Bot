@@ -541,7 +541,7 @@ public class RankService {
         log.debug("Querying daily rank infos");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
-                    SELECT user_id, xp, rank_id, message_count, start_xp, karma_points
+                    SELECT *
                     FROM users
                     WHERE daily_message = true
                     """

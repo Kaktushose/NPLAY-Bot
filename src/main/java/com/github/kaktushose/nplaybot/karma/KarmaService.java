@@ -151,7 +151,8 @@ public class KarmaService {
     public void resetTokens() {
         log.debug("Resetting all karma tokens to default value");
         try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("UPDATE users SET karma_tokens = karma_settings.default_tokens");
+            var statement = connection.prepareStatement("UPDATE users SET karma_tokens = (SELECT default_tokens FROM karma_settings WHERE guild_id = ?)");
+            statement.setLong(1, guild.getIdLong());
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
