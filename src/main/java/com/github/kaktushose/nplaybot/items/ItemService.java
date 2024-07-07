@@ -113,10 +113,20 @@ public class ItemService {
     }
 
     public Optional<Role> createTransaction(UserSnowflake user, int itemId) {
+        return createTransaction(user, itemId, false);
+    }
+
+    public void addPlayActivity(UserSnowflake user) {
+        createTransaction(user, PLAY_ACTIVITY_ITEM_ID, true).ifPresent(it ->
+                guild.addRoleToMember(user, it).queue()
+        );
+    }
+
+    private Optional<Role> createTransaction(UserSnowflake user, int itemId, boolean isPlayActivity) {
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
 
-            if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID) && item.typeId == PREMIUM_BASE_TYPE_ID) {
+            if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID) && (item.typeId == PREMIUM_BASE_TYPE_ID || itemId == PREMIUM_UNLIMITED_ITEM_ID)) {
                 return Optional.empty();
             }
 
@@ -165,11 +175,11 @@ public class ItemService {
                 return Optional.empty();
             }
 
-            statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\") VALUES(?, ?, ?)");
+            statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\", \"is_play_activity\") VALUES(?, ?, ?, ?)");
             statement.setLong(1, user.getIdLong());
             statement.setInt(2, itemId);
-
             statement.setLong(3, System.currentTimeMillis() + item.duration);
+            statement.setBoolean(4, isPlayActivity);
 
             statement.execute();
 
@@ -218,30 +228,6 @@ public class ItemService {
             var statement = connection.prepareStatement("UPDATE users SET last_karma = karma_points WHERE user_id = ?");
             statement.setLong(1, user.getIdLong());
             statement.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    public void addPlayActivity(UserSnowflake user) {
-        if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID)) {
-            return;
-        }
-
-        try (Connection connection = dataSource.getConnection()) {
-            var item = getItem(PLAY_ACTIVITY_ITEM_ID);
-            var statement = connection.prepareStatement("INSERT INTO transactions (\"user_id\", \"item_id\", \"expires_at\", \"is_play_activity\") VALUES(?, ?, ?, true)");
-            statement.setLong(1, user.getIdLong());
-            statement.setInt(2, PLAY_ACTIVITY_ITEM_ID);
-            statement.setLong(3, System.currentTimeMillis() + item.duration);
-            statement.execute();
-
-            if (item.roleId > 0) {
-                guild.addRoleToMember(user, guild.getRoleById(item.roleId())).queue();
-            }
-
-            updateLastKarma(user);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
