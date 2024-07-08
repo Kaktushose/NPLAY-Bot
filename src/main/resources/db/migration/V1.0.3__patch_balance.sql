@@ -1,4 +1,4 @@
-CREATE FUNCTION add_random_xp(id BIGINT)
+CREATE OR REPLACE FUNCTION add_random_xp(id BIGINT)
 RETURNS TABLE (rank_changed BOOLEAN, previous_rank int, current_rank int, next_rank INT, current_xp INT) AS
 $$
 DECLARE
