@@ -57,12 +57,6 @@ public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<Ra
         if (karma < 0) {
             return "(-1 PLAY-Punkte)";
         }
-        if (karma >= 300) {
-            return "(+3 PLAY-Punkte)";
-        }
-        if (karma >= 200) {
-            return "(+2 PLAY-Punkte)";
-        }
         if (karma >= 100) {
             return "(+1 PLAY-Punkte)";
         }
