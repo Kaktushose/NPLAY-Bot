@@ -319,7 +319,6 @@
     "description": "Du hast eine Lootbox :coin: gefunden und einen besonders wertvollen Inhalt gezogen: {item}",
     "color": "#67c94f"
   },
-
   "rankDecrease": {
     "title": ":arrow_down: Stufenabstieg!",
     "description": "{user}",
@@ -359,5 +358,10 @@
     "title": "Hinweis",
     "description": "Text-Befehle wurden deaktiviert. Du kannst stattdessen einfach `/` eingeben, um eine Übersicht über alle Befehle zu erhalten.",
     "color": "#67c94f"
-}
+  },
+  "memberExcluded": {
+    "title": "Okay",
+    "description": "Der Nutzer wurde vom Contest-Event ausgeschlossen",
+    "color": "#67c94f"
+  }
 }

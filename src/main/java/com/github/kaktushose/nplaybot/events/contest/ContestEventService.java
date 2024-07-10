@@ -176,6 +176,17 @@ public class ContestEventService {
         }
     }
 
+    public void setVoteCount(long messageId, int count) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("UPDATE contest_entries SET votes = ? where message_id = ?");
+            statement.setLong(1, count);
+            statement.setLong(2, messageId);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public record ContestLeaderboardRow(int votes, long userId) {
     }
 

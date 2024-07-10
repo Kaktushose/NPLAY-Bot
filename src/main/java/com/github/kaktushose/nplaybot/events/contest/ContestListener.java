@@ -53,7 +53,7 @@ public class ContestListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        eventService.deleteContestEntry(event.getMessageIdLong());
+        eventService.setVoteCount(event.getMessageIdLong(), 0);
     }
 
     @Override
