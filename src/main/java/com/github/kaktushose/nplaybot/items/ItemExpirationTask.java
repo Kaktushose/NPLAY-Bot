@@ -23,25 +23,30 @@ public class ItemExpirationTask {
 
     @ScheduledTask(period = 24, unit = TimeUnit.HOURS)
     public void onCheckItems(Bot bot) {
-        var transactions = bot.getDatabase().getItemService().getExpiringTransactions();
+        var itemService = bot.getDatabase().getItemService();
+        var transactions = itemService.getExpiringTransactions();
 
         for (var transaction : transactions) {
             executor.schedule(() -> {
-                bot.getDatabase().getItemService().deleteTransaction(UserSnowflake.fromId(transaction.userId()), transaction.transactionId());
+                if (transaction.expiresAt() > System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24)) {
+                    return;
+                }
+
+                itemService.deleteTransaction(UserSnowflake.fromId(transaction.userId()), transaction.transactionId());
 
                 if (transaction.isPlayActivity()) {
                     var rankInfo = bot.getDatabase().getRankService().getUserInfo(UserSnowflake.fromId(transaction.userId()));
                     if (rankInfo.karma() - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
-                        bot.getDatabase().getItemService().addPlayActivity(UserSnowflake.fromId(transaction.userId()));
-                        bot.getDatabase().getItemService().updateLastKarma(UserSnowflake.fromId(transaction.userId()));
+                        itemService.addPlayActivity(UserSnowflake.fromId(transaction.userId()));
+                        itemService.updateLastKarma(UserSnowflake.fromId(transaction.userId()));
 
                         messageUser(transaction, bot.getEmbedCache().getEmbed("playActivityRenew").toEmbedBuilder(), bot);
                         return;
                     }
                 }
 
-                var item = bot.getDatabase().getItemService().getItem(transaction.itemId());
-                var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
+                var item = itemService.getItem(transaction.itemId());
+                var emoji = itemService.getTypeEmoji(item.typeId());
                 EmbedBuilder embed = bot.getEmbedCache().getEmbed("itemExpired")
                         .injectValue("item", String.format("%s %s", emoji, item.name()))
                         .toEmbedBuilder();
