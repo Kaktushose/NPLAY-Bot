@@ -160,6 +160,9 @@ public class StarboardListener extends ListenerAdapter {
         if (!event.getReaction().getEmoji().equals(Emoji.fromUnicode("⭐"))) {
             return;
         }
+        if (!starboardService.entryExists(event.getMessageIdLong())) {
+            return;
+        }
         if (starboardService.isPosted(event.getMessageIdLong())) {
             removeEntry(event);
         }
@@ -167,6 +170,9 @@ public class StarboardListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        if (!starboardService.entryExists(event.getMessageIdLong())) {
+            return;
+        }
         if (starboardService.isPosted(event.getMessageIdLong())) {
             removeEntry(event);
         }
@@ -174,6 +180,9 @@ public class StarboardListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
+        if (!starboardService.entryExists(event.getMessageIdLong())) {
+            return;
+        }
         if (starboardService.isPosted(event.getMessageIdLong())) {
             removeEntry(event);
         }
