@@ -297,6 +297,35 @@ public class ItemService {
         });
     }
 
+    public Transaction getTransactionById(long transactionId) {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT *
+                    FROM transactions
+                    JOIN items ON transactions.item_id = items.item_id
+                    JOIN item_types ON item_types.base_type_id = items.type_id
+                    WHERE transaction_id = ?
+                    """
+            );
+            statement.setLong(1, transactionId);
+            var result = statement.executeQuery();
+            result.next();
+            return new Transaction(
+                    result.getInt("transaction_id"),
+                    result.getLong("user_id"),
+                    result.getInt("item_id"),
+                    result.getInt("type_id"),
+                    result.getString("name"),
+                    result.getLong("duration"),
+                    result.getLong("expires_at"),
+                    result.getLong("role_id"),
+                    result.getBoolean("is_play_activity")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public record Item(int itemId, int typeId, String name, long duration, long roleId) {
     }
 

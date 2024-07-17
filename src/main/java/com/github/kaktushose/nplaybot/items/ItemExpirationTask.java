@@ -24,10 +24,9 @@ public class ItemExpirationTask {
     @ScheduledTask(period = 24, unit = TimeUnit.HOURS)
     public void onCheckItems(Bot bot) {
         var itemService = bot.getDatabase().getItemService();
-        var transactions = itemService.getExpiringTransactions();
-
-        for (var transaction : transactions) {
+        for (var expiring : itemService.getExpiringTransactions()) {
             executor.schedule(() -> {
+                var transaction = itemService.getTransactionById(expiring.transactionId());
                 if (transaction.expiresAt() > System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24)) {
                     return;
                 }
@@ -53,7 +52,7 @@ public class ItemExpirationTask {
 
                 messageUser(transaction, embed, bot);
 
-            }, transaction.expiresAt() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            }, expiring.expiresAt() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         }
     }
 
