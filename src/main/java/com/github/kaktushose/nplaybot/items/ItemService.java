@@ -168,9 +168,10 @@ public class ItemService {
             var result = statement.executeQuery();
             // if so just increase the duration of the first item
             if (result.next()) {
-                statement = connection.prepareStatement("UPDATE transactions SET expires_at = ? WHERE transaction_id = ?");
+                statement = connection.prepareStatement("UPDATE transactions SET expires_at = ?, is_play_activity = ? WHERE transaction_id = ?");
                 statement.setLong(1, result.getLong("expires_at") + item.duration);
-                statement.setLong(2, result.getInt("transaction_id"));
+                statement.setBoolean(2, isPlayActivity);
+                statement.setLong(3, result.getInt("transaction_id"));
                 statement.execute();
                 return Optional.empty();
             }

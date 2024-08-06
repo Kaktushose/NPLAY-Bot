@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot.starboard;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.karma.KarmaService;
+import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,6 +23,7 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +61,7 @@ public class StarboardListener extends ListenerAdapter {
 
         AtomicInteger count = new AtomicInteger(0);
         event.getChannel().retrieveMessageById(event.getMessageIdLong()).queue(message -> {
-            if (!permissionsService.hasUserPermissions(message.getMember())) {
+            if (!permissionsService.hasPermissions(message.getAuthor(), Set.of(BotPermissions.USER))) {
                 return;
             }
 
