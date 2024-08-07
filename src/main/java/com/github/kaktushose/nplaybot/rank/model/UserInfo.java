@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount,
-                       int xpGain,
-                       int karma, int lastKarma, long lastValidMessage) {
+                       int xpGain, int karma, int lastKarma, long lastValidMessage, int collectPoints) {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static UserInfo fromResultSet(ResultSet result, RankInfo currentRank, Optional<RankInfo> nextRank) throws SQLException {
@@ -23,7 +22,8 @@ public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<Ra
                 result.getInt("xp") - result.getInt("start_xp"),
                 result.getInt("karma_points"),
                 result.getInt("last_karma"),
-                result.getLong("last_valid_message")
+                result.getLong("last_valid_message"),
+                result.getInt("collect_points")
         );
     }
 

@@ -45,7 +45,19 @@ public class RankInfoCommand {
         if (database.getCollectEventService().isCollectEventActive()) {
             var currency = database.getCollectEventService().getCollectCurrency();
             var points = database.getCollectEventService().getCollectPoints(user);
-            embed.addField(currency.name(), String.format("%s %d", currency.emoji(), points), false);
+            embed.addField(String.format("%s:", currency.name()), String.format("%s %d", currency.emoji(), points), false);
+
+            StringBuilder rewardText = new StringBuilder();
+            database.getCollectEventService().getCollectRewards().forEach(reward -> {
+                if (userInfo.collectPoints() >= reward.threshold()) {
+                    rewardText.append(reward.name()).append("\n");
+                }
+            });
+            if (rewardText.isEmpty()) {
+                rewardText.append("❌ noch keine Belohnung");
+            }
+            var name = database.getCollectEventService().getEventName();
+            embed.addField(String.format("%s Belohnungen: ", name), rewardText.toString(), false);
         }
 
         var transactions = database.getItemService().getTransactions(user);
@@ -61,10 +73,8 @@ public class RankInfoCommand {
                             .append(")\n");
                 }
             });
-            embed.addField("Items", items.toString(), false);
+            embed.addField("Items:", items.toString(), false);
         }
-
         event.reply(embed);
     }
-
 }

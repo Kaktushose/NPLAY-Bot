@@ -47,6 +47,9 @@ public class CollectEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         log.debug("Received message event");
+        if (!eventService.isCollectEventActive()) {
+            return;
+        }
         var author = event.getAuthor();
 
         if (author.isBot()) {
@@ -59,6 +62,10 @@ public class CollectEventListener extends ListenerAdapter {
         }
 
         if (!rankService.isValidChannel(event.getChannel())) {
+            return;
+        }
+
+        if (!rankService.isValidMessage(event.getMessage())) {
             return;
         }
 
@@ -108,10 +115,6 @@ public class CollectEventListener extends ListenerAdapter {
     }
 
     private void onCollectLootDrop(MessageReceivedEvent event) {
-        if (!eventService.isCollectEventActive()) {
-            return;
-        }
-
         var points = eventService.getCollectLootDrop(event.getMessage());
 
         if (points < 1) {
@@ -128,7 +131,9 @@ public class CollectEventListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
-
+        if (!eventService.isCollectEventActive()) {
+            return;
+        }
         var messageId = event.getMessageIdLong();
         if (!collectLootDrops.contains(messageId)) {
             return;

@@ -220,6 +220,22 @@ public class CollectEventService {
         }
     }
 
+    public String getEventName() {
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT collect_event_name
+                    FROM event_settings
+                    WHERE guild_id = ?
+                    """);
+            statement.setLong(1, guild.getIdLong());
+            var result = statement.executeQuery();
+            result.next();
+            return result.getString("collect_event_name");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public record CollectCurrency(String name, String emoji) {
     }
 
