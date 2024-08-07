@@ -368,5 +368,62 @@
     "title": "Okay",
     "description": "Der Nutzer wurde vom Contest-Event ausgeschlossen",
     "color": "#67c94f"
+  },
+  "insufficientPermissions": {
+    "title": "Fehlende Berechtigungen",
+    "description": "`{name}` benötigt bestimmte Berechtigungen, um ausgeführt zu werden",
+    "color": "#ff0000",
+    "fields": [
+      {
+        "name": "Berechtigungen:",
+        "value": "`{permissions}`"
+      }
+    ]
+  },
+  "typeAdaptingFailed": {
+    "title": "Syntax Error",
+    "description": "`{usage}`",
+    "color": "#ffc800",
+    "fields": [
+      {
+        "name": "Erwartete Eingabe:",
+        "value": "`{expected}`"
+      },
+      {
+        "name": "Tatsächliche Eingabe:",
+        "value": "`{actual}`"
+      }
+    ]
+  },
+  "constraintFailed": {
+    "title": "Parameter Validation fehlgeschlagen",
+    "description": "```{message}```",
+    "color": "#ffc800"
+  },
+  "cooldown": {
+    "title": "Cooldown",
+    "description": "Du kannst diesen Command nicht für weitere {cooldown}! nutzen",
+    "color": "#ffc800"
+  },
+  "wrongChannel": {
+    "title": "Falscher Textkanal Typ",
+    "description": "Dieser Command kann in dieser Art von Textkanälen nicht ausgeführt werden",
+    "color": "#ff0000"
+  },
+  "executionFailed": {
+    "title": "Command Ausführung fehlgeschlagen",
+    "description": "Bei der Command Ausführung ist ein plötzlicher Fehler aufgetreten. Bitte leite die Fehlermeldung an <@393843637437464588> weiter.",
+    "fields": [
+      {
+        "name": "Fehlermeldung",
+        "value": "{error}"
+      }
+    ],
+    "color": "#ff0000"
+  },
+  "unknownInteraction": {
+    "title": "Unbekannte Interaktion",
+    "description": "Diese Interaktion ist abgelaufen und steht nicht mehr zur Verfügung",
+    "color": "#ff0000"
   }
 }

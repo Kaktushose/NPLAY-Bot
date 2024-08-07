@@ -3,6 +3,7 @@ package com.github.kaktushose.nplaybot;
 import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.JsonErrorMessageFactory;
 import com.github.kaktushose.nplaybot.events.collect.CollectEventListener;
 import com.github.kaktushose.nplaybot.events.contest.ContestListener;
 import com.github.kaktushose.nplaybot.karma.KarmaListener;
@@ -67,6 +68,7 @@ public class Bot {
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");
         jdaCommands.getDependencyInjector().registerProvider(this);
+        jdaCommands.getImplementationRegistry().setErrorMessageFactory(new JsonErrorMessageFactory(embedCache));
         jdaCommands.getImplementationRegistry().setPermissionsProvider(new CustomPermissionsProvider(database));
 
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
