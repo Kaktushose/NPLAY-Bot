@@ -2,6 +2,7 @@ package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
@@ -31,12 +32,14 @@ public class CollectEventListener extends ListenerAdapter {
     private final PermissionsService permissionsService;
     private final EmbedCache embedCache;
     private final Set<Long> collectLootDrops;
+    private final ItemService itemService;
 
     public CollectEventListener(Database database, EmbedCache embedCache) {
         this.rankService = database.getRankService();
         this.eventService = database.getCollectEventService();
         this.settingsService = database.getSettingsService();
         this.permissionsService = database.getPermissionsService();
+        this.itemService = database.getItemService();
         this.embedCache = embedCache;
         collectLootDrops = new HashSet<>();
     }
@@ -92,6 +95,10 @@ public class CollectEventListener extends ListenerAdapter {
 
         if (reward.roleId() > 0) {
             guild.addRoleToMember(member, guild.getRoleById(reward.roleId())).queue();
+        }
+
+        if (reward.itemId() > 0) {
+            itemService.createTransaction(member, reward.itemId());
         }
 
         var builder = new MessageCreateBuilder().addContent(member.getAsMention())

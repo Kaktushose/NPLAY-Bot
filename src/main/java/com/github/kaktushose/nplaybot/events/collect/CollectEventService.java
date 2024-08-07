@@ -2,10 +2,12 @@ package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
+import com.github.kaktushose.nplaybot.items.ItemService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,15 +90,16 @@ public class CollectEventService {
         }
     }
 
-    public void createCollectReward(String name, int threshold, int xp, Role role, String embed) {
+    public void createCollectReward(String name, int threshold, int xp, @Nullable Role role, @Nullable ItemService.Item item, String embed) {
         log.debug("Creating new collect reward");
         try (Connection connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement("INSERT INTO collect_rewards(name, threshold, xp, role_id, embed) VALUES (?, ?, ?, ?, CAST (? AS jsonb))");
+            var statement = connection.prepareStatement("INSERT INTO collect_rewards(name, threshold, xp, role_id, item_id, embed) VALUES (?, ?, ?, ?, ?, CAST (? AS jsonb))");
             statement.setString(1, name);
             statement.setInt(2, threshold);
             statement.setInt(3, xp);
             statement.setLong(4, role == null ? -1 : role.getIdLong());
-            statement.setObject(5, embed);
+            statement.setInt(5, item == null ? -1 : item.itemId());
+            statement.setObject(6, embed);
 
             statement.execute();
         } catch (SQLException e) {
@@ -170,6 +173,7 @@ public class CollectEventService {
                                 result.getInt("threshold"),
                                 result.getInt("xp"),
                                 result.getLong("role_id"),
+                                result.getInt("item_id"),
                                 result.getString("embed")
                         )
                 );
@@ -219,6 +223,7 @@ public class CollectEventService {
     public record CollectCurrency(String name, String emoji) {
     }
 
-    public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, String embed) {
+    public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, int itemId,
+                                String embed) {
     }
 }

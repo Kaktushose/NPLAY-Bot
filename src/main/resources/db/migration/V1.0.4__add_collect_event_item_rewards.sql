@@ -1,0 +1,1 @@
+ALTER TABLE collect_rewards ADD COLUMN item_id INT NOT NULL DEFAULT -1

@@ -171,6 +171,11 @@
     "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll.",
     "color": "#67c94f"
   },
+  "rewardCreateSelectItem": {
+    "title": "Belohnung: {name}",
+    "description": "Bitte wähle das Item aus, mit der der Nutzer belohnt werden soll.",
+    "color": "#67c94f"
+  },
   "rewardCreateInvalidXp": {
     "title": "Belohnung: {name}",
     "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an.",

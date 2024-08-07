@@ -8,6 +8,7 @@ import com.github.kaktushose.jda.commands.dispatching.interactions.components.Co
 import com.github.kaktushose.jda.commands.dispatching.interactions.modals.ModalEvent;
 import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -29,6 +30,7 @@ public class CollectRewardCommands {
     private static final Gson gson = new Gson();
     private static final String ROLE_REWARD = "Rolle";
     private static final String XP_REWARD = "XP";
+    private static final String ITEM_REWARD = "Item";
     @Inject
     private EmbedCache embedCache;
     @Inject
@@ -36,6 +38,7 @@ public class CollectRewardCommands {
     private String name;
     private String rewardType;
     private Role role;
+    private ItemService.Item item;
     private int xp;
     private int threshold;
     private String embed;
@@ -50,12 +53,30 @@ public class CollectRewardCommands {
     @StringSelectMenu("Wähle eine Belohnungsart aus")
     @SelectOption(label = "Rolle", value = ROLE_REWARD)
     @SelectOption(label = "XP", value = XP_REWARD)
+    @SelectOption(label = "Item", value = ITEM_REWARD)
     public void onSelectType(ComponentEvent event, List<String> selection) {
         rewardType = selection.get(0);
         if (ROLE_REWARD.equals(rewardType)) {
             event.withSelectMenus("onSelectRole").reply(embedCache.getEmbed("rewardCreateSelectRole").injectValue("name", name));
         } else if (XP_REWARD.equals(rewardType)) {
             event.replyModal("onSelectXp");
+        } else if (ITEM_REWARD.equals(rewardType)) {
+            var items = database.getItemService().getAllItems();
+            if (items.isEmpty()) {
+                event.reply(embedCache.getEmbed("noOptions").injectValue("type", "Items"));
+                return;
+            }
+
+            var menu = event.getSelectMenu(
+                    "CollectRewardCommands.onSelectItem",
+                    net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
+            ).createCopy();
+            menu.getOptions().clear();
+            menu.setMaxValues(1);
+
+            items.forEach(it -> menu.addOption(it.name(), String.valueOf(it.itemId())));
+            event.getReplyContext().getBuilder().addActionRow(menu.build());
+            event.reply(embedCache.getEmbed("rewardCreateSelectItem").injectValue("name", name));
         } else {
             throw new IllegalArgumentException(String.format("%s ist keine gültige Auswahl!", rewardType));
         }
@@ -64,6 +85,14 @@ public class CollectRewardCommands {
     @EntitySelectMenu(value = net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu.SelectTarget.ROLE, placeholder = "Wähle eine Rolle aus")
     public void onSelectRole(ComponentEvent event, Mentions mentions) {
         role = mentions.getRoles().get(0);
+        event.replyModal("onSelectEmbed");
+    }
+
+    @StringSelectMenu("Wähle ein Item aus")
+    @SelectOption(label = "dummy option", value = "dummy option")
+    public void onSelectItem(ComponentEvent event, List<String> selection) {
+        var itemId = selection.stream().findFirst().orElseThrow();
+        item = database.getItemService().getItem(Integer.parseInt(itemId));
         event.replyModal("onSelectEmbed");
     }
 
@@ -108,17 +137,25 @@ public class CollectRewardCommands {
     }
 
     private void finishSetup(Replyable event) {
+        String reward;
+        if (role != null) {
+            reward = role.getAsMention();
+        } else if (item != null) {
+            reward = item.name();
+        } else {
+            reward = String.valueOf(xp);
+        }
         event.withButtons("onConfirm", "onCancel").reply(embedCache.getEmbed("rewardCreateSummarize")
                 .injectValue("name", name)
                 .injectValue("type", rewardType)
                 .injectValue("threshold", threshold)
-                .injectValue("reward", role == null ? String.valueOf(xp) : role.getAsMention())
+                .injectValue("reward", reward)
         );
     }
 
     @Button(value = "Erstellen", style = ButtonStyle.SUCCESS)
     public void onConfirm(ComponentEvent event) {
-        database.getCollectEventService().createCollectReward(name, threshold, xp, role, embed);
+        database.getCollectEventService().createCollectReward(name, threshold, xp, role, item, embed);
         event.reply(embedCache.getEmbed("rewardCreateConfirm").injectValue("name", name));
         event.removeComponents();
     }
