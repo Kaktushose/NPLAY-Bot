@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ItemService {
 
-    private static final int PLAY_ACTIVITY_ITEM_ID = 7;
     public static final int PREMIUM_BASE_TYPE_ID = 2;
     public static final int PREMIUM_UNLIMITED_ITEM_ID = 9;
+    private static final int PLAY_ACTIVITY_ITEM_ID = 7;
     private final DataSource dataSource;
     private final Guild guild;
 

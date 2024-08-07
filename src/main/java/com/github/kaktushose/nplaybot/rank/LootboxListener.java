@@ -2,13 +2,11 @@ package com.github.kaktushose.nplaybot.rank;
 
 import com.github.kaktushose.nplaybot.Bot;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
-import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executors;
@@ -75,7 +73,7 @@ public class LootboxListener extends ListenerAdapter {
             bot.getDatabase().getRankService().onXpChange(result, event.getMember(), bot.getEmbedCache());
             var message = new MessageCreateBuilder()
                     .addContent(target.getAsMention())
-                            .addEmbeds(bot.getEmbedCache().getEmbed("onLootboxXp").injectValue("xp", lootbox.xpReward()).toMessageEmbed());
+                    .addEmbeds(bot.getEmbedCache().getEmbed("onLootboxXp").injectValue("xp", lootbox.xpReward()).toMessageEmbed());
 
             event.getChannel().sendMessage(message.build()).queue(it -> it.delete().queueAfter(1, TimeUnit.MINUTES));
             return;

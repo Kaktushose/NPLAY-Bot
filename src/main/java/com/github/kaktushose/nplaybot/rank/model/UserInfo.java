@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount, int xpGain,
+public record UserInfo(long id, int currentXp, RankInfo currentRank, Optional<RankInfo> nextRank, int messageCount,
+                       int xpGain,
                        int karma, int lastKarma, long lastValidMessage) {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

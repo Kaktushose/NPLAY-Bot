@@ -20,12 +20,12 @@ import java.util.concurrent.TimeUnit;
 public class RankListener extends ListenerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(RankListener.class);
+    private static final String XP_LOOT_DROP_EMOJI = "\uD83D\uDFE2";
     private final RankService rankService;
     private final PermissionsService permissionsService;
     private final EmbedCache embedCache;
     private final Bot bot;
     private final Map<Long, Integer> xpLootDrops;
-    private static final String XP_LOOT_DROP_EMOJI = "\uD83D\uDFE2";
 
     public RankListener(Database database, EmbedCache embedCache, Bot bot) {
         this.rankService = database.getRankService();

@@ -27,7 +27,7 @@ public class LegacyCommandListener extends ListenerAdapter {
             return;
         }
         event.getChannel().sendMessage(embedCache.getEmbed("legacyCommandInfo").toMessageCreateData()).queue(it ->
-            it.delete().queueAfter(30, TimeUnit.SECONDS)
+                it.delete().queueAfter(30, TimeUnit.SECONDS)
         );
     }
 

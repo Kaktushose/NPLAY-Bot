@@ -2,9 +2,8 @@ package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.rank.RankService;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.guild.member.*;
-import net.dv8tion.jda.api.events.user.GenericUserEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
