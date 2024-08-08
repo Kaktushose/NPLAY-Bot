@@ -25,6 +25,16 @@ services:
     depends_on:
       - postgres
 
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: nplay-loki
+    restart: always
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./data/loki:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
   bot:
     build:
       context: .
@@ -39,5 +49,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       BOT_GUILD: ${BOT_GUILD}
       BOT_TOKEN: ${BOT_TOKEN}
-    volumes:
-      - ./data/logs:/logs
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
