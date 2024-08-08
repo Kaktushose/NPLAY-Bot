@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ItemService {
 
+    private static final Logger log = LoggerFactory.getLogger(ItemService.class);
     public static final int PREMIUM_BASE_TYPE_ID = 2;
     public static final int PREMIUM_UNLIMITED_ITEM_ID = 9;
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
@@ -28,6 +31,7 @@ public class ItemService {
     }
 
     public List<Item> getAllItems() {
+        log.debug("Querying all items");
         try (Connection connection = dataSource.getConnection()) {
             var items = new ArrayList<Item>();
 
@@ -55,6 +59,7 @@ public class ItemService {
     }
 
     public Item getItem(int itemId) {
+        log.debug("Querying item with id {}", itemId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT *
@@ -79,6 +84,7 @@ public class ItemService {
     }
 
     public List<Transaction> getTransactions(UserSnowflake user) {
+        log.debug("Querying all transactions for user {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var transactions = new ArrayList<Transaction>();
 
@@ -117,20 +123,25 @@ public class ItemService {
     }
 
     public void addPlayActivity(UserSnowflake user) {
-        createTransaction(user, PLAY_ACTIVITY_ITEM_ID, true).ifPresent(it ->
-                guild.addRoleToMember(user, it).queue()
-        );
+        createTransaction(user, PLAY_ACTIVITY_ITEM_ID, true).ifPresent(it -> {
+            log.info("Adding role {} to user {}", it, user);
+            guild.addRoleToMember(user, it).queue();
+        });
     }
 
     private Optional<Role> createTransaction(UserSnowflake user, int itemId, boolean isPlayActivity) {
+        log.info("Starting item transaction: ItemId={}, user={}, isPlayActivity={}", itemId, user, isPlayActivity);
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
 
-            if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID) && (item.typeId == PREMIUM_BASE_TYPE_ID || itemId == PREMIUM_UNLIMITED_ITEM_ID)) {
+            if (getTransactions(user).stream().map(Transaction::itemId).toList().contains(PREMIUM_UNLIMITED_ITEM_ID) &&
+                (item.typeId == PREMIUM_BASE_TYPE_ID || itemId == PREMIUM_UNLIMITED_ITEM_ID)) {
+                log.info("Stopping transaction. User already has Premium Unlimited");
                 return Optional.empty();
             }
 
             if (itemId == PREMIUM_UNLIMITED_ITEM_ID) {
+                log.info("Adding Premium Unlimited");
                 var statement = connection.prepareStatement("""
                         SELECT transaction_id FROM transactions
                         JOIN items ON items.item_id = transactions.item_id
@@ -142,6 +153,7 @@ public class ItemService {
                 var result = statement.executeQuery();
 
                 if (result.next()) {
+                    log.info("Removing temporary Premium Item from User");
                     statement = connection.prepareStatement("DELETE FROM transactions WHERE transaction_id = ?");
                     statement.setInt(1, result.getInt("transaction_id"));
                     statement.execute();
@@ -152,7 +164,7 @@ public class ItemService {
                 statement.setInt(2, itemId);
 
                 statement.execute();
-
+                log.info("Item transaction finished");
                 return Optional.ofNullable(guild.getRoleById(item.roleId));
             }
 
@@ -168,11 +180,14 @@ public class ItemService {
             var result = statement.executeQuery();
             // if so just increase the duration of the first item
             if (result.next()) {
+                var transactionId = result.getInt("transaction_id");
+                log.info("User already has an item of type {}. Adding duration {} to existing transaction {}", item.typeId, item.duration, transactionId);
                 statement = connection.prepareStatement("UPDATE transactions SET expires_at = ?, is_play_activity = ? WHERE transaction_id = ?");
                 statement.setLong(1, result.getLong("expires_at") + item.duration);
                 statement.setBoolean(2, isPlayActivity);
-                statement.setLong(3, result.getInt("transaction_id"));
+                statement.setLong(3, transactionId);
                 statement.execute();
+                log.info("Item transaction finished");
                 return Optional.empty();
             }
 
@@ -184,6 +199,7 @@ public class ItemService {
 
             statement.execute();
 
+            log.info("Item transaction finished");
             if (item.roleId > 0) {
                 return Optional.ofNullable(guild.getRoleById(item.roleId));
             }
@@ -194,6 +210,7 @@ public class ItemService {
     }
 
     public void deleteTransaction(UserSnowflake user, int transactionId) {
+        log.info("Deleting transaction {} for user {}", transactionId, user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT item_id FROM transactions WHERE transaction_id = ?");
             statement.setInt(1, transactionId);
@@ -213,6 +230,7 @@ public class ItemService {
     }
 
     public String getTypeEmoji(int typeId) {
+        log.debug("Querying emoji for item type {}", typeId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT emoji FROM item_types where base_type_id = ?");
             statement.setInt(1, typeId);
@@ -225,6 +243,7 @@ public class ItemService {
     }
 
     public void updateLastKarma(UserSnowflake user) {
+        log.info("Updating last karma for user {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("UPDATE users SET last_karma = karma_points WHERE user_id = ?");
             statement.setLong(1, user.getIdLong());
@@ -235,6 +254,7 @@ public class ItemService {
     }
 
     public List<Transaction> getExpiringTransactions() {
+        log.debug("Querying expiring transactions");
         try (Connection connection = dataSource.getConnection()) {
             var transactions = new ArrayList<Transaction>();
 
@@ -270,6 +290,7 @@ public class ItemService {
     }
 
     private List<Role> getAllItemRoles() {
+        log.debug("Querying all item roles");
         try (Connection connection = dataSource.getConnection()) {
             var result = connection.prepareStatement("SELECT role_id FROM item_types").executeQuery();
             var roles = new ArrayList<Role>();
@@ -287,18 +308,22 @@ public class ItemService {
 
         member.getRoles().stream().filter(getAllItemRoles()::contains).forEach(role -> {
             if (!transactions.stream().map(Transaction::roleId).toList().contains(role.getIdLong())) {
+                log.info("Removing invalid item role {} from member {}", role, member);
                 guild.removeRoleFromMember(member, role).queue();
             }
         });
 
         transactions.forEach(transaction -> {
             if (transaction.roleId > 0) {
-                guild.addRoleToMember(member, guild.getRoleById(transaction.roleId)).queue();
+                var role = guild.getRoleById(transaction.roleId);
+                log.info("Adding missing item role {} to member {}", role, member);
+                guild.addRoleToMember(member, role).queue();
             }
         });
     }
 
     public Transaction getTransactionById(long transactionId) {
+        log.debug("Querying transaction {}", transactionId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT *
@@ -328,11 +353,36 @@ public class ItemService {
     }
 
     public record Item(int itemId, int typeId, String name, long duration, long roleId) {
+        @Override
+        public String toString() {
+            return "Item{" +
+                   "itemId=" + itemId +
+                   ", typeId=" + typeId +
+                   ", name='" + name + '\'' +
+                   ", duration=" + duration +
+                   ", roleId=" + roleId +
+                   '}';
+        }
     }
 
     public record Transaction(int transactionId, long userId, int itemId, int typeId, String name, long duration,
                               long expiresAt,
                               long roleId, boolean isPlayActivity) {
+
+        @Override
+        public String toString() {
+            return "Transaction{" +
+                   "transactionId=" + transactionId +
+                   ", userId=" + userId +
+                   ", itemId=" + itemId +
+                   ", typeId=" + typeId +
+                   ", name='" + name + '\'' +
+                   ", duration=" + duration +
+                   ", expiresAt=" + expiresAt +
+                   ", roleId=" + roleId +
+                   ", isPlayActivity=" + isPlayActivity +
+                   '}';
+        }
     }
 
 }

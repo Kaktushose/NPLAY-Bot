@@ -29,7 +29,9 @@ public class RankDecayTask {
 
         log.info("Checking for rank decay");
         rankService.getUsersForRankDecay().forEach(user -> {
+            log.info("Checking user {}", user);
             if ((System.currentTimeMillis() - user.lastValidMessage()) < TimeUnit.DAYS.toMillis(rankDecayInterval)) {
+                log.info("User was active. Check done");
                 return;
             }
 
@@ -53,8 +55,10 @@ public class RankDecayTask {
                 var minimumRank = bot.getDatabase().getRankService().getRankInfo(startDecayRankId);
                 result = bot.getDatabase().getRankService().setXp(userSnowflake, minimumRank.orElseThrow().xpBound());
             }
+            log.info("Decaying user {}, new rank: {}, current xp: {}", user, result.currentRank(), result.currentXp());
 
             bot.getGuild().retrieveMemberById(user.id()).queue(member -> bot.getDatabase().getRankService().onXpChange(result, member, bot.getEmbedCache()));
+            log.info("Check done");
         });
     }
 }

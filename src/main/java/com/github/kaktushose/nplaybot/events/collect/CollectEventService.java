@@ -30,7 +30,7 @@ public class CollectEventService {
     }
 
     public boolean isCollectEventActive() {
-        log.debug("Querying collect event active flag for guild {}", guild);
+        log.debug("Querying collect event active setting");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT collect_event_active
@@ -49,7 +49,7 @@ public class CollectEventService {
     }
 
     public void startCollectEvent(String eventName, String currencyName, String emoji) {
-        log.debug("Starting new collect event [{}, {}, {}] for guild {}", eventName, currencyName, emoji, guild);
+        log.info("Starting new collect event [{}, {}, {}]", eventName, currencyName, emoji);
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("UPDATE users SET collect_points = 0").execute();
 
@@ -75,7 +75,7 @@ public class CollectEventService {
     }
 
     public void stopCollectEvent() {
-        log.debug("Stopping collect event for guild {}", guild);
+        log.info("Stopping current collect event");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE event_settings
@@ -91,7 +91,7 @@ public class CollectEventService {
     }
 
     public void createCollectReward(String name, int threshold, int xp, @Nullable Role role, @Nullable ItemService.Item item, String embed) {
-        log.debug("Creating new collect reward");
+        log.info("Creating new collect reward [name={}, threshold={}, xp={}, role={}, item={}]", name, threshold, xp, role, item);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO collect_rewards(name, threshold, xp, role_id, item_id, embed) VALUES (?, ?, ?, ?, ?, CAST (? AS jsonb))");
             statement.setString(1, name);
@@ -108,7 +108,7 @@ public class CollectEventService {
     }
 
     public void updateCollectLootChance(double chance) {
-        log.debug("Updating collect loot chance for guild: {}", guild);
+        log.info("Updating collect loot chance, new value: {}", chance);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE event_settings
@@ -185,7 +185,7 @@ public class CollectEventService {
     }
 
     public void deleteCollectReward(int rewardId) {
-        log.debug("Deleting collect reward with id {}", rewardId);
+        log.info("Deleting collect reward with id {}", rewardId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM collect_rewards WHERE reward_id = ?");
             statement.setInt(1, rewardId);
@@ -196,7 +196,7 @@ public class CollectEventService {
     }
 
     public int addCollectPoint(UserSnowflake user) {
-        log.debug("Adding one collect point to user: {}", user);
+        log.info("Adding one collect point to user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("UPDATE users SET collect_points = collect_points + 1 where user_id = ?");
             statement.setLong(1, user.getIdLong());
@@ -221,6 +221,7 @@ public class CollectEventService {
     }
 
     public String getEventName() {
+        log.debug("Querying collect event name");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT collect_event_name
@@ -241,5 +242,17 @@ public class CollectEventService {
 
     public record CollectReward(int rewardId, String name, int threshold, int xp, long roleId, int itemId,
                                 String embed) {
+
+        @Override
+        public String toString() {
+            return "CollectReward{" +
+                   "rewardId=" + rewardId +
+                   ", name='" + name + '\'' +
+                   ", threshold=" + threshold +
+                   ", xp=" + xp +
+                   ", roleId=" + roleId +
+                   ", itemId=" + itemId +
+                   '}';
+        }
     }
 }

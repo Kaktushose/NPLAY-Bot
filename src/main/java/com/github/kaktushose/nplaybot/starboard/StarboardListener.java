@@ -21,6 +21,8 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +32,7 @@ import java.util.regex.Pattern;
 
 public class StarboardListener extends ListenerAdapter {
 
+    private static final Logger log = LoggerFactory.getLogger(StarboardListener.class);
     private final StarboardService starboardService;
     private final KarmaService karmaService;
     private final RankService rankService;
@@ -221,6 +224,7 @@ public class StarboardListener extends ListenerAdapter {
     }
 
     private void removeEntry(GenericMessageEvent event) {
+        log.info("Deleting starboard post {}", event.getMessageIdLong());
         event.getGuild().getTextChannelById(starboardService.getStarboardChannelId())
                 .retrieveMessageById(starboardService.getPostId(event.getMessageIdLong()))
                 .flatMap(Message::delete)

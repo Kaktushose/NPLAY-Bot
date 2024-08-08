@@ -63,7 +63,7 @@ public class ContestEventService {
     }
 
     public void startContestEvent(TextChannel channel, String emoji) {
-        log.debug("Starting new contest event in {} with vote emoji {}", channel, emoji);
+        log.info("Starting new contest event in {} with vote emoji {}", channel, emoji);
         try (Connection connection = dataSource.getConnection()) {
             log.debug("Truncating old votes");
             connection.prepareStatement("TRUNCATE TABLE contest_entries;").execute();
@@ -85,7 +85,7 @@ public class ContestEventService {
     }
 
     public List<ContestLeaderboardRow> stopContestEvent() {
-        log.debug("Stopping current contest event");
+        log.info("Stopping current contest event");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE event_settings
@@ -116,7 +116,7 @@ public class ContestEventService {
     }
 
     public boolean createContestEntry(Message message) {
-        log.debug("Inserting contest entry: {}", message);
+        log.info("Inserting contest entry: {}", message);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO contest_entries VALUES(?, 0, ?) ON CONFLICT DO NOTHING");
             statement.setLong(1, message.getAuthor().getIdLong());
@@ -128,7 +128,7 @@ public class ContestEventService {
     }
 
     public void deleteContestEntry(long messageId) {
-        log.debug("Deleting contest entry: {}", messageId);
+        log.info("Deleting contest entry: {}", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM contest_entries WHERE message_id = ?");
             statement.setLong(1, messageId);
@@ -145,7 +145,7 @@ public class ContestEventService {
      * @param userId    the id of the user that voted for the entry
      */
     public void increaseVoteCount(long messageId, long userId) {
-        log.debug("Increasing total votes for {} by one", messageId);
+        log.info("User {} added one vote for entry {}", userId, messageId);
         try (Connection connection = dataSource.getConnection()) {
             // this AND clause prevents a self vote of the message author
             var statement = connection.prepareStatement("UPDATE contest_entries SET votes = votes + 1 where message_id = ? AND user_id != ?");
@@ -164,7 +164,7 @@ public class ContestEventService {
      * @param userId    the id of the user that removed his vote for the entry
      */
     public void decreaseVoteCount(long messageId, long userId) {
-        log.debug("Decreasing total votes for {} by one", messageId);
+        log.info("User {} removed one vote for entry {}", userId, messageId);
         try (Connection connection = dataSource.getConnection()) {
             // this AND clause prevents a self vote of the message author
             var statement = connection.prepareStatement("UPDATE contest_entries SET votes = votes - 1 where message_id = ?  AND user_id != ?");

@@ -9,6 +9,8 @@ import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import static com.github.kaktushose.nplaybot.items.ItemService.PREMIUM_UNLIMITED
 @Permissions(BotPermissions.MODIFY_USER_BALANCE)
 public class AddItemCommand {
 
+    private static final Logger log = LoggerFactory.getLogger(AddItemCommand.class);
     @Inject
     private Database database;
     @Inject
@@ -65,9 +68,10 @@ public class AddItemCommand {
     @StringSelectMenu("Wähle ein Item aus")
     @SelectOption(label = "dummy option", value = "dummy option")
     public void onItemAddSelect(ComponentEvent event, List<String> selection) {
-        selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id)).ifPresent(role ->
-                event.getGuild().addRoleToMember(target, role).queue()
-        ));
+        selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id)).ifPresent(role -> {
+            log.info("Adding role {} to member {}", target, role);
+            event.getGuild().addRoleToMember(target, role).queue();
+        }));
         event.reply(embedCache.getEmbed("itemAdd"));
         event.removeComponents();
     }

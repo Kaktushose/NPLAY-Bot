@@ -116,18 +116,26 @@ public class PermissionsService {
     }
 
     public boolean hasPermissions(Member member, String... permissions) {
-        log.debug("Checking permissions for member {}", member);
+        log.debug("Checking permissions {} for member {}", permissions, member);
         return hasPermissions(member, Set.of(permissions));
     }
 
     public boolean hasPermissions(Member member, Set<String> permissions) {
-        log.debug("Checking permissions for member {}", member);
-        return BotPermissions.hasPermissions(permissions, getMemberPermissions(member));
+        log.debug("Checking permissions {} for member {}", permissions, member);
+        var hasPerms = BotPermissions.hasPermissions(permissions, getMemberPermissions(member));
+        if (!hasPerms) {
+            log.info("Denying access for user {} due to missing permissions", member);
+        }
+        return hasPerms;
     }
 
     public boolean hasPermissions(User user, Set<String> permissions) {
-        log.debug("Checking permissions for user {}", user);
-        return BotPermissions.hasPermissions(permissions, getUserPermissions(user));
+        log.debug("Checking permissions {} for user {}", permissions, user);
+        var hasPerms = BotPermissions.hasPermissions(permissions, getUserPermissions(user));
+        if (!hasPerms) {
+            log.info("Denying access for user {} due to missing permissions", user);
+        }
+        return hasPerms;
     }
 
 }

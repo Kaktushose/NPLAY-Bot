@@ -21,7 +21,7 @@ public class StarboardService {
     }
 
     public boolean entryExists(long messageId) {
-        log.debug("Checking if starboard entry exists");
+        log.debug("Checking if starboard entry {} exists", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT EXISTS(SELECT 1 FROM starboard_entries WHERE message_id = ?)");
             statement.setLong(1, messageId);
@@ -34,7 +34,7 @@ public class StarboardService {
     }
 
     public void createEntry(long messageId) {
-        log.debug("Creating starboard entry");
+        log.info("Creating starboard entry for message  {}", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO starboard_entries VALUES(?)");
             statement.setLong(1, messageId);
@@ -45,7 +45,7 @@ public class StarboardService {
     }
 
     public boolean isRewarded(long messageId) {
-        log.debug("Querying starboard votes");
+        log.debug("Checking if entry {} already got rewarded", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT is_rewarded
@@ -63,7 +63,7 @@ public class StarboardService {
     }
 
     public void setRewarded(long messageId) {
-        log.debug("Querying starboard votes");
+        log.info("Marking entry {} as rewarded", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE starboard_entries
@@ -79,7 +79,7 @@ public class StarboardService {
     }
 
     public long getPostId(long messageId) {
-        log.debug("Querying starboard post id");
+        log.debug("Querying starboard post {}", messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT post_id
@@ -97,7 +97,7 @@ public class StarboardService {
     }
 
     public void setPostId(long messageId, long postId) {
-        log.debug("Setting starboard post id");
+        log.info("Setting starboard post id to {} for entry {}", postId, messageId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE starboard_entries

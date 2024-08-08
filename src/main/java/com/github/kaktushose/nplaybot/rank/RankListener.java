@@ -196,6 +196,8 @@ public class RankListener extends ListenerAdapter {
                 .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
                 .build();
         settingsService.getBotChannel().sendMessage(builder).queue();
+
+        log.info("Member {} received a collect reward {}", member, reward);
     }
 
     private void onCollectLootDrop(MessageReceivedEvent event) {
@@ -205,7 +207,7 @@ public class RankListener extends ListenerAdapter {
             log.debug("No collect loot drop for this message");
             return;
         }
-
+        log.info("Creating collect loot drop for message {}, points: {}", event.getMessageId(), points);
         collectLootDrops.add(event.getMessageIdLong());
         event.getMessage().addReaction(Emoji.fromUnicode(eventService.getCollectCurrency().emoji())).queue();
     }
@@ -232,7 +234,7 @@ public class RankListener extends ListenerAdapter {
             return;
         }
 
-        log.debug("Collect loot drop got claimed by {}", event.getMember());
+        log.info("Collect loot drop {} got claimed by {}", event.getMessageId(), event.getMember());
 
         var oldPoints = eventService.getCollectPoints(event.getMember());
         var newPoints = eventService.addCollectPoint(event.getMember());

@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LootboxListener extends ListenerAdapter {
 
+    private static final Logger log = LoggerFactory.getLogger(LootboxListener.class);
     private static final String LOOTBOX_EMOJI = "\uD83C\uDF81";
     private static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final Bot bot;
@@ -30,6 +33,7 @@ public class LootboxListener extends ListenerAdapter {
         this.messageId = message.getIdLong();
         this.isPrivate = isPrivate;
         bot.getJda().addEventListener(this);
+        log.debug("Creating new lootbox listener: Lootbox={}, user={}, message = {}, isPrivate={}", lootbox, user, message, isPrivate);
         message.addReaction(Emoji.fromFormatted(LOOTBOX_EMOJI)).queue();
         executor.schedule(() -> terminate(message), 30, TimeUnit.MINUTES);
     }
@@ -67,6 +71,8 @@ public class LootboxListener extends ListenerAdapter {
         }
 
         event.getReaction().clearReactions().queue();
+
+        log.info("Lootbox {} got claimed by {}", event.getMessageId(), event.getMember());
 
         if (lootbox.xpReward() > 0) {
             var result = bot.getDatabase().getRankService().addXp(target, lootbox.xpReward());
@@ -109,6 +115,7 @@ public class LootboxListener extends ListenerAdapter {
     }
 
     private void terminate(Message message) {
+        log.info("Removing unclaimed lootbox listener for message: {}", message);
         message.clearReactions().queue();
         bot.getJda().removeEventListener(this);
     }

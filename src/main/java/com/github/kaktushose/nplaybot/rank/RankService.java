@@ -35,7 +35,7 @@ public class RankService {
     }
 
     public boolean createUser(UserSnowflake user) {
-        log.debug("Inserting user: {}", user);
+        log.info("Inserting new user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO users VALUES(?) ON CONFLICT DO NOTHING RETURNING user_id");
             statement.setLong(1, user.getIdLong());
@@ -47,7 +47,7 @@ public class RankService {
     }
 
     public void removeUser(UserSnowflake user) {
-        log.debug("Deleting user: {}", user);
+        log.info("Deleting user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM users WHERE user_id = ?");
             statement.setLong(1, user.getIdLong());
@@ -111,7 +111,7 @@ public class RankService {
     }
 
     public RankConfig getRankConfig() {
-        log.debug("Querying rank config for guild: {}", guild);
+        log.debug("Querying rank config");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT message_cooldown, min_message_length, xp_loot_chance
@@ -135,7 +135,7 @@ public class RankService {
     }
 
     public void updateCooldown(int cooldown) {
-        log.debug("Updating cooldown for guild: {}", guild);
+        log.info("Updating cooldown, new value {}", cooldown);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE rank_settings
@@ -153,7 +153,7 @@ public class RankService {
     }
 
     public void updateMinMessageLength(int length) {
-        log.debug("Updating minimum message length for guild: {}", guild);
+        log.info("Updating minimum message length, new value {}", length);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE rank_settings
@@ -171,7 +171,7 @@ public class RankService {
     }
 
     public void updateXpLootChance(double chance) {
-        log.debug("Updating xp loot chance for guild: {}", guild);
+        log.info("Updating xp loot chance for guild, new value {}", chance);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE rank_settings
@@ -189,7 +189,7 @@ public class RankService {
     }
 
     public Set<Long> getValidChannels() {
-        log.debug("Querying valid channels for guild {}", guild);
+        log.debug("Querying valid channels");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT valid_channels
@@ -208,7 +208,7 @@ public class RankService {
     }
 
     public void updateValidChannels(Set<Long> validChannels) {
-        log.debug("Querying valid channels for guild {}", guild);
+        log.debug("Querying valid channels");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE rank_settings
@@ -301,7 +301,7 @@ public class RankService {
     }
 
     public XpChangeResult addXp(UserSnowflake user, int amount) {
-        log.debug("Adding {} xp to {}", amount, user);
+        log.info("Adding {} xp to {}", amount, user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT * FROM add_xp(?, ?)");
             statement.setLong(1, user.getIdLong());
@@ -322,7 +322,7 @@ public class RankService {
     }
 
     public XpChangeResult setXp(UserSnowflake user, int value) {
-        log.debug("Setting xp of user {} to {}", user, value);
+        log.info("Setting xp of user {} to {}", user, value);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT * FROM set_xp(?, ?)");
             statement.setLong(1, user.getIdLong());
@@ -343,13 +343,13 @@ public class RankService {
     }
 
     public void onXpChange(XpChangeResult result, Member member, EmbedCache embedCache) {
-        log.debug("Checking for rank up: {}", member);
+        log.info("Checking for rank change: {}", member);
 
         if (!result.rankChanged()) {
-            log.debug("Rank hasn't changed");
+            log.info("Rank hasn't changed");
             return;
         }
-        log.debug("Applying changes. New rank: {}", result.currentRank());
+        log.info("Applying changes. Previous rank: {}, New rank: {}", result.previousRank(), result.currentRank());
 
         if (result.previousRank().isPresent()) {
             if (result.currentRank().rankId() < result.previousRank().get().rankId()) {
@@ -358,6 +358,7 @@ public class RankService {
                         .addEmbeds(embedCache.getEmbed(embed).injectValues(result.getEmbedValues(member)).toMessageEmbed())
                         .build();
                 bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue();
+                log.info("Rank change done");
                 return;
             }
         }
@@ -366,6 +367,7 @@ public class RankService {
         String reward = "keine Belohnung";
         if (result.currentRank().lootboxReward()) {
             lootbox = Optional.of(getRandomLootbox());
+            log.info("Rank up reward: {}", lootbox.get());
             reward = "\uD83C\uDF81 eine Lootbox";
         } else {
             lootbox = Optional.empty();
@@ -377,6 +379,7 @@ public class RankService {
             var item = itemService.getItem(result.currentRank().itemRewardId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             reward = String.format("%s %s", emoji, item.name());
+            log.info("Rank up reward: {}", item);
         }
 
         updateRankRoles(member, result.currentRank(), itemRole);
@@ -389,9 +392,11 @@ public class RankService {
         bot.getDatabase().getSettingsService().getBotChannel().sendMessage(message).queue(msg ->
                 lootbox.ifPresent(it -> LootboxListener.newListener(bot, it, member, msg, true))
         );
+        log.info("Rank change done");
     }
 
     public Lootbox getRandomLootbox() {
+        log.debug("Querying random lootbox");
         try (Connection connection = dataSource.getConnection()) {
             var result = connection.prepareStatement("SELECT * FROM get_random_lootbox()").executeQuery();
             result.next();
@@ -412,6 +417,7 @@ public class RankService {
     }
 
     public Optional<RankInfo> getRankByXp(int xp) {
+        log.debug("Querying rank for xp {}", xp);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("SELECT * FROM ranks WHERE ? >= bound ORDER BY bound DESC LIMIT 1");
             statement.setInt(1, xp);
@@ -435,7 +441,7 @@ public class RankService {
                 .map(guild::getRoleById)
                 .filter(it -> it != validRole)
                 .toList();
-        log.debug("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
+        log.info("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
         guild.modifyMemberRoles(member, List.of(validRole, itemRole.get()), invalidRoles).queue();
     }
 
@@ -445,7 +451,7 @@ public class RankService {
                 .map(guild::getRoleById)
                 .filter(it -> it != validRole)
                 .toList();
-        log.debug("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
+        log.info("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
         guild.modifyMemberRoles(member, List.of(validRole), invalidRoles).queue();
     }
 
@@ -499,7 +505,7 @@ public class RankService {
     }
 
     public void resetDailyStatistics() {
-        log.debug("Resetting start_xp for all users");
+        log.info("Resetting start_xp for all users");
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("UPDATE users SET start_xp = xp").execute();
         } catch (SQLException e) {
@@ -508,7 +514,7 @@ public class RankService {
     }
 
     public void updateStatistics() {
-        log.debug("Resetting start_xp for all users");
+        log.info("Updating rank statistics");
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("SELECT * FROM update_rank_statistics()").execute();
         } catch (SQLException e) {
@@ -526,7 +532,7 @@ public class RankService {
     }
 
     public void switchDaily(UserSnowflake user, boolean enabled) {
-        log.debug("Setting daily message for user {} to {}", user, enabled);
+        log.info("Setting daily message for user {} to {}", user, enabled);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("UPDATE users SET daily_message = ? where user_id = ?");
             statement.setBoolean(1, enabled);
@@ -610,6 +616,7 @@ public class RankService {
     }
 
     public int getStartDecayRankId() {
+        log.debug("Querying start decay rank id");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT rank_decay_start
@@ -628,6 +635,7 @@ public class RankService {
     }
 
     public int getDecayXp() {
+        log.debug("Querying decay xp");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT rank_decay_xp_loss
@@ -646,6 +654,7 @@ public class RankService {
     }
 
     public int getLootboxChance() {
+        log.debug("Querying lootbox chance");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT lootbox_chance
@@ -664,6 +673,7 @@ public class RankService {
     }
 
     public int getLootboxQueryLimit() {
+        log.debug("Querying lootbox_query_limit");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT lootbox_query_limit
@@ -682,6 +692,7 @@ public class RankService {
     }
 
     public long getLastDecay() {
+        log.debug("Querying last rank decay date");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT last_rank_decay
@@ -700,6 +711,7 @@ public class RankService {
     }
 
     public void updateLastDecay() {
+        log.debug("Updating last rank decay date");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE rank_settings
@@ -717,6 +729,7 @@ public class RankService {
     }
 
     public List<UserInfo> getUsersForRankDecay() {
+        log.debug("Querying users eligible for rank decay");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT users.* FROM users
@@ -739,6 +752,7 @@ public class RankService {
     }
 
     public int getRankDecayInterval() {
+        log.debug("Querying rank decay interval");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT rank_decay_interval
@@ -757,6 +771,15 @@ public class RankService {
     }
 
     public record Lootbox(int id, int xpReward, int karmaReward, int itemId) {
+        @Override
+        public String toString() {
+            return "Lootbox{" +
+                   "id=" + id +
+                   ", xpReward=" + xpReward +
+                   ", karmaReward=" + karmaReward +
+                   ", itemId=" + itemId +
+                   '}';
+        }
     }
 
 }

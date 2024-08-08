@@ -43,10 +43,9 @@ public class ContestListener extends ListenerAdapter {
         }
 
         if (eventService.createContestEntry(event.getMessage())) {
-            log.debug("Created new contest entry: {}", event.getMessage());
             event.getMessage().addReaction(Emoji.fromFormatted(eventService.getVoteEmoji())).queue();
         } else {
-            log.debug("User already has a contest entry, deleting message");
+            log.info("User {} already has a contest entry, deleting new message", event.getAuthor());
             event.getMessage().delete().queue();
         }
     }
@@ -54,6 +53,7 @@ public class ContestListener extends ListenerAdapter {
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         eventService.setVoteCount(event.getMessageIdLong(), 0);
+        log.info("Contest entry {} got deleted, setting vote count to 0", event.getMessageId());
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ContestListener extends ListenerAdapter {
         if (!event.getEmoji().equals(Emoji.fromFormatted(eventService.getVoteEmoji()))) {
             return;
         }
-        log.debug("Detected removal of all vote emojis. Adding initial emoji again");
+        log.warn("Detected removal of all vote emojis. Adding initial emoji again");
         event.getChannel().retrieveMessageById(event.getMessageId()).flatMap(message ->
                 message.addReaction(Emoji.fromFormatted(eventService.getVoteEmoji()))
         ).queue();
@@ -119,7 +119,7 @@ public class ContestListener extends ListenerAdapter {
         if (event.getChannel().getIdLong() != eventService.getContestEventChannel()) {
             return;
         }
-        log.debug("Detected removal of all vote emojis. Adding initial emoji again");
+        log.warn("Detected removal of all vote emojis. Adding initial emoji again");
         event.getChannel().retrieveMessageById(event.getMessageId()).flatMap(message ->
                 message.addReaction(Emoji.fromFormatted(eventService.getVoteEmoji()))
         ).queue();

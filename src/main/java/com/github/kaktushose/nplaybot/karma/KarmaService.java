@@ -43,7 +43,7 @@ public class KarmaService {
     }
 
     public void setKarma(UserSnowflake user, int karma) {
-        log.debug("Setting karma of {} to {}", user, karma);
+        log.info("Setting karma of {} to {}", user, karma);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE users
@@ -60,7 +60,7 @@ public class KarmaService {
     }
 
     public void addKarma(UserSnowflake user, int karma) {
-        log.debug("Increasing karma points of {} by {}", user, karma);
+        log.info("Increasing karma points of {} by {}", user, karma);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE users
@@ -84,6 +84,7 @@ public class KarmaService {
                 return;
             }
 
+            log.info("User {} has enough karma for Play Activity", member);
             itemService.addPlayActivity(member);
             itemService.updateLastKarma(member);
 
@@ -118,6 +119,7 @@ public class KarmaService {
                 .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
                 .build();
         bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
+        log.info("Member {} received a karma reward {}", member, reward);
     }
 
     public void onKarmaDecrease(int oldKarma, int newKarma, Member member, EmbedCache embedCache) {
@@ -149,6 +151,7 @@ public class KarmaService {
                         .build()
                 ).build();
         bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
+        log.info("Removed karma reward {} from user {}", reward, member);
     }
 
     public void resetTokens() {
@@ -163,7 +166,7 @@ public class KarmaService {
     }
 
     public void decreaseTokens(UserSnowflake user, int decrease) {
-        log.debug("Decreasing karma tokens of {} by {}", user, decrease);
+        log.info("Decreasing karma tokens of {} by {}", user, decrease);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE users
@@ -180,7 +183,7 @@ public class KarmaService {
     }
 
     public int onKarmaVoteAdd(UserSnowflake author, UserSnowflake target, boolean decreaseTokens) {
-        log.debug("Performing karma vote of {} for {}", author, target);
+        log.info("Performing karma vote of {} for {}", author, target);
         try (var connection = dataSource.getConnection()) {
             if (getUserTokens(author) > 0) {
                 addKarma(target, 1);
@@ -202,7 +205,7 @@ public class KarmaService {
     }
 
     public int onKarmaVoteRemove(UserSnowflake author, UserSnowflake target, boolean decreaseTokens) {
-        log.debug("Removing karma vote of {} for {}", author, target);
+        log.info("Removing karma vote of {} for {}", author, target);
         try (var connection = dataSource.getConnection()) {
             if (getUserTokens(author) > 0) {
                 addKarma(target, -1);
@@ -243,7 +246,7 @@ public class KarmaService {
     }
 
     public int getDefaultTokens() {
-        log.debug("Querying default karma tokens for guild {}", guild);
+        log.debug("Querying default karma tokens");
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT default_tokens
@@ -262,7 +265,7 @@ public class KarmaService {
     }
 
     public void setDefaultTokens(int value) {
-        log.debug("Setting default karma tokens for guild {}", guild);
+        log.info("Setting default karma tokens, new value {}", value);
         try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     UPDATE karma_settings
@@ -280,7 +283,7 @@ public class KarmaService {
     }
 
     public List<UnicodeEmoji> getValidUpvoteEmojis() {
-        log.debug("Querying valid karma emojis for guild {}", guild);
+        log.debug("Querying valid karma emojis");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT valid_emojis_upvote
@@ -300,7 +303,7 @@ public class KarmaService {
     }
 
     public List<UnicodeEmoji> getValidDownvoteEmojis() {
-        log.debug("Querying valid karma emojis for guild {}", guild);
+        log.debug("Querying valid karma emojis");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("""
                     SELECT valid_emojis_downvote
@@ -320,7 +323,7 @@ public class KarmaService {
     }
 
     public void createKarmaReward(String name, int threshold, int xp, Role role, String embed) {
-        log.debug("Creating new karma reward");
+        log.info("Creating new karma reward");
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO karma_rewards(name, threshold, xp, role_id, embed) VALUES (?, ?, ?, ?, CAST (? AS jsonb))");
             statement.setString(1, name);
@@ -359,7 +362,7 @@ public class KarmaService {
     }
 
     public void deleteKarmaReward(int rewardId) {
-        log.debug("Deleting karma reward with id {}", rewardId);
+        log.info("Deleting karma reward with id {}", rewardId);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("DELETE FROM karma_rewards WHERE reward_id = ?");
             statement.setInt(1, rewardId);
@@ -370,5 +373,16 @@ public class KarmaService {
     }
 
     public record KarmaReward(int rewardId, String name, int threshold, int xp, long roleId, String embed) {
+        @Override
+        public String toString() {
+            return "KarmaReward{" +
+                   "rewardId=" + rewardId +
+                   ", name='" + name + '\'' +
+                   ", threshold=" + threshold +
+                   ", xp=" + xp +
+                   ", roleId=" + roleId +
+                   ", embed='" + embed + '\'' +
+                   '}';
+        }
     }
 }
