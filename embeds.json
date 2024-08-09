@@ -425,5 +425,10 @@
     "title": "Unbekannte Interaktion",
     "description": "Diese Interaktion ist abgelaufen und steht nicht mehr zur Verfügung",
     "color": "#ff0000"
+  },
+  "logChannelEntry": {
+    "title": "{title}",
+    "description": "{description}",
+    "color": "#67c94f"
   }
 }

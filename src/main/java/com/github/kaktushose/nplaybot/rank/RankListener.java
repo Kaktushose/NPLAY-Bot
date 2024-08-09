@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -143,12 +144,23 @@ public class RankListener extends ListenerAdapter {
             return;
         }
 
-        log.debug("Xp loot drop got claimed by {}", event.getMember());
-
         var xp = xpLootDrops.get(messageId);
         var result = rankService.addXp(event.getMember(), xp);
         rankService.onXpChange(result, event.getMember(), embedCache);
         xpLootDrops.remove(messageId);
+
+        log.debug("Xp loot drop got claimed by {}", event.getMember());
+        settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
+                .setEmbeds(embedCache.getEmbed("logChannelEntry")
+                        .injectValue("title", "XP Loot Drop")
+                        .injectValue("description", String.format("%s hat %d XP in einem Loot Drop gefunden",
+                                event.getUser().getAsMention(),
+                                xp)
+                        ).toEmbedBuilder()
+                        .setTimestamp(Instant.now())
+                        .build()
+                ).build()
+        ).queue();
 
         event.retrieveMessage().queue(message -> {
             message.reply(
@@ -189,7 +201,10 @@ public class RankListener extends ListenerAdapter {
         }
 
         if (reward.itemId() > 0) {
-            itemService.createTransaction(member, reward.itemId());
+            itemService.createTransaction(member, reward.itemId()).ifPresent(role -> {
+                log.info("Adding role {} to member {}", member, role);
+                guild.addRoleToMember(member, role).queue();
+            });
         }
 
         var builder = new MessageCreateBuilder().addContent(member.getAsMention())
@@ -235,6 +250,16 @@ public class RankListener extends ListenerAdapter {
         }
 
         log.info("Collect loot drop {} got claimed by {}", event.getMessageId(), event.getMember());
+        settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
+                .setEmbeds(embedCache.getEmbed("logChannelEntry")
+                        .injectValue("title", "Collect Loot Drop")
+                        .injectValue("description", String.format("%s hat einen Collect Punkt in einem Loot Drop gefunden",
+                                event.getUser().getAsMention())
+                        ).toEmbedBuilder()
+                        .setTimestamp(Instant.now())
+                        .build()
+                ).build()
+        ).queue();
 
         var oldPoints = eventService.getCollectPoints(event.getMember());
         var newPoints = eventService.addCollectPoint(event.getMember());

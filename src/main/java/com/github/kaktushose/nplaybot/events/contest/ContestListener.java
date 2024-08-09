@@ -52,6 +52,9 @@ public class ContestListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        if (event.getChannel().getIdLong() != eventService.getContestEventChannel()) {
+            return;
+        }
         eventService.setVoteCount(event.getMessageIdLong(), 0);
         log.info("Contest entry {} got deleted, setting vote count to 0", event.getMessageId());
     }

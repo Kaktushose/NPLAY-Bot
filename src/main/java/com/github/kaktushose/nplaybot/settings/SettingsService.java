@@ -39,4 +39,24 @@ public class SettingsService {
             throw new RuntimeException(e);
         }
     }
+
+    public TextChannel getLogChannel() {
+        log.debug("Querying log channel");
+        try (Connection connection = dataSource.getConnection()) {
+            var statement = connection.prepareStatement("""
+                    SELECT log_channel_id
+                    FROM bot_settings
+                    WHERE guild_id = ?
+                    """
+            );
+            statement.setLong(1, guild.getIdLong());
+
+            var result = statement.executeQuery();
+            result.next();
+            return guild.getTextChannelById(result.getLong(1));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

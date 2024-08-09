@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +74,18 @@ public class LootboxListener extends ListenerAdapter {
         event.getReaction().clearReactions().queue();
 
         log.info("Lootbox {} got claimed by {}", event.getMessageId(), event.getMember());
+        bot.getDatabase().getSettingsService().getLogChannel().sendMessage(new MessageCreateBuilder()
+                .setEmbeds(bot.getEmbedCache().getEmbed("logChannelEntry")
+                        .injectValue("title", "Lootbox")
+                        .injectValue("description", String.format(
+                                "%s hat folgende Lootbox erhalten: %s",
+                                event.getMember().getAsMention(),
+                                lootbox.rewardString(bot.getDatabase().getItemService()))
+                        ).toEmbedBuilder()
+                        .setTimestamp(Instant.now())
+                        .build()
+                ).build()
+        ).queue();
 
         if (lootbox.xpReward() > 0) {
             var result = bot.getDatabase().getRankService().addXp(target, lootbox.xpReward());
@@ -99,9 +112,10 @@ public class LootboxListener extends ListenerAdapter {
         }
 
         if (lootbox.itemId() >= 0) {
-            bot.getDatabase().getItemService().createTransaction(target, lootbox.itemId()).ifPresent(role ->
-                    event.getGuild().addRoleToMember(target, role).queue()
-            );
+            bot.getDatabase().getItemService().createTransaction(target, lootbox.itemId()).ifPresent(role -> {
+                log.info("Adding role {} to member {}", target, role);
+                event.getGuild().addRoleToMember(target, role).queue();
+            });
             var item = bot.getDatabase().getItemService().getItem(lootbox.itemId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             var message = new MessageCreateBuilder()

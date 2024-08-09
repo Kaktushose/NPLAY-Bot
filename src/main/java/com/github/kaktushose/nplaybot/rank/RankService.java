@@ -35,12 +35,15 @@ public class RankService {
     }
 
     public boolean createUser(UserSnowflake user) {
-        log.info("Inserting new user: {}", user);
         try (Connection connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement("INSERT INTO users VALUES(?) ON CONFLICT DO NOTHING RETURNING user_id");
             statement.setLong(1, user.getIdLong());
             var result = statement.executeQuery();
-            return result.next();
+            boolean created = result.next();
+            if (created) {
+                log.info("Inserting new user: {}", user);
+            }
+            return created;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -343,7 +346,7 @@ public class RankService {
     }
 
     public void onXpChange(XpChangeResult result, Member member, EmbedCache embedCache) {
-        log.info("Checking for rank change: {}", member);
+        log.info("Checking for rank change: member={}, xpChangeResult={}", member, result);
 
         if (!result.rankChanged()) {
             log.info("Rank hasn't changed");
@@ -441,7 +444,7 @@ public class RankService {
                 .map(guild::getRoleById)
                 .filter(it -> it != validRole)
                 .toList();
-        log.info("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
+        log.debug("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
         guild.modifyMemberRoles(member, List.of(validRole, itemRole.get()), invalidRoles).queue();
     }
 
@@ -451,7 +454,7 @@ public class RankService {
                 .map(guild::getRoleById)
                 .filter(it -> it != validRole)
                 .toList();
-        log.info("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
+        log.debug("Updating roles for {}. Valid role: {}, invalid Roles {}", member, validRole, invalidRoles);
         guild.modifyMemberRoles(member, List.of(validRole), invalidRoles).queue();
     }
 
@@ -779,6 +782,20 @@ public class RankService {
                    ", karmaReward=" + karmaReward +
                    ", itemId=" + itemId +
                    '}';
+        }
+
+        public String rewardString(ItemService itemService) {
+            var result = new StringBuilder();
+            if (xpReward > 0) {
+                result.append(String.format("%d XP", xpReward)).append("\n");
+            }
+            if (karmaReward > 0) {
+                result.append(String.format("%d Karma", karmaReward)).append("\n");
+            }
+            if (itemId > 0) {
+                result.append(itemService.getItem(itemId).name());
+            }
+            return result.toString();
         }
     }
 

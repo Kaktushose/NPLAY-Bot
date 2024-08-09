@@ -1,16 +1,20 @@
 package com.github.kaktushose.nplaybot.items;
 
+import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Bot;
+import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +28,14 @@ public class ItemService {
     private static final int PLAY_ACTIVITY_ITEM_ID = 7;
     private final DataSource dataSource;
     private final Guild guild;
+    private final EmbedCache embedCache;
+    private final SettingsService settingsService;
 
     public ItemService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
         this.guild = bot.getGuild();
+        this.embedCache = bot.getEmbedCache();
+        this.settingsService = bot.getDatabase().getSettingsService();
     }
 
     public List<Item> getAllItems() {
@@ -140,6 +148,16 @@ public class ItemService {
                 return Optional.empty();
             }
 
+            settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
+                    .setEmbeds(embedCache.getEmbed("logChannelEntry")
+                            .injectValue("title", "Item erhalten")
+                            .injectValue("description", String.format("%s hat folgendes Item erhalten: %s", user.getAsMention(), item.name))
+                            .toEmbedBuilder()
+                            .setTimestamp(Instant.now())
+                            .build()
+                    ).build()
+            ).queue();
+
             if (itemId == PREMIUM_UNLIMITED_ITEM_ID) {
                 log.info("Adding Premium Unlimited");
                 var statement = connection.prepareStatement("""
@@ -217,6 +235,15 @@ public class ItemService {
             var result = statement.executeQuery();
             result.next();
             var item = getItem(result.getInt(1));
+            settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
+                    .setEmbeds(embedCache.getEmbed("logChannelEntry")
+                            .injectValue("title", "Item entfernt")
+                            .injectValue("description", String.format("%s wurde folgendes Item entfernt: %s", user.getAsMention(), item.name))
+                            .toEmbedBuilder()
+                            .setTimestamp(Instant.now())
+                            .build()
+                    ).build()
+            ).queue();
             if (item.roleId > 0) {
                 guild.removeRoleFromMember(user, guild.getRoleById(item.roleId())).queue();
             }
