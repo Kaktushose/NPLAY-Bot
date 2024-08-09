@@ -31,11 +31,11 @@ public class ItemService {
     private final EmbedCache embedCache;
     private final SettingsService settingsService;
 
-    public ItemService(DataSource dataSource, Bot bot) {
+    public ItemService(DataSource dataSource, Bot bot, SettingsService settingsService) {
         this.dataSource = dataSource;
         this.guild = bot.getGuild();
         this.embedCache = bot.getEmbedCache();
-        this.settingsService = bot.getDatabase().getSettingsService();
+        this.settingsService = settingsService;
     }
 
     public List<Item> getAllItems() {

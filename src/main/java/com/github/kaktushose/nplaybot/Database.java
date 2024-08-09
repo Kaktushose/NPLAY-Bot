@@ -39,7 +39,7 @@ public class Database {
         initialSetup(bot.getGuild().getIdLong());
 
         settingsService = new SettingsService(dataSource, bot);
-        itemService = new ItemService(dataSource, bot);
+        itemService = new ItemService(dataSource, bot, settingsService);
         rankService = new RankService(dataSource, itemService, bot);
         contestEventService = new ContestEventService(dataSource, bot);
         collectEventService = new CollectEventService(dataSource, bot);
