@@ -1,13 +1,13 @@
 package com.github.kaktushose.nplaybot;
 
-import com.github.kaktushose.nplaybot.events.collect.CollectEventService;
-import com.github.kaktushose.nplaybot.events.contest.ContestEventService;
-import com.github.kaktushose.nplaybot.items.ItemService;
-import com.github.kaktushose.nplaybot.karma.KarmaService;
+import com.github.kaktushose.nplaybot.features.events.collect.CollectEventService;
+import com.github.kaktushose.nplaybot.features.events.contest.ContestEventService;
+import com.github.kaktushose.nplaybot.features.items.ItemService;
+import com.github.kaktushose.nplaybot.features.karma.KarmaService;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
-import com.github.kaktushose.nplaybot.rank.RankService;
-import com.github.kaktushose.nplaybot.settings.SettingsService;
-import com.github.kaktushose.nplaybot.starboard.StarboardService;
+import com.github.kaktushose.nplaybot.features.rank.RankService;
+import com.github.kaktushose.nplaybot.features.settings.SettingsService;
+import com.github.kaktushose.nplaybot.features.starboard.StarboardService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
