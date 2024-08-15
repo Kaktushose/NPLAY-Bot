@@ -4,6 +4,7 @@ import com.github.kaktushose.jda.commands.JDACommands;
 import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.JsonErrorMessageFactory;
+import com.github.kaktushose.nplaybot.events.EventDispatcher;
 import com.github.kaktushose.nplaybot.features.LegacyCommandListener;
 import com.github.kaktushose.nplaybot.features.MemberDatabaseSyncListener;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestListener;
@@ -32,6 +33,7 @@ public class Bot {
     private final EmbedCache embedCache;
     private final TaskScheduler taskScheduler;
     private final Guild guild;
+    private final EventDispatcher eventDispatcher;
 
     private Bot(long guildId, String token) throws InterruptedException, RuntimeException {
         embedCache = new EmbedCache("embeds.json");
@@ -56,6 +58,8 @@ public class Bot {
         } catch (Exception e) {
             throw new RuntimeException("Unable to connect to database!", e);
         }
+
+        eventDispatcher = new EventDispatcher(this);
 
         jda.addEventListener(
                 new RankListener(database, embedCache, this),
@@ -108,5 +112,9 @@ public class Bot {
 
     public Guild getGuild() {
         return guild;
+    }
+
+    public EventDispatcher getEventDispatcher() {
+        return eventDispatcher;
     }
 }
