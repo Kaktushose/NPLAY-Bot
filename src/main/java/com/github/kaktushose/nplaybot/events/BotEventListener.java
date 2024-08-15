@@ -6,6 +6,6 @@ public abstract class BotEventListener<T extends GenericBotEvent> {
         onEvent((T) event);
     }
 
-    public  abstract void onEvent(T event);
+    public abstract void onEvent(T event);
 
 }

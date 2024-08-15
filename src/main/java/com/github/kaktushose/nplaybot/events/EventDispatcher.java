@@ -1,7 +1,7 @@
 package com.github.kaktushose.nplaybot.events;
 
 import com.github.kaktushose.nplaybot.Bot;
-import com.github.kaktushose.nplaybot.events.messages.valid.ValidMessageProducer;
+import com.github.kaktushose.nplaybot.events.messages.receive.MessageReceiveListener;
 import net.dv8tion.jda.api.JDA;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class EventDispatcher {
     }
 
     private void registerJDAListeners(JDA jda) {
-        jda.addEventListener(new ValidMessageProducer(bot));
+        jda.addEventListener(new MessageReceiveListener(bot));
     }
 
     private void registerBotListeners() {

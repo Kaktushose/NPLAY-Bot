@@ -23,9 +23,7 @@ public class LegacyCommandListener extends ListenerAdapter {
         if (!event.isFromGuild()) {
             return;
         }
-        if (!event.getMessage().getContentDisplay().startsWith("!")) {
-            return;
-        }
+
         event.getChannel().sendMessage(embedCache.getEmbed("legacyCommandInfo").toMessageCreateData()).queue(it ->
                 it.delete().queueAfter(30, TimeUnit.SECONDS)
         );

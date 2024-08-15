@@ -5,24 +5,19 @@ import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 
 public abstract class GenericBotEvent {
 
-    private final Bot bot;
     private final Database database;
     private final EmbedCache embedCache;
     private final JDA jda;
     private final Guild guild;
-    private final Member member;
 
-    public GenericBotEvent(Bot bot, Member member) {
-        this.bot = bot;
+    public GenericBotEvent(Bot bot) {
         this.database = bot.getDatabase();
         this.embedCache = bot.getEmbedCache();
         this.jda = bot.getJda();
         this.guild = bot.getGuild();
-        this.member = member;
     }
 
     public Database getDatabase() {
@@ -39,9 +34,5 @@ public abstract class GenericBotEvent {
 
     public Guild getGuild() {
         return guild;
-    }
-
-    public Member getMember() {
-        return member;
     }
 }
