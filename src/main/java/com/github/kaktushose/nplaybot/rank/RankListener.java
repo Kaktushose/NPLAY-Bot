@@ -87,6 +87,10 @@ public class RankListener extends ListenerAdapter {
         onXpLootDrop(event);
         onCheckForLootbox(event);
         onAddRegularXp(event);
+
+        if (!eventService.isCollectEventActive()) {
+            return;
+        }
         onAddRegularCollectPoints(event);
         onCollectLootDrop(event);
     }
@@ -216,10 +220,6 @@ public class RankListener extends ListenerAdapter {
     }
 
     private void onCollectLootDrop(MessageReceivedEvent event) {
-        if (!eventService.isCollectEventActive()) {
-            return;
-        }
-
         var points = eventService.getCollectLootDrop(event.getMessage());
 
         if (points < 1) {
@@ -233,6 +233,9 @@ public class RankListener extends ListenerAdapter {
 
 
     private void onCollectEventDropReactionAdd(MessageReactionAddEvent event) {
+        if (!eventService.isCollectEventActive()) {
+            return;
+        }
         if (event.getUser().isBot()) {
             return;
         }
