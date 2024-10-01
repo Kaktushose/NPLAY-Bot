@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.events;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.jda.commands.data.EmbedDTO;
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
 import net.dv8tion.jda.api.JDA;
@@ -26,6 +27,10 @@ public abstract class GenericBotEvent {
 
     public EmbedCache getEmbedCache() {
         return embedCache;
+    }
+
+    public EmbedDTO getEmbed(String name) {
+        return embedCache.getEmbed(name);
     }
 
     public JDA getJDA() {

@@ -5,14 +5,13 @@ import com.github.kaktushose.jda.commands.annotations.Produces;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.JsonErrorMessageFactory;
 import com.github.kaktushose.nplaybot.events.EventDispatcher;
-import com.github.kaktushose.nplaybot.features.LegacyCommandListener;
 import com.github.kaktushose.nplaybot.features.MemberDatabaseSyncListener;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestListener;
 import com.github.kaktushose.nplaybot.features.karma.KarmaListener;
-import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
 import com.github.kaktushose.nplaybot.features.rank.RankListener;
-import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
 import com.github.kaktushose.nplaybot.features.starboard.StarboardListener;
+import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
+import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -66,8 +65,7 @@ public class Bot {
                 new ContestListener(database),
                 new KarmaListener(database, embedCache),
                 new StarboardListener(database, embedCache),
-                new MemberDatabaseSyncListener(database),
-                new LegacyCommandListener(embedCache)
+                new MemberDatabaseSyncListener(database)
         );
 
         jdaCommands = JDACommands.start(jda, Bot.class, "com.github.kaktushose.nplaybot");

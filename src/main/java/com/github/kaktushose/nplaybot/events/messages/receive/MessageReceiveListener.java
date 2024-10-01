@@ -2,7 +2,6 @@ package com.github.kaktushose.nplaybot.events.messages.receive;
 
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.messages.receive.impl.ContestMessageEvent;
-import com.github.kaktushose.nplaybot.events.messages.receive.impl.GuildMessageEvent;
 import com.github.kaktushose.nplaybot.events.messages.receive.impl.LegacyCommandEvent;
 import com.github.kaktushose.nplaybot.events.messages.receive.impl.ValidMessageEvent;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestEventService;

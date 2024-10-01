@@ -1,32 +1,16 @@
 package com.github.kaktushose.nplaybot.features;
 
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
+import com.github.kaktushose.nplaybot.events.BotEvent;
+import com.github.kaktushose.nplaybot.events.messages.receive.impl.LegacyCommandEvent;
 
 import java.util.concurrent.TimeUnit;
 
-public class LegacyCommandListener extends ListenerAdapter {
+public class LegacyCommandListener {
 
-    private final EmbedCache embedCache;
-
-    public LegacyCommandListener(EmbedCache embedCache) {
-        this.embedCache = embedCache;
-    }
-
-    @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-        if (!event.isFromGuild()) {
-            return;
-        }
-
-        event.getChannel().sendMessage(embedCache.getEmbed("legacyCommandInfo").toMessageCreateData()).queue(it ->
+    @BotEvent
+    public void onMessageReceived(LegacyCommandEvent event) {
+        event.getChannel().sendMessage(event.getEmbedCache().getEmbed("legacyCommandInfo").toMessageCreateData()).queue(it ->
                 it.delete().queueAfter(30, TimeUnit.SECONDS)
         );
     }
-
 }
