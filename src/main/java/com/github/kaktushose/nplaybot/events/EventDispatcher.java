@@ -2,7 +2,9 @@ package com.github.kaktushose.nplaybot.events;
 
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.messages.receive.MessageReceiveListener;
+import com.github.kaktushose.nplaybot.events.reactions.MessageReactionListener;
 import com.github.kaktushose.nplaybot.features.LegacyCommandListener;
+import com.github.kaktushose.nplaybot.features.events.contest.ContestListener;
 import net.dv8tion.jda.api.JDA;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,8 +30,10 @@ public class EventDispatcher {
 
     private void registerListeners(JDA jda) {
         jda.addEventListener(new MessageReceiveListener(bot));
+        jda.addEventListener(new MessageReactionListener(bot));
 
         addEventListener(new LegacyCommandListener());
+        addEventListener(new ContestListener(bot));
     }
 
     @SuppressWarnings("unchecked")

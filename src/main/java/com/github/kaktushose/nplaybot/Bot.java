@@ -6,7 +6,6 @@ import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.JsonErrorMessageFactory;
 import com.github.kaktushose.nplaybot.events.EventDispatcher;
 import com.github.kaktushose.nplaybot.features.MemberDatabaseSyncListener;
-import com.github.kaktushose.nplaybot.features.events.contest.ContestListener;
 import com.github.kaktushose.nplaybot.features.karma.KarmaListener;
 import com.github.kaktushose.nplaybot.features.rank.RankListener;
 import com.github.kaktushose.nplaybot.features.starboard.StarboardListener;
@@ -62,7 +61,6 @@ public class Bot {
 
         jda.addEventListener(
                 new RankListener(database, embedCache, this),
-                new ContestListener(database),
                 new KarmaListener(database, embedCache),
                 new StarboardListener(database, embedCache),
                 new MemberDatabaseSyncListener(database)
