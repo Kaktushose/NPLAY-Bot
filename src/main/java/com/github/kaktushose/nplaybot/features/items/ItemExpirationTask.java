@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ItemExpirationTask {
 
-    private static final Logger log = LoggerFactory.getLogger(ItemExpirationTask.class);
     public static final int PLAY_ACTIVITY_KARMA_THRESHOLD = 30;
+    private static final Logger log = LoggerFactory.getLogger(ItemExpirationTask.class);
     private final ScheduledExecutorService executor;
 
     public ItemExpirationTask() {

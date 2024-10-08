@@ -2,8 +2,8 @@ package com.github.kaktushose.nplaybot.features.karma;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
-import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.features.rank.RankService;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;

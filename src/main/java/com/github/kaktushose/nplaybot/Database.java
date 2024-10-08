@@ -4,10 +4,10 @@ import com.github.kaktushose.nplaybot.features.events.collect.CollectEventServic
 import com.github.kaktushose.nplaybot.features.events.contest.ContestEventService;
 import com.github.kaktushose.nplaybot.features.items.ItemService;
 import com.github.kaktushose.nplaybot.features.karma.KarmaService;
-import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.features.rank.RankService;
 import com.github.kaktushose.nplaybot.features.settings.SettingsService;
 import com.github.kaktushose.nplaybot.features.starboard.StarboardService;
+import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 

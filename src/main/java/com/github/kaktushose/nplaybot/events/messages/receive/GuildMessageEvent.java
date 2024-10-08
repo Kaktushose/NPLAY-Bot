@@ -4,7 +4,6 @@ import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.JDABotEvent;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
