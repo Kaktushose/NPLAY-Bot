@@ -1,17 +1,14 @@
 package com.github.kaktushose.nplaybot.features.starboard;
 
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.BotEvent;
+import com.github.kaktushose.nplaybot.events.reactions.karma.KarmaBalanceChangeEvent;
 import com.github.kaktushose.nplaybot.events.reactions.starboard.StarboardPostDeleteEvent;
 import com.github.kaktushose.nplaybot.events.reactions.starboard.StarboardPostUpdateEvent;
 import com.github.kaktushose.nplaybot.features.karma.KarmaService;
 import com.github.kaktushose.nplaybot.features.rank.RankService;
-import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.UserSnowflake;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -21,21 +18,17 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StarboardListener extends ListenerAdapter {
+public class StarboardListener {
 
     private static final Logger log = LoggerFactory.getLogger(StarboardListener.class);
     private final StarboardService starboardService;
     private final KarmaService karmaService;
     private final RankService rankService;
-    private final PermissionsService permissionsService;
-    private final EmbedCache embedCache;
 
-    public StarboardListener(Database database, EmbedCache embedCache) {
-        this.starboardService = database.getStarboardService();
-        this.karmaService = database.getKarmaService();
-        this.rankService = database.getRankService();
-        this.permissionsService = database.getPermissionsService();
-        this.embedCache = embedCache;
+    public StarboardListener(Bot bot) {
+        this.starboardService = bot.getDatabase().getStarboardService();
+        this.karmaService = bot.getDatabase().getKarmaService();
+        this.rankService = bot.getDatabase().getRankService();
     }
 
     @BotEvent
@@ -45,9 +38,10 @@ public class StarboardListener extends ListenerAdapter {
             starboardService.setRewarded(messageId);
 
             var oldKarma = rankService.getUserInfo(event.getMember()).karma();
-            karmaService.addKarma(UserSnowflake.fromId(event.getMessage().getAuthor().getIdLong()), starboardService.getKarmaReward());
+            karmaService.addKarma(event.getMember(), starboardService.getKarmaReward());
             var newKarma = rankService.getUserInfo(event.getMember()).karma();
-            karmaService.onKarmaIncrease(oldKarma, newKarma, event.getMember(), embedCache);
+
+            event.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(event.getBot(), oldKarma, newKarma, event.getMember()));
         }
 
         var starboardChannel = event.getGuild().getTextChannelById(starboardService.getStarboardChannelId());

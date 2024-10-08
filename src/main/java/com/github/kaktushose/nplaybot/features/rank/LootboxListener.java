@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot.features.rank;
 
 import com.github.kaktushose.nplaybot.Bot;
+import com.github.kaktushose.nplaybot.events.reactions.karma.KarmaBalanceChangeEvent;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -102,7 +103,7 @@ public class LootboxListener extends ListenerAdapter {
             var oldKarma = bot.getDatabase().getRankService().getUserInfo(target).karma();
             var newKarma = oldKarma + lootbox.karmaReward();
             bot.getDatabase().getKarmaService().addKarma(target, lootbox.karmaReward());
-            bot.getDatabase().getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), bot.getEmbedCache());
+            bot.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(bot, oldKarma, newKarma, event.getMember()));
             var message = new MessageCreateBuilder()
                     .addContent(target.getAsMention())
                     .addEmbeds(bot.getEmbedCache().getEmbed("onLootboxKarma").injectValue("karma", lootbox.karmaReward()).toMessageEmbed());

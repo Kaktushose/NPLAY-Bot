@@ -4,9 +4,13 @@ import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.reactions.contest.ContestReactionAddEvent;
 import com.github.kaktushose.nplaybot.events.reactions.contest.ContestReactionRemoveEvent;
 import com.github.kaktushose.nplaybot.events.reactions.contest.ContestVoteRemoveEvent;
+import com.github.kaktushose.nplaybot.events.reactions.karma.KarmaDownvoteEvent;
+import com.github.kaktushose.nplaybot.events.reactions.karma.KarmaUpvoteEvent;
 import com.github.kaktushose.nplaybot.events.reactions.starboard.StarboardPostDeleteEvent;
 import com.github.kaktushose.nplaybot.events.reactions.starboard.StarboardPostUpdateEvent;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestEventService;
+import com.github.kaktushose.nplaybot.features.karma.KarmaService;
+import com.github.kaktushose.nplaybot.features.rank.RankService;
 import com.github.kaktushose.nplaybot.features.starboard.StarboardService;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
@@ -28,12 +32,16 @@ public class MessageReactionListener extends ListenerAdapter {
     private final PermissionsService permissionsService;
     private final ContestEventService eventService;
     private final StarboardService starboardService;
+    private final KarmaService karmaService;
+    private final RankService rankService;
 
     public MessageReactionListener(Bot bot) {
         this.bot = bot;
         permissionsService = bot.getDatabase().getPermissionsService();
         eventService = bot.getDatabase().getContestEventService();
         starboardService = bot.getDatabase().getStarboardService();
+        karmaService = bot.getDatabase().getKarmaService();
+        rankService = bot.getDatabase().getRankService();
     }
 
     @Override
@@ -43,15 +51,24 @@ public class MessageReactionListener extends ListenerAdapter {
         }
 
         if (event.getChannel().getIdLong() == eventService.getContestEventChannel()) {
-            handleContestEvent(event);
+            handleContestVote(event);
         }
 
         if (event.getReaction().getEmoji().equals(Emoji.fromUnicode("⭐"))) {
-            handleStarboardEvent(event);
+            handleStarboardVote(event);
+        }
+
+        if (rankService.isValidChannel(event.getChannel())) {
+            if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
+                handleKarmaUpvote(event);
+            }
+            if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
+                handleKarmaDownvote(event);
+            }
         }
     }
 
-    private void handleContestEvent(MessageReactionAddEvent event) {
+    private void handleContestVote(MessageReactionAddEvent event) {
         if (!permissionsService.hasUserPermissions(event.getMember())) {
             event.getReaction().removeReaction(event.getUser()).queue();
             return;
@@ -59,7 +76,7 @@ public class MessageReactionListener extends ListenerAdapter {
         bot.getEventDispatcher().dispatch(new ContestReactionAddEvent(event, bot));
     }
 
-    private void handleStarboardEvent(MessageReactionAddEvent event) {
+    private void handleStarboardVote(MessageReactionAddEvent event) {
         if (!permissionsService.hasUserPermissions(event.getMember())) {
             event.getReaction().removeReaction(event.getUser()).queue();
         }
@@ -83,6 +100,44 @@ public class MessageReactionListener extends ListenerAdapter {
                 return;
             }
             bot.getEventDispatcher().dispatch(new StarboardPostUpdateEvent(event, bot, count.get(), message));
+        });
+    }
+
+    private void handleKarmaUpvote(MessageReactionAddEvent event) {
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+        // prevent Erich abuse
+        if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+
+        event.retrieveMessage().queue(message -> {
+            if (!permissionsService.hasUserPermissions(message.getMember())) {
+                return;
+            }
+            bot.getEventDispatcher().dispatch(new KarmaUpvoteEvent(event, bot, message));
+        });
+    }
+
+    private void handleKarmaDownvote(MessageReactionAddEvent event) {
+        if (!permissionsService.hasUserPermissions(event.getMember())) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+        // prevent Erich abuse
+        if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
+            event.getReaction().removeReaction(event.getUser()).queue();
+            return;
+        }
+
+        event.retrieveMessage().queue(message -> {
+            if (!permissionsService.hasUserPermissions(message.getMember())) {
+                return;
+            }
+            bot.getEventDispatcher().dispatch(new KarmaDownvoteEvent(event, bot, message));
         });
     }
 
@@ -134,6 +189,25 @@ public class MessageReactionListener extends ListenerAdapter {
                     }
                 } else {
                     dispatcher.dispatch(new StarboardPostUpdateEvent(event, bot, count.get(), message));
+                }
+            });
+        }
+
+        if (rankService.isValidChannel(event.getChannel())) {
+            event.retrieveMessage().queue(message -> {
+                if (!permissionsService.hasUserPermissions(message.getMember())) {
+                    return;
+                }
+
+                if (event.getUser().getIdLong() == message.getAuthor().getIdLong()) {
+                    return;
+                }
+                if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
+                    dispatcher.dispatch(new KarmaDownvoteEvent(event, bot, message));
+                    return;
+                }
+                if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
+                    dispatcher.dispatch(new KarmaUpvoteEvent(event, bot, message));
                 }
             });
         }

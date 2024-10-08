@@ -8,7 +8,9 @@ import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
 import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
+import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.events.reactions.karma.KarmaBalanceChangeEvent;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -16,6 +18,8 @@ import net.dv8tion.jda.api.entities.Member;
 @Interaction
 public class KarmaConfigCommands {
 
+    @Inject
+    private Bot bot;
     @Inject
     private Database database;
     @Inject
@@ -28,12 +32,7 @@ public class KarmaConfigCommands {
         var newKarma = oldKarma + amount;
 
         database.getKarmaService().addKarma(target, amount);
-
-        if (newKarma > oldKarma) {
-            database.getKarmaService().onKarmaIncrease(oldKarma, newKarma, event.getMember(), embedCache);
-        } else if (newKarma < oldKarma) {
-            database.getKarmaService().onKarmaDecrease(oldKarma, newKarma, event.getMember(), embedCache);
-        }
+        bot.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(bot, oldKarma, newKarma, event.getMember()));
 
         event.reply(embedCache.getEmbed("addKarmaResult")
                 .injectValue("user", target.getAsMention())
@@ -45,13 +44,10 @@ public class KarmaConfigCommands {
     @Permissions(BotPermissions.MODIFY_USER_BALANCE)
     public void onSetKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) int value) {
         var oldKarma = database.getRankService().getUserInfo(target).karma();
-        database.getKarmaService().setKarma(target, value);
 
-        if (value > oldKarma) {
-            database.getKarmaService().onKarmaIncrease(oldKarma, value, event.getMember(), embedCache);
-        } else if (value < oldKarma) {
-            database.getKarmaService().onKarmaDecrease(oldKarma, value, event.getMember(), embedCache);
-        }
+        database.getKarmaService().setKarma(target, value);
+        bot.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(bot, oldKarma, value, event.getMember()));
+
 
         event.reply(embedCache.getEmbed("setKarmaResult")
                 .injectValue("user", target.getAsMention())

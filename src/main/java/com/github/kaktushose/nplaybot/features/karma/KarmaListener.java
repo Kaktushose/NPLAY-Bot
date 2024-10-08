@@ -1,112 +1,141 @@
 package com.github.kaktushose.nplaybot.features.karma;
 
 import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.nplaybot.Database;
+import com.github.kaktushose.nplaybot.Bot;
+import com.github.kaktushose.nplaybot.events.BotEvent;
+import com.github.kaktushose.nplaybot.events.reactions.karma.*;
+import com.github.kaktushose.nplaybot.features.items.ItemService;
 import com.github.kaktushose.nplaybot.features.rank.RankService;
-import com.github.kaktushose.nplaybot.permissions.PermissionsService;
-import net.dv8tion.jda.api.entities.UserSnowflake;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class KarmaListener extends ListenerAdapter {
+import static com.github.kaktushose.nplaybot.features.items.ItemExpirationTask.PLAY_ACTIVITY_KARMA_THRESHOLD;
 
+public class KarmaListener {
+
+    private static final Logger log = LoggerFactory.getLogger(KarmaListener.class);
+    private final Bot bot;
     private final KarmaService karmaService;
     private final RankService rankService;
-    private final PermissionsService permissionsService;
+    private final ItemService itemService;
     private final EmbedCache embedCache;
 
-    public KarmaListener(Database database, EmbedCache embedCache) {
-        karmaService = database.getKarmaService();
-        rankService = database.getRankService();
-        permissionsService = database.getPermissionsService();
-        this.embedCache = embedCache;
+    public KarmaListener(Bot bot) {
+        this.bot = bot;
+        karmaService = bot.getDatabase().getKarmaService();
+        rankService = bot.getDatabase().getRankService();
+        itemService = bot.getDatabase().getItemService();
+        this.embedCache = bot.getEmbedCache();
     }
 
-    @Override
-    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        if (!rankService.isValidChannel(event.getChannel())) {
-            return;
+    @BotEvent
+    public void onKarmaUpvote(KarmaUpvoteEvent event) {
+        int oldKarma = rankService.getUserInfo(event.getMessage().getAuthor()).karma();
+        int newKarma = karmaService.onKarmaVoteAdd(event.getJDAEvent().getUser(), event.getMessage().getAuthor(), true);
+        event.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(event.getBot(), oldKarma, newKarma, event.getMessage().getMember()));
+    }
+
+    @BotEvent
+    public void onKarmaDownvote(KarmaDownvoteEvent event) {
+        int oldKarma = rankService.getUserInfo(event.getMessage().getAuthor()).karma();
+        int newKarma = karmaService.onKarmaVoteRemove(event.getJDAEvent().getUser(), event.getMessage().getAuthor(), true);
+
+        event.getEventDispatcher().dispatch(new KarmaBalanceChangeEvent(event.getBot(), oldKarma, newKarma, event.getMessage().getMember()));
+    }
+
+    @BotEvent
+    public void onKarmaChange(KarmaBalanceChangeEvent event) {
+        if (event.getNewKarma() > event.getOldKarma()) {
+            event.getEventDispatcher().dispatch(new KarmaIncreaseEvent(event));
         }
-        if (event.getUser().isBot()) {
-            return;
-        }
-
-        if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
-            // prevent Erich abuse
-            if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
-                event.getReaction().removeReaction(event.getUser()).queue();
-                return;
-            }
-
-            if (!permissionsService.hasUserPermissions(event.getMember())) {
-                event.getReaction().removeReaction(event.getUser()).queue();
-                return;
-            }
-
-            event.retrieveMessage().queue(message -> {
-                if (!permissionsService.hasUserPermissions(message.getMember())) {
-                    return;
-                }
-
-                int oldKarma = rankService.getUserInfo(UserSnowflake.fromId(event.getMessageAuthorIdLong())).karma();
-                int newKarma = karmaService.onKarmaVoteAdd(event.getUser(), UserSnowflake.fromId(event.getMessageAuthorIdLong()), true);
-
-                karmaService.onKarmaIncrease(oldKarma, newKarma, message.getMember(), embedCache);
-            });
-        } else if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
-            if (event.getUser().getIdLong() == event.getMessageAuthorIdLong()) {
-                event.getReaction().removeReaction(event.getUser()).queue();
-                return;
-            }
-
-            if (!permissionsService.hasUserPermissions(event.getMember())) {
-                event.getReaction().removeReaction(event.getUser()).queue();
-                return;
-            }
-
-            event.retrieveMessage().queue(message -> {
-                if (!permissionsService.hasUserPermissions(message.getMember())) {
-                    return;
-                }
-
-                int oldKarma = rankService.getUserInfo(UserSnowflake.fromId(event.getMessageAuthorIdLong())).karma();
-                int newKarma = karmaService.onKarmaVoteRemove(event.getUser(), UserSnowflake.fromId(event.getMessageAuthorIdLong()), true);
-
-                karmaService.onKarmaIncrease(oldKarma, newKarma, message.getMember(), embedCache);
-            });
+        if (event.getNewKarma() < event.getOldKarma()) {
+            event.getEventDispatcher().dispatch(new KarmaDecreaseEvent(event));
         }
     }
 
-    @Override
-    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
-        if (!rankService.isValidChannel(event.getChannel())) {
-            return;
-        }
-        if (event.getUser().isBot()) {
-            return;
-        }
-        if (!permissionsService.hasUserPermissions(event.getMember())) {
-            return;
-        }
-        event.retrieveMessage().queue(message -> {
-            if (!permissionsService.hasUserPermissions(message.getMember())) {
+    @BotEvent
+    public void onKarmaIncrease(KarmaIncreaseEvent event) {
+        var member = event.getMember();
+        var rankInfo = rankService.getUserInfo(member);
+
+        // play activity role
+        if (event.getNewKarma() - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
+            if (itemService.getTransactions(member).stream().anyMatch(ItemService.Transaction::isPlayActivity)) {
                 return;
             }
 
-            if (event.getUser().getIdLong() == message.getAuthor().getIdLong()) {
-                return;
-            }
-            if (karmaService.getValidUpvoteEmojis().contains(event.getEmoji())) {
-                int oldKarma = rankService.getUserInfo(message.getAuthor()).karma();
-                int newKarma = karmaService.onKarmaVoteRemove(event.getUser(), message.getAuthor(), false);
-                karmaService.onKarmaDecrease(oldKarma, newKarma, message.getMember(), embedCache);
-            } else if (karmaService.getValidDownvoteEmojis().contains(event.getEmoji())) {
-                int oldKarma = rankService.getUserInfo(message.getAuthor()).karma();
-                int newKarma = karmaService.onKarmaVoteAdd(event.getUser(), message.getAuthor(), false);
-                karmaService.onKarmaDecrease(oldKarma, newKarma, message.getMember(), embedCache);
-            }
-        });
+            log.info("User {} has enough karma for Play Activity", member);
+            itemService.addPlayActivity(member);
+            itemService.updateLastKarma(member);
+
+            var builder = new MessageCreateBuilder().addContent(member.getAsMention())
+                    .addEmbeds(embedCache.getEmbed("playActivityAdd").toMessageEmbed())
+                    .build();
+            bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
+        }
+
+        // karma rewards
+        var rewards = karmaService.getKarmaRewards();
+        var optional = rewards.stream()
+                .filter(it -> it.threshold() > event.getOldKarma())
+                .filter(it -> it.threshold() <= event.getNewKarma())
+                .findFirst();
+
+        if (optional.isEmpty()) {
+            return;
+        }
+        var reward = optional.get();
+
+        if (reward.xp() > 0) {
+            var xpChangeResult = rankService.addXp(member, reward.xp());
+            rankService.onXpChange(xpChangeResult, member, embedCache);
+        }
+
+        if (reward.roleId() > 0) {
+            bot.getGuild().addRoleToMember(member, bot.getGuild().getRoleById(reward.roleId())).queue();
+        }
+
+        var builder = new MessageCreateBuilder().addContent(member.getAsMention())
+                .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
+                .build();
+        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
+        log.info("Member {} received a karma reward {}", member, reward);
+    }
+
+    @BotEvent
+    public void onKarmaDecrease(KarmaDecreaseEvent event) {
+        var member = event.getMember();
+        var rewards = karmaService.getKarmaRewards();
+        var optional = rewards.stream()
+                .filter(it -> it.threshold() < event.getOldKarma())
+                .filter(it -> it.threshold() >= event.getNewKarma())
+                .findFirst();
+
+        if (optional.isEmpty()) {
+            return;
+        }
+        var reward = optional.get();
+
+        if (reward.xp() > 0) {
+            var xpChangeResult = rankService.addXp(member, -reward.xp());
+            rankService.onXpChange(xpChangeResult, member, embedCache);
+        }
+
+        if (reward.roleId() > 0) {
+            bot.getGuild().removeRoleFromMember(member, bot.getGuild().getRoleById(reward.roleId())).queue();
+        }
+
+        var builder = new MessageCreateBuilder()
+                .addContent(member.getAsMention())
+                .addEmbeds(embedCache.getEmbed("karmaRewardRemove")
+                        .injectValue("user", member.getAsMention())
+                        .toEmbedBuilder()
+                        .build()
+                ).build();
+        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
+        log.info("Removed karma reward {} from user {}", reward, member);
     }
 }

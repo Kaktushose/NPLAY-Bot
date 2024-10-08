@@ -44,7 +44,7 @@ public class Database {
         contestEventService = new ContestEventService(dataSource, bot);
         collectEventService = new CollectEventService(dataSource, bot);
         permissionsService = new PermissionsService(dataSource, bot);
-        karmaService = new KarmaService(dataSource, rankService, itemService, bot);
+        karmaService = new KarmaService(dataSource, bot);
         starboardService = new StarboardService(dataSource, bot);
     }
 

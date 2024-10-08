@@ -6,9 +6,7 @@ import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.JsonErrorMessageFactory;
 import com.github.kaktushose.nplaybot.events.EventDispatcher;
 import com.github.kaktushose.nplaybot.features.MemberDatabaseSyncListener;
-import com.github.kaktushose.nplaybot.features.karma.KarmaListener;
 import com.github.kaktushose.nplaybot.features.rank.RankListener;
-import com.github.kaktushose.nplaybot.features.starboard.StarboardListener;
 import com.github.kaktushose.nplaybot.permissions.CustomPermissionsProvider;
 import com.github.kaktushose.nplaybot.scheduler.TaskScheduler;
 import net.dv8tion.jda.api.JDA;
@@ -61,8 +59,6 @@ public class Bot {
 
         jda.addEventListener(
                 new RankListener(database, embedCache, this),
-                new KarmaListener(database, embedCache),
-                new StarboardListener(database, embedCache),
                 new MemberDatabaseSyncListener(database)
         );
 
@@ -110,7 +106,14 @@ public class Bot {
         return guild;
     }
 
+    @Produces(skipIndexing = true)
     public EventDispatcher getEventDispatcher() {
         return eventDispatcher;
     }
+
+    @Produces(skipIndexing = true)
+    public Bot getBot() {
+        return this;
+    }
+
 }

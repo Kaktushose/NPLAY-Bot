@@ -1,18 +1,11 @@
 package com.github.kaktushose.nplaybot.features.karma;
 
-import com.github.kaktushose.jda.commands.data.EmbedCache;
 import com.github.kaktushose.nplaybot.Bot;
-import com.github.kaktushose.nplaybot.features.items.ItemService;
-import com.github.kaktushose.nplaybot.features.rank.RankService;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
-import net.dv8tion.jda.api.utils.data.DataObject;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,22 +16,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.kaktushose.nplaybot.features.items.ItemExpirationTask.PLAY_ACTIVITY_KARMA_THRESHOLD;
-
 public class KarmaService {
 
     private static final Logger log = LoggerFactory.getLogger(KarmaService.class);
     private final DataSource dataSource;
-    private final Bot bot;
-    private final RankService rankService;
-    private final ItemService itemService;
     private final Guild guild;
 
-    public KarmaService(DataSource dataSource, RankService rankService, ItemService itemService, Bot bot) {
+    public KarmaService(DataSource dataSource, Bot bot) {
         this.dataSource = dataSource;
-        this.bot = bot;
-        this.rankService = rankService;
-        this.itemService = itemService;
         this.guild = bot.getGuild();
     }
 
@@ -74,84 +59,6 @@ public class KarmaService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void onKarmaIncrease(int oldKarma, int newKarma, Member member, EmbedCache embedCache) {
-        // play activity role
-        var rankInfo = rankService.getUserInfo(member);
-        if (newKarma - rankInfo.lastKarma() >= PLAY_ACTIVITY_KARMA_THRESHOLD) {
-            if (itemService.getTransactions(member).stream().anyMatch(ItemService.Transaction::isPlayActivity)) {
-                return;
-            }
-
-            log.info("User {} has enough karma for Play Activity", member);
-            itemService.addPlayActivity(member);
-            itemService.updateLastKarma(member);
-
-            var builder = new MessageCreateBuilder().addContent(member.getAsMention())
-                    .addEmbeds(embedCache.getEmbed("playActivityAdd").toMessageEmbed())
-                    .build();
-            bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
-        }
-
-        // karma rewards
-        var rewards = getKarmaRewards();
-        var optional = rewards.stream()
-                .filter(it -> it.threshold() > oldKarma)
-                .filter(it -> it.threshold() <= newKarma)
-                .findFirst();
-
-        if (optional.isEmpty()) {
-            return;
-        }
-        var reward = optional.get();
-
-        if (reward.xp() > 0) {
-            var xpChangeResult = rankService.addXp(member, reward.xp());
-            rankService.onXpChange(xpChangeResult, member, embedCache);
-        }
-
-        if (reward.roleId() > 0) {
-            guild.addRoleToMember(member, guild.getRoleById(reward.roleId())).queue();
-        }
-
-        var builder = new MessageCreateBuilder().addContent(member.getAsMention())
-                .addEmbeds(EmbedBuilder.fromData(DataObject.fromJson(reward.embed())).build())
-                .build();
-        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
-        log.info("Member {} received a karma reward {}", member, reward);
-    }
-
-    public void onKarmaDecrease(int oldKarma, int newKarma, Member member, EmbedCache embedCache) {
-        var rewards = getKarmaRewards();
-        var optional = rewards.stream()
-                .filter(it -> it.threshold() < oldKarma)
-                .filter(it -> it.threshold() >= newKarma)
-                .findFirst();
-
-        if (optional.isEmpty()) {
-            return;
-        }
-        var reward = optional.get();
-
-        if (reward.xp() > 0) {
-            var xpChangeResult = rankService.addXp(member, -reward.xp());
-            rankService.onXpChange(xpChangeResult, member, embedCache);
-        }
-
-        if (reward.roleId() > 0) {
-            guild.removeRoleFromMember(member, guild.getRoleById(reward.roleId())).queue();
-        }
-
-        var builder = new MessageCreateBuilder()
-                .addContent(member.getAsMention())
-                .addEmbeds(embedCache.getEmbed("karmaRewardRemove")
-                        .injectValue("user", member.getAsMention())
-                        .toEmbedBuilder()
-                        .build()
-                ).build();
-        bot.getDatabase().getSettingsService().getBotChannel().sendMessage(builder).queue();
-        log.info("Removed karma reward {} from user {}", reward, member);
     }
 
     public void resetTokens() {

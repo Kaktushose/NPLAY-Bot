@@ -5,6 +5,8 @@ import com.github.kaktushose.nplaybot.events.messages.receive.MessageReceiveList
 import com.github.kaktushose.nplaybot.events.reactions.MessageReactionListener;
 import com.github.kaktushose.nplaybot.features.LegacyCommandListener;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestListener;
+import com.github.kaktushose.nplaybot.features.karma.KarmaListener;
+import com.github.kaktushose.nplaybot.features.starboard.StarboardListener;
 import net.dv8tion.jda.api.JDA;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +36,8 @@ public class EventDispatcher {
 
         addEventListener(new LegacyCommandListener());
         addEventListener(new ContestListener(bot));
+        addEventListener(new StarboardListener(bot));
+        addEventListener(new KarmaListener(bot));
     }
 
     @SuppressWarnings("unchecked")
