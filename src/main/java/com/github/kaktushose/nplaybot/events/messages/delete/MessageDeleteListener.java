@@ -2,7 +2,7 @@ package com.github.kaktushose.nplaybot.events.messages.delete;
 
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.events.messages.delete.impl.ContestEntryDeletedEvent;
-import com.github.kaktushose.nplaybot.events.messages.delete.impl.StarboardEntryDeletedEvent;
+import com.github.kaktushose.nplaybot.events.reactions.starboard.StarboardPostDeleteEvent;
 import com.github.kaktushose.nplaybot.features.events.contest.ContestEventService;
 import com.github.kaktushose.nplaybot.features.starboard.StarboardService;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -26,10 +26,9 @@ public class MessageDeleteListener extends ListenerAdapter {
         var dispatcher = bot.getEventDispatcher();
 
         if (starboardService.entryExists(event.getMessageIdLong())) {
-            if (!starboardService.isPosted(event.getMessageIdLong())) {
-                return;
+            if (starboardService.isPosted(event.getMessageIdLong())) {
+                dispatcher.dispatch(new StarboardPostDeleteEvent(event, bot));
             }
-            dispatcher.dispatch(new StarboardEntryDeletedEvent(event, bot));
         }
 
         if (event.getChannel().getIdLong() == contestEventService.getContestEventChannel()) {
