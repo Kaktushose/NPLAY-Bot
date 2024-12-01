@@ -68,7 +68,7 @@ public class AddItemCommand {
     @StringSelectMenu("Wähle ein Item aus")
     @SelectOption(label = "dummy option", value = "dummy option")
     public void onItemAddSelect(ComponentEvent event, List<String> selection) {
-        selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id)).ifPresent(role -> {
+        selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id), "Add Item Command").ifPresent(role -> {
             log.info("Adding role {} to member {}", target, role);
             event.getGuild().addRoleToMember(target, role).queue();
         }));

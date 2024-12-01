@@ -378,7 +378,7 @@ public class RankService {
 
         Optional<Role> itemRole = Optional.empty();
         if (result.currentRank().itemRewardId() > 0) {
-            itemRole = itemService.createTransaction(member, result.currentRank().itemRewardId());
+            itemRole = itemService.createTransaction(member, result.currentRank().itemRewardId(), "Rank Reward");
             var item = itemService.getItem(result.currentRank().itemRewardId());
             var emoji = bot.getDatabase().getItemService().getTypeEmoji(item.typeId());
             reward = String.format("%s %s", emoji, item.name());

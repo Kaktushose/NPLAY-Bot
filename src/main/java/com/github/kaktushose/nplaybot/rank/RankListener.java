@@ -157,7 +157,7 @@ public class RankListener extends ListenerAdapter {
         settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
                 .setEmbeds(embedCache.getEmbed("logChannelEntry")
                         .injectValue("title", "XP Loot Drop")
-                        .injectValue("description", String.format("%s hat %d XP in einem Loot Drop gefunden",
+                        .injectValue("description", String.format("%s hat %d PLAY-Punkte in einem PLAY-Punkte Drop gefunden",
                                 event.getUser().getAsMention(),
                                 xp)
                         ).toEmbedBuilder()
@@ -205,7 +205,7 @@ public class RankListener extends ListenerAdapter {
         }
 
         if (reward.itemId() > 0) {
-            itemService.createTransaction(member, reward.itemId()).ifPresent(role -> {
+            itemService.createTransaction(member, reward.itemId(), "Collect Reward").ifPresent(role -> {
                 log.info("Adding role {} to member {}", member, role);
                 guild.addRoleToMember(member, role).queue();
             });
@@ -260,7 +260,7 @@ public class RankListener extends ListenerAdapter {
         settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
                 .setEmbeds(embedCache.getEmbed("logChannelEntry")
                         .injectValue("title", "Collect Loot Drop")
-                        .injectValue("description", String.format("%s hat einen Collect Punkt in einem Loot Drop gefunden",
+                        .injectValue("description", String.format("%s hat einen Collect Punkt in einem Collect-Punkte Drop gefunden",
                                 event.getUser().getAsMention())
                         ).toEmbedBuilder()
                         .setTimestamp(Instant.now())

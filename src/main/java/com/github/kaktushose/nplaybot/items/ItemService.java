@@ -126,18 +126,18 @@ public class ItemService {
         }
     }
 
-    public Optional<Role> createTransaction(UserSnowflake user, int itemId) {
-        return createTransaction(user, itemId, false);
+    public Optional<Role> createTransaction(UserSnowflake user, int itemId, String origin) {
+        return createTransaction(user, itemId, false, origin);
     }
 
     public void addPlayActivity(UserSnowflake user) {
-        createTransaction(user, PLAY_ACTIVITY_ITEM_ID, true).ifPresent(it -> {
+        createTransaction(user, PLAY_ACTIVITY_ITEM_ID, true, "Play-Activity").ifPresent(it -> {
             log.info("Adding role {} to user {}", it, user);
             guild.addRoleToMember(user, it).queue();
         });
     }
 
-    private Optional<Role> createTransaction(UserSnowflake user, int itemId, boolean isPlayActivity) {
+    private Optional<Role> createTransaction(UserSnowflake user, int itemId, boolean isPlayActivity, String origin) {
         log.info("Starting item transaction: ItemId={}, user={}, isPlayActivity={}", itemId, user, isPlayActivity);
         try (Connection connection = dataSource.getConnection()) {
             var item = getItem(itemId);
@@ -151,7 +151,12 @@ public class ItemService {
             settingsService.getLogChannel().sendMessage(new MessageCreateBuilder()
                     .setEmbeds(embedCache.getEmbed("logChannelEntry")
                             .injectValue("title", "Item erhalten")
-                            .injectValue("description", String.format("%s hat folgendes Item erhalten: %s", user.getAsMention(), item.name))
+                            .injectValue("description", String.format("%s hat folgendes Item erhalten: %s (%s)",
+                                    user.getAsMention(),
+                                    item.name,
+                                    origin
+
+                            ))
                             .toEmbedBuilder()
                             .setTimestamp(Instant.now())
                             .build()
