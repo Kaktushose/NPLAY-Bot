@@ -2,11 +2,10 @@ package com.github.kaktushose.nplaybot.karma;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.modals.ModalEvent;
-import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ModalEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.google.gson.Gson;
@@ -41,10 +40,10 @@ public class KarmaRewardCommands {
     private String embed;
 
     @SlashCommand(value = "karma-config reward create", desc = "Erstellt eine Belohnung für das Karma System", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") int threshold) {
+    public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") Integer threshold) {
         this.name = name;
         this.threshold = threshold;
-        event.withSelectMenus("onSelectType").reply(embedCache.getEmbed("rewardCreateSelectType").injectValue("name", name));
+        event.with().components("onSelectType").reply(embedCache.getEmbed("rewardCreateSelectType").injectValue("name", name));
     }
 
     @StringSelectMenu("Wähle eine Belohnungsart aus")
@@ -53,7 +52,7 @@ public class KarmaRewardCommands {
     public void onSelectType(ComponentEvent event, List<String> selection) {
         rewardType = selection.get(0);
         if (ROLE_REWARD.equals(rewardType)) {
-            event.withSelectMenus("onSelectRole").reply(embedCache.getEmbed("rewardCreateSelectRole").injectValue("name", name));
+            event.with().components("onSelectRole").reply(embedCache.getEmbed("rewardCreateSelectRole").injectValue("name", name));
         } else if (XP_REWARD.equals(rewardType)) {
             event.replyModal("onSelectXp");
         } else {
@@ -72,7 +71,7 @@ public class KarmaRewardCommands {
         parseJson(embed).ifPresentOrElse(it -> {
             this.embed = it;
             finishSetup(event);
-        }, () -> event.withButtons("onRetryEmbedInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
+        }, () -> event.with().components("onRetryEmbedInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
     }
 
     @Button("neue Eingabe")
@@ -88,18 +87,18 @@ public class KarmaRewardCommands {
         try {
             xp = Integer.parseInt(amount);
         } catch (NumberFormatException ignored) {
-            event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
+            event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
             return;
         }
         if (xp < 1) {
-            event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
+            event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
             return;
         }
         parseJson(embed).ifPresentOrElse(it -> {
             this.embed = it;
             this.xp = xp;
             finishSetup(event);
-        }, () -> event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
+        }, () -> event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
     }
 
     @Button("neue Eingabe")
@@ -107,8 +106,8 @@ public class KarmaRewardCommands {
         event.replyModal("onSelectXp");
     }
 
-    private void finishSetup(Replyable event) {
-        event.withButtons("onConfirm", "onCancel").reply(embedCache.getEmbed("rewardCreateSummarize")
+    private void finishSetup(ModalEvent event) {
+        event.with().components("onConfirm", "onCancel").reply(embedCache.getEmbed("rewardCreateSummarize")
                 .injectValue("name", name)
                 .injectValue("type", rewardType)
                 .injectValue("threshold", threshold)
@@ -139,12 +138,14 @@ public class KarmaRewardCommands {
         }
 
         var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
-                event.getJdaCommands().getSelectMenu("KarmaRewardCommands.onRewardDeleteSelect")).createCopy();
+                event.getSelectMenu("KarmaRewardCommands.onRewardDeleteSelect")).createCopy();
         menu.getOptions().clear();
         menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
         rewards.forEach(it -> menu.addOption(it.name(), String.valueOf(it.rewardId())));
-        event.getReplyContext().getBuilder().addActionRow(menu.build());
-        event.reply(embedCache.getEmbed("rewardDeleteSelect"));
+        event.jdaEvent()
+                .replyEmbeds(embedCache.getEmbed("rewardDeleteSelect").toMessageEmbed())
+                .addActionRow(menu.build())
+                .queue();
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Belohnungen aus")

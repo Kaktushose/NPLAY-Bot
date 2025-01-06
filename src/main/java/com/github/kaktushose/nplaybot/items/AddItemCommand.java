@@ -2,9 +2,9 @@ package com.github.kaktushose.nplaybot.items;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
@@ -52,17 +52,16 @@ public class AddItemCommand {
 
         this.target = target;
 
-        var menu = event.getSelectMenu(
-                "AddItemCommand.onItemAddSelect",
-                net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
-        ).createCopy();
+        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) event.getSelectMenu("AddItemCommand.onItemAddSelect")).createCopy();
 
         menu.getOptions().clear();
         menu.setMaxValues(1);
 
         items.forEach(it -> menu.addOption(it.name(), String.valueOf(it.itemId())));
-        event.getReplyContext().getBuilder().addActionRow(menu.build());
-        event.reply(embedCache.getEmbed("itemAddSelect"));
+        event.jdaEvent()
+                .replyEmbeds(embedCache.getEmbed("itemAddSelect").toMessageEmbed())
+                .addActionRow(menu.build())
+                .queue();
     }
 
     @StringSelectMenu("Wähle ein Item aus")

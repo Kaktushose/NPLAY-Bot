@@ -1,11 +1,14 @@
 package com.github.kaktushose.nplaybot.permissions;
 
-import com.github.kaktushose.jda.commands.dispatching.interactions.Context;
+
+import com.github.kaktushose.jda.commands.dispatching.context.InvocationContext;
 import com.github.kaktushose.jda.commands.permissions.PermissionsProvider;
 import com.github.kaktushose.nplaybot.Database;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
 
 public class CustomPermissionsProvider implements PermissionsProvider {
 
@@ -16,12 +19,12 @@ public class CustomPermissionsProvider implements PermissionsProvider {
     }
 
     @Override
-    public boolean hasPermission(@NotNull User user, @NotNull Context context) {
-        return database.getPermissionsService().hasPermissions(user, context.getInteractionDefinition().getPermissions());
+    public boolean hasPermission(@NotNull User user, InvocationContext<?> context) {
+        return database.getPermissionsService().hasPermissions(user, new HashSet<>(context.definition().permissions()));
     }
 
     @Override
-    public boolean hasPermission(@NotNull Member member, @NotNull Context context) {
-        return database.getPermissionsService().hasPermissions(member, context.getInteractionDefinition().getPermissions());
+    public boolean hasPermission(@NotNull Member member, InvocationContext<?> context) {
+        return database.getPermissionsService().hasPermissions(member, new HashSet<>(context.definition().permissions()));
     }
 }
