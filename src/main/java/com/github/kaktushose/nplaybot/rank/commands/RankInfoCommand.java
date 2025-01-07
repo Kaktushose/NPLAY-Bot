@@ -2,8 +2,8 @@ package com.github.kaktushose.nplaybot.rank.commands;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
@@ -28,16 +28,16 @@ public class RankInfoCommand {
         UserInfo userInfo = database.getRankService().getUserInfo(target);
         database.getRankService().updateRankRoles(target, userInfo.currentRank());
         database.getItemService().updateItemRoles(target);
-        sendReply(userInfo, target.getUser(), event);
+        sendReply(userInfo, target.getUser(), event, false);
     }
 
-    @ContextCommand(value = "Kontoinformation abrufen", type = Command.Type.USER, isGuildOnly = true, ephemeral = true)
+    @ContextCommand(value = "Kontoinformation abrufen", type = Command.Type.USER, isGuildOnly = true)
     public void onContextRankInfo(CommandEvent event, User user) {
         UserInfo userInfo = database.getRankService().getUserInfo(user);
-        sendReply(userInfo, user, event);
+        sendReply(userInfo, user, event, true);
     }
 
-    private void sendReply(UserInfo userInfo, User user, CommandEvent event) {
+    private void sendReply(UserInfo userInfo, User user, CommandEvent event, boolean ephemeral) {
         var embed = embedCache.getEmbed(userInfo.nextRank().isPresent() ? "rankInfo" : "rankInfoMax")
                 .injectValues(userInfo.getEmbedValues(user, false))
                 .toEmbedBuilder();
@@ -75,6 +75,6 @@ public class RankInfoCommand {
             });
             embed.addField("Items:", items.toString(), false);
         }
-        event.reply(embed);
+        event.with().ephemeral(ephemeral).reply(embed);
     }
 }

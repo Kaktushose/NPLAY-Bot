@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
-import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.nplaybot.Bot;
 import com.github.kaktushose.nplaybot.settings.SettingsService;
 import net.dv8tion.jda.api.entities.Guild;

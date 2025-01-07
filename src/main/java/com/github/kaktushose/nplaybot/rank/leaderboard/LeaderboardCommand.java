@@ -5,12 +5,11 @@ import com.github.kaktushose.jda.commands.annotations.interactions.Button;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
-import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
-import com.github.kaktushose.jda.commands.dispatching.reply.components.Buttons;
-import com.github.kaktushose.jda.commands.dispatching.reply.components.Component;
+import com.github.kaktushose.jda.commands.dispatching.events.ReplyableEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
+import com.github.kaktushose.jda.commands.dispatching.reply.Component;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.entities.Guild;
@@ -75,35 +74,41 @@ public class LeaderboardCommand {
         reply(event);
     }
 
-    private void reply(Replyable event) {
+    private void reply(ReplyableEvent event) {
         log.debug("Sending new leaderboard with index {}/{}", index, maxIndex);
-        event.with(getButtons()).reply(
+        event.with().components(getButtons(event)).reply(
                 embedCache.getEmbed("leaderboard").injectValue("leaderboard", leaderboard.get(index - 1).getPage(guild, index - 1))
                         .toEmbedBuilder()
                         .setFooter(String.format("Seite (%d/%d)", index, maxIndex))
         );
     }
 
-    private Component[] getButtons() {
+    private Component[] getButtons(ReplyableEvent event) {
         log.trace("Selecting buttons for index: {}, minIndex: {}, maxIndex: {}", index, minIndex, maxIndex);
         if (index == minIndex) {
             log.trace("Enabling bof buttons");
             return List.of(
-                    Buttons.disabled("onStart", "onBackward"),
-                    Buttons.enabled("onForward", "onEnd")
+                    event.getButton("onStart").asDisabled(),
+                    event.getButton("onBackward").asDisabled(),
+                    event.getButton("onForward"),
+                    event.getButton("onEnd")
             ).toArray(new Component[0]);
         }
         if (index == maxIndex) {
             log.trace("Enabling eof buttons");
             return List.of(
-                    Buttons.enabled("onStart", "onBackward"),
-                    Buttons.disabled("onForward", "onEnd")
+                    event.getButton("onStart"),
+                    event.getButton("onBackward"),
+                    event.getButton("onForward").asDisabled(),
+                    event.getButton("onEnd").asDisabled()
             ).toArray(new Component[0]);
         }
         log.trace("Enabling all buttons");
         return List.of(
-                Buttons.enabled("onStart", "onBackward"),
-                Buttons.enabled("onForward", "onEnd")
+                event.getButton("onStart"),
+                event.getButton("onBackward"),
+                event.getButton("onForward"),
+                event.getButton("onEnd")
         ).toArray(new Component[0]);
     }
 }

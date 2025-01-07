@@ -2,9 +2,9 @@ package com.github.kaktushose.nplaybot.items;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
@@ -34,17 +34,16 @@ public class RemoveItemCommand {
 
         this.target = target;
 
-        var menu = event.getSelectMenu(
-                "RemoveItemCommand.onItemRemoveSelect",
-                net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
-        ).createCopy();
+        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) event.getSelectMenu("RemoveItemCommand.onItemRemoveSelect")).createCopy();
 
         menu.getOptions().clear();
         menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
 
         transactions.forEach(it -> menu.addOption(it.name(), String.valueOf(it.transactionId())));
-        event.getReplyContext().getBuilder().addActionRow(menu.build());
-        event.reply(embedCache.getEmbed("itemRemoveSelect"));
+        event.jdaEvent()
+                .replyEmbeds(embedCache.getEmbed("itemRemoveSelect").toMessageEmbed())
+                .addActionRow(menu.build())
+                .queue();
     }
 
     @StringSelectMenu("Wähle ein oder mehrere Items aus")
