@@ -1,6 +1,7 @@
 package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
+import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.github.kaktushose.jda.commands.definitions.interactions.command.CommandDefinition;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -25,7 +26,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.concurrent.TimeUnit;
 
-public class Bot {
+public class Bot extends AbstractModule {
 
     private final JDA jda;
     private final JDACommands jdaCommands;
