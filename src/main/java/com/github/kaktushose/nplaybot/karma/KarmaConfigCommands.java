@@ -6,8 +6,8 @@ import com.github.kaktushose.jda.commands.annotations.constraints.Min;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
@@ -23,7 +23,7 @@ public class KarmaConfigCommands {
 
     @SlashCommand(value = "balance add karma", desc = "Fügt einem User Karma hinzu", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MODIFY_USER_BALANCE)
-    public void onAddKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) int amount) {
+    public void onAddKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) Integer amount) {
         var oldKarma = database.getRankService().getUserInfo(target).karma();
         var newKarma = oldKarma + amount;
 
@@ -43,7 +43,7 @@ public class KarmaConfigCommands {
 
     @SlashCommand(value = "balance set karma", desc = "Setzt die Karma Punkte von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MODIFY_USER_BALANCE)
-    public void onSetKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) int value) {
+    public void onSetKarma(CommandEvent event, Member target, @Min(Integer.MIN_VALUE) @Max(Integer.MAX_VALUE) Integer value) {
         var oldKarma = database.getRankService().getUserInfo(target).karma();
         database.getKarmaService().setKarma(target, value);
 
@@ -61,7 +61,7 @@ public class KarmaConfigCommands {
 
     @SlashCommand(value = "karma-config set default-karma-tokens", desc = "Legt die tägliche Anzahl an Karma-Tokens für jeden Nutzer fest", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
     @Permissions(BotPermissions.MANAGE_KARMA_SETTINGS)
-    public void onSetKarmaTokens(CommandEvent event, @Min(1) @Max(Integer.MAX_VALUE) int value) {
+    public void onSetKarmaTokens(CommandEvent event, @Min(1) @Max(Integer.MAX_VALUE) Integer value) {
         database.getKarmaService().setDefaultTokens(value);
         onGetKarmaConfig(event);
     }

@@ -7,8 +7,8 @@ import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Param;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
 import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
@@ -29,19 +29,19 @@ public class RankConfigCommands {
     }
 
     @SlashCommand(value = "rank-config set cooldown", desc = "Legt den Cooldown für gewertete Nachrichten fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    public void onSetCooldown(CommandEvent event, @Param("Die Dauer in Millisekunden") @Min(0) @Max(Integer.MAX_VALUE) int cooldown) {
+    public void onSetCooldown(CommandEvent event, @Param("Die Dauer in Millisekunden") @Min(0) @Max(Integer.MAX_VALUE) Integer cooldown) {
         database.getRankService().updateCooldown(cooldown);
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig()));
     }
 
     @SlashCommand(value = "rank-config set message-length", desc = "Legt die Mindestlänge für gewertete Nachrichten fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    public void onSetMinMessageLength(CommandEvent event, @Param("Die Mindestanzahl an Buchstaben pro Nachricht") @Min(0) @Max(Integer.MAX_VALUE) int length) {
+    public void onSetMinMessageLength(CommandEvent event, @Param("Die Mindestanzahl an Buchstaben pro Nachricht") @Min(0) @Max(Integer.MAX_VALUE) Integer length) {
         database.getRankService().updateMinMessageLength(length);
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig()));
     }
 
     @SlashCommand(value = "rank-config set xp-loot-chance", desc = "Legt die Wahrscheinlichkeit für zufällige XP-Loot-Drops fest", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
-    public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) double chance) {
+    public void onSetXpLootDropChance(CommandEvent event, @Param("Die Wahrscheinlichkeit in Prozent") @Min(1) @Max(100) Double chance) {
         database.getRankService().updateXpLootChance(chance);
         event.reply(embedCache.getEmbed("rankConfig").injectFields(database.getRankService().getRankConfig()));
     }

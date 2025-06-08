@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.karma;
 
-import com.github.kaktushose.jda.commands.data.EmbedCache;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.PermissionsService;
 import com.github.kaktushose.nplaybot.rank.RankService;

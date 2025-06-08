@@ -2,11 +2,10 @@ package com.github.kaktushose.nplaybot.events.collect;
 
 import com.github.kaktushose.jda.commands.annotations.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
-import com.github.kaktushose.jda.commands.data.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.components.ComponentEvent;
-import com.github.kaktushose.jda.commands.dispatching.interactions.modals.ModalEvent;
-import com.github.kaktushose.jda.commands.dispatching.reply.Replyable;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.ModalEvent;
+import com.github.kaktushose.jda.commands.embeds.EmbedCache;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.items.ItemService;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
@@ -47,7 +46,7 @@ public class CollectRewardCommands {
     public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") int threshold) {
         this.name = name;
         this.threshold = threshold;
-        event.withSelectMenus("onSelectType").reply(embedCache.getEmbed("rewardCreateSelectType").injectValue("name", name));
+        event.with().components("onSelectType").reply(embedCache.getEmbed("rewardCreateSelectType").injectValue("name", name));
     }
 
     @StringSelectMenu("Wähle eine Belohnungsart aus")
@@ -57,7 +56,7 @@ public class CollectRewardCommands {
     public void onSelectType(ComponentEvent event, List<String> selection) {
         rewardType = selection.get(0);
         if (ROLE_REWARD.equals(rewardType)) {
-            event.withSelectMenus("onSelectRole").reply(embedCache.getEmbed("rewardCreateSelectRole").injectValue("name", name));
+            event.with().components("onSelectRole").reply(embedCache.getEmbed("rewardCreateSelectRole").injectValue("name", name));
         } else if (XP_REWARD.equals(rewardType)) {
             event.replyModal("onSelectXp");
         } else if (ITEM_REWARD.equals(rewardType)) {
@@ -67,16 +66,15 @@ public class CollectRewardCommands {
                 return;
             }
 
-            var menu = event.getSelectMenu(
-                    "CollectRewardCommands.onSelectItem",
-                    net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu.class
-            ).createCopy();
+            var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) event.getSelectMenu("CollectRewardCommands.onSelectItem")).createCopy();
             menu.getOptions().clear();
             menu.setMaxValues(1);
 
             items.forEach(it -> menu.addOption(it.name(), String.valueOf(it.itemId())));
-            event.getReplyContext().getBuilder().addActionRow(menu.build());
-            event.reply(embedCache.getEmbed("rewardCreateSelectItem").injectValue("name", name));
+            event.jdaEvent()
+                    .replyEmbeds(embedCache.getEmbed("rewardCreateSelectItem").injectValue("name", name).toMessageEmbed())
+                    .addActionRow(menu.build())
+                    .queue();
         } else {
             throw new IllegalArgumentException(String.format("%s ist keine gültige Auswahl!", rewardType));
         }
@@ -101,7 +99,7 @@ public class CollectRewardCommands {
         parseJson(embed).ifPresentOrElse(it -> {
             this.embed = it;
             finishSetup(event);
-        }, () -> event.withButtons("onRetryEmbedInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
+        }, () -> event.with().components("onRetryEmbedInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
     }
 
     @Button("neue Eingabe")
@@ -117,18 +115,18 @@ public class CollectRewardCommands {
         try {
             xp = Integer.parseInt(amount);
         } catch (NumberFormatException ignored) {
-            event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
+            event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
             return;
         }
         if (xp < 1) {
-            event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
+            event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidXp").injectValue("name", name));
             return;
         }
         parseJson(embed).ifPresentOrElse(it -> {
             this.embed = it;
             this.xp = xp;
             finishSetup(event);
-        }, () -> event.withButtons("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
+        }, () -> event.with().components("onRetryXpInput").reply(embedCache.getEmbed("rewardCreateInvalidEmbed").injectValue("name", name)));
     }
 
     @Button("neue Eingabe")
@@ -136,7 +134,7 @@ public class CollectRewardCommands {
         event.replyModal("onSelectXp");
     }
 
-    private void finishSetup(Replyable event) {
+    private void finishSetup(ModalEvent event) {
         String reward;
         if (role != null) {
             reward = role.getAsMention();
@@ -145,7 +143,7 @@ public class CollectRewardCommands {
         } else {
             reward = String.valueOf(xp);
         }
-        event.withButtons("onConfirm", "onCancel").reply(embedCache.getEmbed("rewardCreateSummarize")
+        event.with().components("onConfirm", "onCancel").reply(embedCache.getEmbed("rewardCreateSummarize")
                 .injectValue("name", name)
                 .injectValue("type", rewardType)
                 .injectValue("threshold", threshold)
@@ -175,13 +173,15 @@ public class CollectRewardCommands {
             return;
         }
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
-                event.getJdaCommands().getSelectMenu("CollectRewardCommands.onRewardDeleteSelect")).createCopy();
+        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) 
+                event.getSelectMenu("CollectRewardCommands.onRewardDeleteSelect")).createCopy();
         menu.getOptions().clear();
         menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
         rewards.forEach(it -> menu.addOption(it.name(), String.valueOf(it.rewardId())));
-        event.getReplyContext().getBuilder().addActionRow(menu.build());
-        event.reply(embedCache.getEmbed("rewardDeleteSelect"));
+        event.jdaEvent()
+                .replyEmbeds(embedCache.getEmbed("rewardDeleteSelect").toMessageEmbed())
+                .addActionRow(menu.build())
+                .queue();
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Belohnungen aus")
