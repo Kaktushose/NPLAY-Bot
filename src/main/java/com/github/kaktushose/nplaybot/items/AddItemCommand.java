@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -28,7 +28,8 @@ public class AddItemCommand {
     private EmbedCache embedCache;
     private Member target;
 
-    @SlashCommand(value = "balance item add", desc = "Fügt einem Nutzer ein Item hinzu", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @Command(value = "balance item add", desc = "Fügt einem Nutzer ein Item hinzu")
+    @CommandConfig(enabledFor = Permission.BAN_MEMBERS)
     public void onItemAdd(CommandEvent event, Member target) {
         var items = database.getItemService().getAllItems();
 
@@ -65,7 +66,7 @@ public class AddItemCommand {
     }
 
     @StringSelectMenu("Wähle ein Item aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     public void onItemAddSelect(ComponentEvent event, List<String> selection) {
         selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id), "Add Item Command").ifPresent(role -> {
             log.info("Adding role {} to member {}", target, role);

@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.events.collect;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ModalEvent;
@@ -42,7 +42,8 @@ public class CollectRewardCommands {
     private int threshold;
     private String embed;
 
-    @SlashCommand(value = "events collect-reward create", desc = "Erstellt eine Belohnung für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @Command(value = "events collect-reward create", desc = "Erstellt eine Belohnung für das Collect Event")
+    @CommandConfig(enabledFor = Permission.BAN_MEMBERS)
     public void onRewardCreate(CommandEvent event, @Param("Der interne Name dieser Belohnung") String name, @Param("Der Wert, ab wann die Belohnung vergeben werden soll") int threshold) {
         this.name = name;
         this.threshold = threshold;
@@ -50,9 +51,9 @@ public class CollectRewardCommands {
     }
 
     @StringSelectMenu("Wähle eine Belohnungsart aus")
-    @SelectOption(label = "Rolle", value = ROLE_REWARD)
-    @SelectOption(label = "XP", value = XP_REWARD)
-    @SelectOption(label = "Item", value = ITEM_REWARD)
+    @MenuOption(label = "Rolle", value = ROLE_REWARD)
+    @MenuOption(label = "XP", value = XP_REWARD)
+    @MenuOption(label = "Item", value = ITEM_REWARD)
     public void onSelectType(ComponentEvent event, List<String> selection) {
         rewardType = selection.get(0);
         if (ROLE_REWARD.equals(rewardType)) {
@@ -87,7 +88,7 @@ public class CollectRewardCommands {
     }
 
     @StringSelectMenu("Wähle ein Item aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     public void onSelectItem(ComponentEvent event, List<String> selection) {
         var itemId = selection.stream().findFirst().orElseThrow();
         item = database.getItemService().getItem(Integer.parseInt(itemId));
@@ -95,7 +96,7 @@ public class CollectRewardCommands {
     }
 
     @Modal("Embed angeben")
-    public void onSelectEmbed(ModalEvent event, @TextInput(value = "Das Embed im JSON-Format", label = "Embed") String embed) {
+    public void onSelectEmbed(ModalEvent event, @TextInput(placeholder = "Das Embed im JSON-Format", value = "Embed") String embed) {
         parseJson(embed).ifPresentOrElse(it -> {
             this.embed = it;
             finishSetup(event);
@@ -109,8 +110,8 @@ public class CollectRewardCommands {
 
     @Modal("XP-Belohnung")
     public void onSelectXp(ModalEvent event,
-                           @TextInput(style = TextInputStyle.SHORT, label = "XP-Menge", value = "Eine Zahl zwischen 1 und 2.147.483.647") String amount,
-                           @TextInput(value = "Das Embed im JSON-Format", label = "Embed") String embed) {
+                           @TextInput(style = TextInputStyle.SHORT, value = "XP-Menge", placeholder = "Eine Zahl zwischen 1 und 2.147.483.647") String amount,
+                           @TextInput(placeholder = "Das Embed im JSON-Format", value = "Embed") String embed) {
         int xp;
         try {
             xp = Integer.parseInt(amount);
@@ -164,7 +165,8 @@ public class CollectRewardCommands {
         event.removeComponents();
     }
 
-    @SlashCommand(value = "events collect-reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Collect Event", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @Command(value = "events collect-reward delete", desc = "Löscht eine oder mehrere Belohnung(en) für das Collect Event")
+    @CommandConfig(enabledFor = Permission.BAN_MEMBERS)
     public void onRewardDelete(CommandEvent event) {
         var rewards = database.getCollectEventService().getCollectRewards();
 
@@ -185,7 +187,7 @@ public class CollectRewardCommands {
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Belohnungen aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     public void onRewardDeleteSelect(ComponentEvent event, List<String> selection) {
         for (var id : selection) {
             database.getCollectEventService().deleteCollectReward(Integer.parseInt(id));

@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.permissions;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -16,6 +16,7 @@ import java.util.List;
 import static com.github.kaktushose.nplaybot.permissions.BotPermissions.*;
 
 @Interaction
+@CommandConfig(enabledFor = Permission.BAN_MEMBERS)
 public class PermissionCommands {
 
     private static final String NONE = "NONE";
@@ -26,9 +27,9 @@ public class PermissionCommands {
     private Member targetMember;
     private Role targetRole;
 
-    @SlashCommand(value = "permissions list", desc = "Zeigt die Berechtigungen eines Users an", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @Command(value = "permissions list", desc = "Zeigt die Berechtigungen eines Users an")
     @Permissions(USER)
-    public void onPermissionsList(CommandEvent event, @Optional Member member) {
+    public void onPermissionsList(CommandEvent event, @Param(optional = true) Member member) {
         var target = member == null ? event.getMember() : member;
 
         event.reply(embedCache.getEmbed("permissionsList")
@@ -37,7 +38,7 @@ public class PermissionCommands {
         );
     }
 
-    @SlashCommand(value = "permissions user edit", desc = "Bearbeitet die Berechtigungen von einem Nutzer. Hat keinen Einfluss auf die Rollen-Berechtigungen", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @Command(value = "permissions user edit", desc = "Bearbeitet die Berechtigungen von einem Nutzer. Hat keinen Einfluss auf die Rollen-Berechtigungen")
     @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsUserEdit(CommandEvent event, Member member) {
         targetMember = member;
@@ -61,7 +62,7 @@ public class PermissionCommands {
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsUserSelect(ComponentEvent event, List<String> selection) {
         database.getPermissionsService().setUserPermissions(targetMember, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));
@@ -72,7 +73,7 @@ public class PermissionCommands {
         );
     }
 
-    @SlashCommand(value = "permissions role edit", desc = "Bearbeitet die Berechtigungen von einer Rolle", isGuildOnly = true, enabledFor = Permission.BAN_MEMBERS)
+    @Command(value = "permissions role edit", desc = "Bearbeitet die Berechtigungen von einer Rolle")
     @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsRoleEdit(CommandEvent event, Role role) {
         targetRole = role;
@@ -97,7 +98,7 @@ public class PermissionCommands {
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Berechtigungen aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     @Permissions(MANAGE_USER_PERMISSIONS)
     public void onPermissionsRoleSelect(ComponentEvent event, List<String> selection) {
         database.getPermissionsService().setRolePermissions(targetRole, BotPermissions.combine(selection.stream().map(Integer::valueOf).toList()));

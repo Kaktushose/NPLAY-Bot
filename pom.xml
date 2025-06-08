@@ -56,28 +56,16 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>dv8tion</id>
-            <name>m2-dv8tion</name>
-            <url>https://m2.dv8tion.net/releases</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.2.2</version>
+            <version>5.6.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Kaktushose</groupId>
+            <groupId>io.github.kaktushose</groupId>
             <artifactId>jda-commands</artifactId>
-            <version>737f90b697</version>
+            <version>4.0.0-beta.7</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -15,6 +15,7 @@ import java.util.List;
 
 @Interaction
 @Permissions(BotPermissions.MODIFY_USER_BALANCE)
+@CommandConfig(enabledFor = Permission.BAN_MEMBERS)
 public class RemoveItemCommand {
 
     @Inject
@@ -23,7 +24,7 @@ public class RemoveItemCommand {
     private EmbedCache embedCache;
     private Member target;
 
-    @SlashCommand(value = "balance item remove", desc = "Entfernt einem Nutzer ein oder mehrere Items", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @Command(value = "balance item remove", desc = "Entfernt einem Nutzer ein oder mehrere Items")
     public void onItemRemove(CommandEvent event, Member target) {
         var transactions = database.getItemService().getTransactions(target);
 
@@ -47,7 +48,7 @@ public class RemoveItemCommand {
     }
 
     @StringSelectMenu("Wähle ein oder mehrere Items aus")
-    @SelectOption(label = "dummy option", value = "dummy option")
+    @MenuOption(label = "dummy option", value = "dummy option")
     public void onItemRemoveSelect(ComponentEvent event, List<String> selection) {
         selection.forEach(id -> database.getItemService().deleteTransaction(target, Integer.parseInt(id)));
         event.reply(embedCache.getEmbed("itemDelete"));

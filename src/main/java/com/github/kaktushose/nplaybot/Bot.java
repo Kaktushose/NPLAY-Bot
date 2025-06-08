@@ -1,8 +1,8 @@
 package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
-import com.github.kaktushose.jda.commands.annotations.Produces;
-import com.github.kaktushose.jda.commands.dependency.DefaultDependencyInjector;
+import com.google.inject.Provides;
+import com.github.kaktushose.jda.commands.definitions.interactions.command.CommandDefinition;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.jda.commands.embeds.error.JsonErrorMessageFactory;
 import com.github.kaktushose.nplaybot.events.contest.ContestListener;
@@ -16,6 +16,8 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.IntegrationType;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -64,12 +66,9 @@ public class Bot {
                 new MemberDatabaseSyncListener(database),
                 new LegacyCommandListener(embedCache)
         );
-        
-        var dependencyInjector = new DefaultDependencyInjector();
-        dependencyInjector.registerProvider(this);
 
         jdaCommands = JDACommands.builder(jda, Bot.class, "com.github.kaktushose.nplaybot")
-                .dependencyInjector(dependencyInjector)
+                .globalCommandConfig(CommandDefinition.CommandConfig.of(config -> config.integration(IntegrationType.GUILD_INSTALL).context(InteractionContextType.GUILD)))
                 .errorMessageFactory(new JsonErrorMessageFactory(embedCache))
                 .permissionsProvider(new CustomPermissionsProvider(database))
                 .start();
@@ -99,12 +98,12 @@ public class Bot {
         return jda;
     }
 
-    @Produces(skipIndexing = true)
+    @Provides
     public Database getDatabase() {
         return database;
     }
 
-    @Produces(skipIndexing = true)
+    @Provides
     public EmbedCache getEmbedCache() {
         return embedCache;
     }

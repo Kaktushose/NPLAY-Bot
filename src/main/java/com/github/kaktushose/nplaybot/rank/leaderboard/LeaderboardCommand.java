@@ -1,10 +1,10 @@
 package com.github.kaktushose.nplaybot.rank.leaderboard;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.Button;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
-import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
+import com.github.kaktushose.jda.commands.annotations.interactions.Command;
 import com.github.kaktushose.jda.commands.dispatching.events.ReplyableEvent;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.dispatching.reply.Component;
@@ -34,7 +34,7 @@ public class LeaderboardCommand {
     private List<LeaderboardPage> leaderboard;
     private Guild guild;
 
-    @SlashCommand(value = "rangliste", desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP", isGuildOnly = true)
+    @Command(value = "rangliste", desc = "Zeigt eine Rangliste der Benutzer mit den meisten XP")
     public void onCommand(CommandEvent event) {
         guild = event.getGuild();
         leaderboard = database.getRankService().getLeaderboard();

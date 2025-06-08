@@ -1,6 +1,6 @@
 package com.github.kaktushose.nplaybot.rank.commands;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
@@ -9,7 +9,8 @@ import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import com.github.kaktushose.nplaybot.rank.model.UserInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.Command.Type;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +23,8 @@ public class RankInfoCommand {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "info", isGuildOnly = true, desc = "Zeigt die Kontoinformationen zu einem User an")
-    public void onRankInfo(CommandEvent event, @Optional Member member) {
+    @Command(value = "info", desc = "Zeigt die Kontoinformationen zu einem User an")
+    public void onRankInfo(CommandEvent event, @Param(optional = true) Member member) {
         var target = member == null ? event.getMember() : member;
         UserInfo userInfo = database.getRankService().getUserInfo(target);
         database.getRankService().updateRankRoles(target, userInfo.currentRank());
@@ -31,7 +32,7 @@ public class RankInfoCommand {
         sendReply(userInfo, target.getUser(), event, false);
     }
 
-    @ContextCommand(value = "Kontoinformation abrufen", type = Command.Type.USER, isGuildOnly = true)
+    @Command(value = "Kontoinformation abrufen", type = Type.USER)
     public void onContextRankInfo(CommandEvent event, User user) {
         UserInfo userInfo = database.getRankService().getUserInfo(user);
         sendReply(userInfo, user, event, true);

@@ -1,10 +1,7 @@
 package com.github.kaktushose.nplaybot.events.contest;
 
-import com.github.kaktushose.jda.commands.annotations.Inject;
-import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
-import com.github.kaktushose.jda.commands.annotations.interactions.Param;
-import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
-import com.github.kaktushose.jda.commands.annotations.interactions.SlashCommand;
+import com.github.kaktushose.jda.commands.annotations.interactions.*;
+import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
@@ -17,6 +14,7 @@ import java.util.Optional;
 
 @Interaction
 @Permissions(BotPermissions.MANAGE_EVENTS)
+@CommandConfig(enabledFor = Permission.BAN_MEMBERS)
 public class ContestCommands {
 
     @Inject
@@ -24,7 +22,7 @@ public class ContestCommands {
     @Inject
     private EmbedCache embedCache;
 
-    @SlashCommand(value = "events contest-event start", desc = "Startet ein Contest-Event", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @Command(value = "events contest-event start", desc = "Startet ein Contest-Event")
     public void onContestEventStart(CommandEvent event,
                                     @Param("Der Textkanal, in dem das Contest-Event stattfinden soll") TextChannel channel,
                                     @Param("Der Emoji, mit dem abgestimmt werden soll") String emoji) {
@@ -32,7 +30,7 @@ public class ContestCommands {
         event.reply(embedCache.getEmbed("contestEventStart").injectValue("channel", channel.getAsMention()));
     }
 
-    @SlashCommand(value = "events contest-event stop", desc = "Stoppt das aktuelle Contest-Event und zeigt die Gewinner an", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)
+    @Command(value = "events contest-event stop", desc = "Stoppt das aktuelle Contest-Event und zeigt die Gewinner an")
     public void onContestEventStop(CommandEvent event) {
         var result = database.getContestEventService().stopContestEvent();
         StringBuilder builder = new StringBuilder();
