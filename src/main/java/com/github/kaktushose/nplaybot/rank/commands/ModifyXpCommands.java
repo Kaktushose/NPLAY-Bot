@@ -35,7 +35,7 @@ public class ModifyXpCommands {
                 .injectValue("xp", amount)
         );
 
-        database.getRankService().onXpChange(result, event.getMember(), embedCache);
+        database.getRankService().onXpChange(result, target, embedCache);
     }
 
     @SlashCommand(value = "balance set xp", desc = "Setzt die XP von einem User auf den angegebenen Wert", enabledFor = Permission.BAN_MEMBERS, isGuildOnly = true)

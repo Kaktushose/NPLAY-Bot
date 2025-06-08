@@ -16,7 +16,10 @@
         "name": "Deine einmalige Belohnung:",
         "value": "{reward}"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankIncreaseMax": {
     "title": ":arrow_up: Stufenaufstieg!",
@@ -35,7 +38,10 @@
         "name": "Deine einmalige Belohnung:",
         "value": "{reward}"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankInfo": {
     "title": ":information_source: Stufeninformation für",
@@ -69,7 +75,10 @@
         "name": "Gewertete Nachrichten:",
         "value": ":bar_chart: {messageCount}"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankInfoMax": {
     "title": ":information_source: Stufeninformation für",
@@ -99,92 +108,146 @@
         "name": "Gewertete Nachrichten:",
         "value": ":bar_chart: {messageCount}"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "embedCacheReload": {
     "title": "Erfolg",
     "description": "Der EmbedCache wurde aktualisiert.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "setXpResult": {
     "title": "Erfolg",
     "description": "Die PLAY-Punkte von {user} wurden auf {xp} Punkte gesetzt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "addXpResult": {
     "title": "Erfolg",
     "description": "{user} wurden {xp} PLAY-Punkte hinzugefügt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "leaderboard": {
     "title": "Rangliste",
     "description": "{leaderboard}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "switchDaily": {
     "title": "Erfolg",
     "description": "Dein tägliches Update zum Levelfortschritt wurde {switch}.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "xpLootDropClaimed": {
     "title": "Herzlichen Glückwunsch! :tada:",
     "description": "{user} hat {xp} PLAY-Punkte :green_circle: aufgesammelt!",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "contestEventStart": {
     "title": "Okay",
     "description": "Das Contest-Event wurde im Kanal {channel} gestartet.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "contestEventStop": {
     "title": "Leaderboard",
     "description": "{leaderboard}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankConfig": {
     "title": "Rank Konfiguration",
     "description": "Cooldown: `{cooldown}ms`\nNachrichtenlänge: `{minLength} Buchstaben`\nXP Loot-Wahrscheinlichkeit: `{lootChance}%`\n",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "validChannels": {
     "title": "Gewertete Textkanäle",
     "description": "{channels}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "permissionsEdit": {
     "title": "Berechtigungen von {target}",
     "description": "Bearbeite die Berechtigungen, indem du sie im Select Menü an- oder abwählst.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "permissionsList": {
     "title": "Berechtigungen von {target}",
     "description": "{permissions}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateSelectType": {
     "title": "Belohnung: {name}",
     "description": "Bitte wähle die Belohnungsart aus, mit der der Nutzer belohnt werden soll.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateSelectRole": {
     "title": "Belohnung: {name}",
     "description": "Bitte wähle die Rolle aus, mit der der Nutzer belohnt werden soll.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateSelectItem": {
     "title": "Belohnung: {name}",
     "description": "Bitte wähle das Item aus, mit der der Nutzer belohnt werden soll.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateInvalidXp": {
     "title": "Belohnung: {name}",
     "description": "Bitte gib eine Zahl zwischen 1 und 2.147.483.647 an.",
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateInvalidEmbed": {
     "title": "Belohnung: {name}",
     "description": "Bitte gib ein gültiges Embed im JSON-Format an. [Online Embed Builder](https://glitchii.github.io/embedbuilder/?data=e30=)",
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateSummarize": {
     "title": "Belohnung: {name}",
@@ -203,126 +266,201 @@
         "value": "{reward}"
       }
     ],
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateConfirm": {
     "title": "Erfolg",
     "description": "Die Belohnung `{name}` wurde erstellt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardCreateCancel": {
     "title": "Okay",
     "description": "Die Erstellung einer Belohnung wurde abgebrochen.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "collectEventStart": {
     "title": "Erfolg",
     "description": "Das Collect-Event `{name}` wurde gestartet.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "collectEventStartError": {
     "title": "Fehler",
     "description": "Es ist bereits ein Collect-Event aktiv. Beende dies zuerst, bevor du ein neues starten kannst!",
-    "color": "#ff0000"
+    "color": "#ff0000",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "collectEventStop": {
     "title": "Erfolg",
     "description": "Das aktuelle Collect-Event wurde beendet.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardDeleteSelect": {
     "title": "Belohnungen löschen",
     "description": "Wähle eine oder mehrere Belohnungen aus, die du löschen möchtest.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rewardDelete": {
     "title": "Erfolg",
     "description": "Die Belohnung(en) wurden gelöscht.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "collectLootChanceUpdate": {
     "title": "Erfolg",
-    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt."
+    "description": "Die Wahrscheinlichkeit für zufällige Collect-Loot-Drops wurde auf {chance}% gesetzt.",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "collectLootDropClaimed": {
     "title": "Herzlichen Glückwunsch! :tada:",
     "description": "{user} hat 1 {name} aufgesammelt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "setKarmaResult": {
     "title": "Erfolg",
     "description": "Die PLAY-Prestige von {user} wurde auf {karma} gesetzt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "addKarmaResult": {
     "title": "Erfolg",
     "description": "{user} wurde {karma} PLAY-Prestige hinzugefügt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "karmaConfig": {
     "title": "Karma Konfiguration",
     "description": "Erlaubte Emojis: {emojis}\nKarma Tokens pro Nutzer: `{tokens}`",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "karmaRewardRemove": {
     "title": "Achtung",
     "description": "Lieber {user},\ndu hast in letzter Zeit zu viel PLAY-Prestige verloren- Daher wurden dir deine zusätzlichen Belohnungen wieder entfernt.",
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "itemRemoveSelect": {
     "title": "Items entfernen",
     "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer entfernen möchtest:",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "itemDelete": {
     "title": "Erfolg",
     "description": "Die Items wurden dem Nutzer entfernt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "noOptions": {
     "title": "Fehler",
     "description": "Es existieren keine {type}, die ausgewählt werden könnten.",
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "itemAddSelect": {
     "title": "Items hinzufügen",
     "description": "Wähle eine oder mehrere Items aus, die du dem Nutzer hinzufügen möchtest.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "itemAdd": {
     "title": "Erfolg",
     "description": "Das Item wurde dem Nutzer hinzugefügt.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "itemExpired": {
     "title": "Item abgelaufen!",
     "description": "Dein {item} ist abgelaufen!",
-    "color": "#f4cd53"
+    "color": "#f4cd53",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "playActivityAdd": {
     "title": "Glückwunsch :tada:!",
     "description": "Du hast in den letzten 30 Tagen jede Menge PLAY-Prestige gesammelt. Als Dankeschön erhälst Du nun **30 Tage** unsere **PREMIUM-Rolle** :star:.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "playActivityRenew": {
     "title": "Weiter so :tada:!",
     "description": "Du hast in den letzten 30 Tagen erneut genug PLAY-Prestige gesammelt, um Dir unsere **PREMIUM-Rolle** für weitere **30 Tage** zu sichern.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "onLootboxXp": {
     "title": "Du Glückspilz! :dizzy:",
     "description": "Du hast eine Lootbox :coin: gefunden. Darin verstecken sich {xp} PLAY-Punkte :green_circle:.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "onLootboxKarma": {
     "title": "Du Glückspilz! :dizzy:",
     "description": "Du hast eine Lootbox :coin: gefunden. Du hast darin {karma} zusätzliches PLAY-Prestige :star2: gezogen!",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "onLootboxItem": {
     "title": "Glückwunsch",
     "description": "Du hast eine Lootbox :coin: gefunden und einen besonders wertvollen Inhalt gezogen: {item}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankDecrease": {
     "title": ":arrow_down: Stufenabstieg!",
@@ -337,7 +475,10 @@
         "name": "Nächste Stufe:",
         "value": ":dart: {nextRank} (noch {xp} PLAY-Punkte)"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "rankDecreaseMax": {
     "title": ":arrow_down: Stufenabstieg!",
@@ -352,22 +493,34 @@
         "name": "Hoppla!",
         "value": ":frowning: Weiter bergab geht es nicht mehr.\nAlso Kopf hoch, schlimmer wird es nicht :wink:."
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "allItemsError": {
     "title": "Fehler",
     "description": "Der Nutzer hat bereits alle Items",
-    "color": "#ffc926"
+    "color": "#ffc926",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "legacyCommandInfo": {
     "title": "Hinweis",
     "description": "Text-Befehle wurden deaktiviert. Du kannst stattdessen einfach `/` eingeben, um eine Übersicht über alle Befehle zu erhalten.",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "memberExcluded": {
     "title": "Okay",
     "description": "Der Nutzer wurde vom Contest-Event ausgeschlossen",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "insufficientPermissions": {
     "title": "Fehlende Berechtigungen",
@@ -378,7 +531,10 @@
         "name": "Berechtigungen:",
         "value": "`{permissions}`"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "typeAdaptingFailed": {
     "title": "Syntax Error",
@@ -393,22 +549,34 @@
         "name": "Tatsächliche Eingabe:",
         "value": "`{actual}`"
       }
-    ]
+    ],
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "constraintFailed": {
     "title": "Parameter Validation fehlgeschlagen",
     "description": "```{message}```",
-    "color": "#ffc800"
+    "color": "#ffc800",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "cooldown": {
     "title": "Cooldown",
     "description": "Du kannst diesen Command nicht für weitere {cooldown}! nutzen",
-    "color": "#ffc800"
+    "color": "#ffc800",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "wrongChannel": {
     "title": "Falscher Textkanal Typ",
     "description": "Dieser Command kann in dieser Art von Textkanälen nicht ausgeführt werden",
-    "color": "#ff0000"
+    "color": "#ff0000",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "executionFailed": {
     "title": "Command Ausführung fehlgeschlagen",
@@ -419,16 +587,25 @@
         "value": "{error}"
       }
     ],
-    "color": "#ff0000"
+    "color": "#ff0000",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "unknownInteraction": {
     "title": "Unbekannte Interaktion",
     "description": "Diese Interaktion ist abgelaufen und steht nicht mehr zur Verfügung",
-    "color": "#ff0000"
+    "color": "#ff0000",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   },
   "logChannelEntry": {
     "title": "{title}",
     "description": "{description}",
-    "color": "#67c94f"
+    "color": "#67c94f",
+    "footer": {
+      "text": "Happy Pride Month :rainbow_flag:"
+    }
   }
 }
