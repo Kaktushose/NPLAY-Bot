@@ -1,7 +1,9 @@
 package com.github.kaktushose.nplaybot;
 
 import com.github.kaktushose.jda.commands.JDACommands;
+import com.github.kaktushose.jda.commands.guice.GuiceExtensionData;
 import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.google.inject.Provides;
 import com.github.kaktushose.jda.commands.definitions.interactions.command.CommandDefinition;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
@@ -72,6 +74,7 @@ public class Bot extends AbstractModule {
                 .globalCommandConfig(CommandDefinition.CommandConfig.of(config -> config.integration(IntegrationType.GUILD_INSTALL).context(InteractionContextType.GUILD)))
                 .errorMessageFactory(new JsonErrorMessageFactory(embedCache))
                 .permissionsProvider(new CustomPermissionsProvider(database))
+                .extensionData(new GuiceExtensionData(Guice.createInjector(this)))
                 .start();
 
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.customStatus("Version 3.0.0"));
