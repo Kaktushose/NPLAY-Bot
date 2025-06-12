@@ -500,6 +500,11 @@ public class RankService {
                 ));
                 rowCount++;
             }
+
+            if(pages.isEmpty() && !rows.isEmpty()) {
+                pages.add(new LeaderboardPage(rows));
+            }
+
             log.debug("Result of leaderboard query: {} pages", pages.size());
             return pages;
         } catch (SQLException e) {

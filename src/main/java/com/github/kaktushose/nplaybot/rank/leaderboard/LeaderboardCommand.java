@@ -1,17 +1,18 @@
 package com.github.kaktushose.nplaybot.rank.leaderboard;
 
-import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.Button;
+import com.github.kaktushose.jda.commands.annotations.interactions.Command;
 import com.github.kaktushose.jda.commands.annotations.interactions.Interaction;
 import com.github.kaktushose.jda.commands.annotations.interactions.Permissions;
-import com.github.kaktushose.jda.commands.annotations.interactions.Command;
 import com.github.kaktushose.jda.commands.dispatching.events.ReplyableEvent;
+import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
 import com.github.kaktushose.jda.commands.dispatching.reply.Component;
+import com.github.kaktushose.jda.commands.dispatching.reply.dynamic.ButtonComponent;
 import com.github.kaktushose.jda.commands.embeds.EmbedCache;
-import com.github.kaktushose.jda.commands.dispatching.events.interactions.CommandEvent;
 import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
+import com.google.inject.Inject;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class LeaderboardCommand {
         reply(event);
     }
 
-    private void reply(ReplyableEvent event) {
+    private void reply(ReplyableEvent<?> event) {
         log.debug("Sending new leaderboard with index {}/{}", index, maxIndex);
         event.with().components(getButtons(event)).reply(
                 embedCache.getEmbed("leaderboard").injectValue("leaderboard", leaderboard.get(index - 1).getPage(guild, index - 1))
@@ -83,32 +84,32 @@ public class LeaderboardCommand {
         );
     }
 
-    private Component[] getButtons(ReplyableEvent event) {
+    private ButtonComponent[] getButtons(ReplyableEvent<?> event) {
         log.trace("Selecting buttons for index: {}, minIndex: {}, maxIndex: {}", index, minIndex, maxIndex);
         if (index == minIndex) {
             log.trace("Enabling bof buttons");
-            return List.of(
-                    event.getButton("onStart").asDisabled(),
-                    event.getButton("onBackward").asDisabled(),
-                    event.getButton("onForward"),
-                    event.getButton("onEnd")
-            ).toArray(new Component[0]);
+            return new ButtonComponent[]{
+                    Component.button("onStart").enabled(false),
+                    Component.button("onBackward").enabled(false),
+                    Component.button("onForward"),
+                    Component.button("onEnd")
+            };
         }
         if (index == maxIndex) {
             log.trace("Enabling eof buttons");
-            return List.of(
-                    event.getButton("onStart"),
-                    event.getButton("onBackward"),
-                    event.getButton("onForward").asDisabled(),
-                    event.getButton("onEnd").asDisabled()
-            ).toArray(new Component[0]);
+            return new ButtonComponent[]{
+                    Component.button("onStart"),
+                    Component.button("onBackward"),
+                    Component.button("onForward").enabled(false),
+                    Component.button("onEnd").enabled(false)
+            };
         }
         log.trace("Enabling all buttons");
-        return List.of(
-                event.getButton("onStart"),
-                event.getButton("onBackward"),
-                event.getButton("onForward"),
-                event.getButton("onEnd")
-        ).toArray(new Component[0]);
+        return new ButtonComponent[]{
+                Component.button("onStart"),
+                Component.button("onBackward"),
+                Component.button("onForward"),
+                Component.button("onEnd")
+        };
     }
 }
