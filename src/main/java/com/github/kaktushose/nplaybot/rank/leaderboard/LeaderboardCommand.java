@@ -77,7 +77,7 @@ public class LeaderboardCommand {
 
     private void reply(ReplyableEvent<?> event) {
         log.debug("Sending new leaderboard with index {}/{}", index, maxIndex);
-        event.with().components(getButtons(event)).reply(
+        event.with().keepComponents(false).components(getButtons(event)).reply(
                 embedCache.getEmbed("leaderboard").injectValue("leaderboard", leaderboard.get(index - 1).getPage(guild, index - 1))
                         .toEmbedBuilder()
                         .setFooter(String.format("Seite (%d/%d)", index, maxIndex))
