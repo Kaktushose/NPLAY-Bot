@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
+import com.github.kaktushose.jda.commands.dispatching.reply.Component;
 import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
@@ -9,6 +10,7 @@ import com.github.kaktushose.nplaybot.Database;
 import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,20 +55,15 @@ public class AddItemCommand {
 
         this.target = target;
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) event.getSelectMenu("AddItemCommand.onItemAddSelect")).createCopy();
-
-        menu.getOptions().clear();
-        menu.setMaxValues(1);
-
-        items.forEach(it -> menu.addOption(it.name(), String.valueOf(it.itemId())));
-        event.jdaEvent()
-                .replyEmbeds(embedCache.getEmbed("itemAddSelect").toMessageEmbed())
-                .addActionRow(menu.build())
-                .queue();
+        List<SelectOption> options = items.stream()
+                .map(it -> SelectOption.of(it.name(), String.valueOf(it.itemId())))
+                .toList();
+        event.with()
+                .components(Component.stringSelect("onItemAddSelect").selectOptions(options))
+                .reply(embedCache.getEmbed("itemAddSelect"));
     }
 
     @StringSelectMenu("Wähle ein Item aus")
-    @MenuOption(label = "dummy option", value = "dummy option")
     public void onItemAddSelect(ComponentEvent event, List<String> selection) {
         selection.forEach(id -> database.getItemService().createTransaction(target, Integer.parseInt(id), "Add Item Command").ifPresent(role -> {
             log.info("Adding role {} to member {}", target, role);

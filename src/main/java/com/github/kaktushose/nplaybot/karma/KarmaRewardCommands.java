@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.karma;
 
+import com.github.kaktushose.jda.commands.dispatching.reply.Component;
 import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.entities.Mentions;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
 import java.util.List;
@@ -138,19 +140,15 @@ public class KarmaRewardCommands {
             return;
         }
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu)
-                event.getSelectMenu("KarmaRewardCommands.onRewardDeleteSelect")).createCopy();
-        menu.getOptions().clear();
-        menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
-        rewards.forEach(it -> menu.addOption(it.name(), String.valueOf(it.rewardId())));
-        event.jdaEvent()
-                .replyEmbeds(embedCache.getEmbed("rewardDeleteSelect").toMessageEmbed())
-                .addActionRow(menu.build())
-                .queue();
+        List<SelectOption> options = rewards.stream()
+                .map(it -> SelectOption.of(it.name(), String.valueOf(it.rewardId())))
+                .toList();
+        event.with()
+                .components(Component.stringSelect("onRewardDeleteSelect").selectOptions(options))
+                .reply(embedCache.getEmbed("rewardDeleteSelect"));
     }
 
     @StringSelectMenu(value = "Wähle eine oder mehrere Belohnungen aus")
-    @MenuOption(label = "dummy option", value = "dummy option")
     public void onRewardDeleteSelect(ComponentEvent event, List<String> selection) {
         for (var id : selection) {
             database.getKarmaService().deleteKarmaReward(Integer.parseInt(id));

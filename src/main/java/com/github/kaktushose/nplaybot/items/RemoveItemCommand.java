@@ -1,5 +1,6 @@
 package com.github.kaktushose.nplaybot.items;
 
+import com.github.kaktushose.jda.commands.dispatching.reply.Component;
 import com.google.inject.Inject;
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.events.interactions.ComponentEvent;
@@ -10,6 +11,7 @@ import com.github.kaktushose.nplaybot.permissions.BotPermissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 
 import java.util.List;
 
@@ -35,20 +37,15 @@ public class RemoveItemCommand {
 
         this.target = target;
 
-        var menu = ((net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu) event.getSelectMenu("RemoveItemCommand.onItemRemoveSelect")).createCopy();
-
-        menu.getOptions().clear();
-        menu.setMaxValues(SelectMenu.OPTIONS_MAX_AMOUNT);
-
-        transactions.forEach(it -> menu.addOption(it.name(), String.valueOf(it.transactionId())));
-        event.jdaEvent()
-                .replyEmbeds(embedCache.getEmbed("itemRemoveSelect").toMessageEmbed())
-                .addActionRow(menu.build())
-                .queue();
+        List<SelectOption> options = transactions.stream()
+                .map(it -> SelectOption.of(it.name(), String.valueOf(it.transactionId())))
+                .toList();
+        event.with()
+                .components(Component.stringSelect("onItemRemoveSelect").selectOptions(options))
+                .reply(embedCache.getEmbed("itemRemoveSelect"));
     }
 
     @StringSelectMenu("Wähle ein oder mehrere Items aus")
-    @MenuOption(label = "dummy option", value = "dummy option")
     public void onItemRemoveSelect(ComponentEvent event, List<String> selection) {
         selection.forEach(id -> database.getItemService().deleteTransaction(target, Integer.parseInt(id)));
         event.reply(embedCache.getEmbed("itemDelete"));
