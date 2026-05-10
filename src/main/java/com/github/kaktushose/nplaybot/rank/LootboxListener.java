@@ -72,6 +72,7 @@ public class LootboxListener extends ListenerAdapter {
         }
 
         event.getReaction().clearReactions().queue();
+        bot.getJda().removeEventListener(this);
 
         log.info("Lootbox {} got claimed by {}", event.getMessageId(), event.getMember());
         bot.getDatabase().getSettingsService().getLogChannel().sendMessage(new MessageCreateBuilder()
@@ -124,7 +125,6 @@ public class LootboxListener extends ListenerAdapter {
                             .injectValue("item", String.format("%s %s", emoji, item.name())).toMessageEmbed());
 
             event.getChannel().sendMessage(message.build()).queue(it -> it.delete().queueAfter(1, TimeUnit.MINUTES));
-
         }
     }
 
