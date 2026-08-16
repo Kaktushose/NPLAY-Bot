@@ -47,7 +47,6 @@ public class Bot extends AbstractModule {
                 )
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.include(guildId))
-                .enableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS)
                 .setActivity(Activity.customStatus("starting..."))
                 .setStatus(OnlineStatus.IDLE)
                 .build().awaitReady();
