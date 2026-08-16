@@ -3,13 +3,13 @@ FROM redgate/flyway as flyway
 WORKDIR /flyway
 
 
-FROM maven:3.9.9-eclipse-temurin-17 AS builder
+FROM maven:3.9-eclipse-temurin-8-alpine AS builder
 
 WORKDIR /bot
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 
 COPY --from=flyway /flyway ./flyway
 COPY src/main/resources/db/migration ./db/migration
