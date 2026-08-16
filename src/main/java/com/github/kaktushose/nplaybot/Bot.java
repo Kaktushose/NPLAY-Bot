@@ -43,7 +43,6 @@ public class Bot extends AbstractModule {
         jda = JDABuilder.createDefault(token)
                 .enableIntents(
                         GatewayIntent.GUILD_MEMBERS,
-                        GatewayIntent.GUILD_PRESENCES,
                         GatewayIntent.MESSAGE_CONTENT
                 )
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
